@@ -3,7 +3,7 @@ import { View, Image, Text, ActivityIndicator, Pressable, PressableProps, ViewSt
 import { useTheme } from '@/Hooks'
 import { colors } from '@/Utils/constants'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import Animated, { FadeInDown, FadeOut, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 
 type TurquoiseButtonProps = {
   text: string
@@ -19,7 +19,7 @@ type TurquoiseButtonProps = {
 const DEFAULT_TEXT_STYLE: TextStyle = {
   fontSize: 16,
   fontWeight: 'bold',
-  color: colors.darkCharcoal,
+  color: colors.darkBlueGray,
 }
 
 const BUTTON_STYLE: ViewStyle = {
@@ -50,10 +50,13 @@ const TurquoiseButton = ({ text, containerStyle, style, textStyle, onPress, isLo
 
   return (
     <Animated.View
+      entering={FadeInDown.duration(1000)}
       style={[
         {
           ...containerStyle,
           backgroundColor: colors.white,
+          borderColor: colors.darkBlueGray,
+          borderWidth: 1,
           borderRadius: 20,
         },
         containerAnimatedStyle,
@@ -83,7 +86,7 @@ const TurquoiseButton = ({ text, containerStyle, style, textStyle, onPress, isLo
         ]}
       >
         {isLoading ? (
-          <ActivityIndicator size='small' color={colors.darkCharcoal} />
+          <ActivityIndicator size='small' color={colors.darkBlueGray} />
         ) : (
           <View style={[Layout.rowCenter]}>
             {leftIcon && leftIcon()}

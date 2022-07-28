@@ -23,8 +23,8 @@ import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import backBtn from '@/Assets/Images/buttons/back.png'
 import WhiteInput from '@/Components/Inputs/WhiteInput'
 import AppLogo from '@/Components/Icons/AppLogo'
-import { color } from 'react-native-reanimated'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import Animated, { color, FadeInDown, ZoomIn } from 'react-native-reanimated'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 import { firebase } from '@react-native-firebase/messaging'
 import { showSnackbar, startLoading } from '@/Store/UI/actions'
@@ -38,6 +38,9 @@ import axios from 'axios'
 import crashlytics from '@react-native-firebase/crashlytics'
 import TouchID from 'react-native-touch-id'
 import * as Keychain from 'react-native-keychain'
+import { SharedElement } from 'react-navigation-shared-element'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import signInGif from '@/Assets/Images/Illustrations/signin.gif'
 
 const LOGIN_BUTTON: ViewStyle = {
   height: 40,
@@ -121,7 +124,57 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
         })
         break
       default:
-        crashlytics().recordError(err)
+      //crashlytics().recordError(err)
+    }
+  }
+
+  const touchIdAuth = async () => {
+    try {
+      const keychainCred = await Keychain.getGenericPassword()
+      if (keychainCred) {
+        let touchIdAuthRes = await TouchID.authenticate('Authenticate with TouchID / FaceID', {
+          title: 'Authentication Required', // Android
+          imageColor: colors.eucalyptus, // Android
+          imageErrorColor: colors.magicPotion, // Android
+          sensorDescription: 'Touch sensor', // Android
+          sensorErrorDescription: 'Failed', // Android
+          cancelText: 'Cancel', // Android
+          fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+          unifiedErrors: false, // use unified error messages (default false)
+          passcodeFallback: true, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
+        })
+        if (touchIdAuthRes) {
+          dispatch(startLoading(true))
+
+          const user = await Auth.signIn(keychainCred.username, keychainCred.password)
+          let { attributes, username } = user
+          let jwtToken = user?.signInUserSession?.idToken?.jwtToken
+
+          // const userProfileRes = await axios.get(config.userProfile, {
+          //   signal: abortController.signal,
+          //   headers: {
+          //     Authorization: jwtToken,
+          //   },
+          // })
+          // const { email, uuid } = userProfileRes?.data
+
+          dispatch(
+            login({
+              email: attributes.email,
+              username,
+            }),
+          )
+
+          setIsLoggingIn(true)
+        }
+      } else {
+        // TBD: snackbar remind user to enable fingerprint
+      }
+    } catch (err: any) {
+      loginErrHandler(err)
+      dispatch(startLoading(false))
+    } finally {
+      setIsLoggingIn(false)
     }
   }
 
@@ -131,56 +184,7 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
       password: '',
     })
 
-    const touchIdAuth = async () => {
-      try {
-        const keychainCred = await Keychain.getGenericPassword()
-        if (keychainCred) {
-          let touchIdAuthRes = await TouchID.authenticate('Authenticate with TouchID / FaceID', {
-            title: 'Authentication Required', // Android
-            imageColor: colors.eucalyptus, // Android
-            imageErrorColor: colors.magicPotion, // Android
-            sensorDescription: 'Touch sensor', // Android
-            sensorErrorDescription: 'Failed', // Android
-            cancelText: 'Cancel', // Android
-            fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
-            unifiedErrors: false, // use unified error messages (default false)
-            passcodeFallback: true, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
-          })
-          if (touchIdAuthRes) {
-            dispatch(startLoading(true))
-
-            const user = await Auth.signIn(keychainCred.username, keychainCred.password)
-            let { attributes, username } = user
-            let jwtToken = user?.signInUserSession?.idToken?.jwtToken
-
-            const userProfileRes = await axios.get(config.userProfile, {
-              signal: abortController.signal,
-              headers: {
-                Authorization: jwtToken,
-              },
-            })
-            const { email, uuid } = userProfileRes?.data
-
-            dispatch(
-              login({
-                email: attributes.email,
-                username,
-                uuid,
-              }),
-            )
-
-            setIsLoggingIn(true)
-          }
-        }
-      } catch (err: any) {
-        loginErrHandler(err)
-        dispatch(startLoading(false))
-      } finally {
-        setIsLoggingIn(false)
-      }
-    }
-
-    touchIdAuth()
+    // touchIdAuth()
 
     return () => {
       abortController.abort()
@@ -216,18 +220,17 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
 
         await Keychain.setGenericPassword(emailUsernameHash(credential.email), credential.password)
 
-        const userProfileRes = await axios.get(config.userProfile, {
-          headers: {
-            Authorization: jwtToken,
-          },
-        })
-        const { email, uuid } = userProfileRes?.data
+        // const userProfileRes = await axios.get(config.userProfile, {
+        //   headers: {
+        //     Authorization: jwtToken,
+        //   },
+        // })
+        // const { email, uuid } = userProfileRes?.data
 
         dispatch(
           login({
             email: attributes.email,
             username,
-            uuid,
           }),
         )
 
@@ -267,67 +270,111 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
   return (
     <ScreenBackgrounds screenName={RouteStacks.logIn}>
       <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter, Layout.justifyContentStart]}>
-        <Header onLeftPress={goBack} headerText={t('login')} />
+        <Header onLeftPress={goBack} headerText={t('login')} withProfile={false} />
 
         <View
           style={[
             {
-              height: '25%',
+              flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
             },
             Layout.fullWidth,
           ]}
         >
-          <View style={{ flexBasis: 100 }}>
-            <AppLogo type='white' />
-          </View>
-
-          <View style={[Layout.fullWidth, { justifyContent: 'center', paddingVertical: 40, paddingHorizontal: 20 }]}>
-            <Text style={[{ color: colors.darkCharcoal, fontWeight: 'bold' }, Fonts.textMD, Fonts.textCenter]}>{t('welcomeBack')} !</Text>
-          </View>
-        </View>
-
-        <View style={[Layout.fullWidth, Gutters.largeHPadding, INPUT_VIEW_LAYOUT]}>
-          <StandardInput
-            onChangeText={text => onCredentialFieldChange('email', text)}
-            value={credential.email}
-            placeholder={t('email')}
-            placeholderTextColor={colors.spanishGray}
-          />
-          {errMsg.email !== '' && <Text style={ERR_MSG_TEXT}>{errMsg.email}</Text>}
-        </View>
-
-        <View style={[Layout.fullWidth, Gutters.largeHPadding, INPUT_VIEW_LAYOUT]}>
-          <StandardInput
-            onChangeText={text => onCredentialFieldChange('password', text)}
-            value={credential.password}
-            placeholder={t('password')}
-            placeholderTextColor={colors.spanishGray}
-            secureTextEntry={!showPassword}
-            showPassword={showPassword}
-            onPasswordEyePress={onPasswordEyePress}
-          />
-          {errMsg.password !== '' && <Text style={ERR_MSG_TEXT}>{errMsg.password}</Text>}
-        </View>
-
-        <View style={[Layout.fullWidth, Layout.center, Gutters.regularVPadding, { flex: 1, justifyContent: 'center' }]}>
-          <TurquoiseButton
-            onPress={() => onLoginOptionPress('normal')}
-            text={t('logMeIn')}
-            containerStyle={{
-              width: '45%',
+          <Image
+            source={signInGif}
+            style={{
+              height: '100%',
+              resizeMode: 'contain',
             }}
           />
-          <Pressable style={[Layout.fullWidth, Layout.center, { marginBottom: 30, marginTop: 10 }]} onPress={onForgotPasswordPress}>
-            <Text style={{ color: colors.darkCharcoal, textDecorationLine: 'underline' }}>{t('forgotPassword')}</Text>
-          </Pressable>
+        </View>
 
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ color: colors.darkCharcoal }}>{t('dontHaveAnAccount')}</Text>
-            <Pressable style={{ paddingLeft: 6 }} onPress={() => navigation.navigate(RouteStacks.signUp)}>
-              <Text style={{ color: colors.darkCharcoal, fontWeight: 'bold' }}>{t('signUp')}</Text>
+        <View
+          style={{
+            flex: 1,
+            width: '100%',
+          }}
+        >
+          <View style={[Layout.fullWidth, Gutters.largeHPadding, INPUT_VIEW_LAYOUT]}>
+            <StandardInput
+              onChangeText={text => onCredentialFieldChange('email', text)}
+              value={credential.email}
+              placeholder={t('email')}
+              placeholderTextColor={colors.spanishGray}
+            />
+            {errMsg.email !== '' && <Text style={ERR_MSG_TEXT}>{errMsg.email}</Text>}
+          </View>
+
+          <View style={[Layout.fullWidth, Gutters.largeHPadding, INPUT_VIEW_LAYOUT]}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <View style={{ flex: 1, paddingRight: 20 }}>
+                <StandardInput
+                  onChangeText={text => onCredentialFieldChange('password', text)}
+                  value={credential.password}
+                  placeholder={t('password')}
+                  placeholderTextColor={colors.spanishGray}
+                  secureTextEntry={!showPassword}
+                  showPassword={showPassword}
+                  onPasswordEyePress={onPasswordEyePress}
+                />
+              </View>
+              <Animated.View
+                entering={FadeInDown.duration(1000)}
+                style={{
+                  flexBasis: 80,
+                }}
+              >
+                <Pressable
+                  onPress={() => touchIdAuth()}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: colors.darkBlueGray,
+                    paddingVertical: 10,
+                  }}
+                >
+                  <MaterialCommunityIcons size={30} name='fingerprint' color={colors.darkBlueGray} />
+                </Pressable>
+              </Animated.View>
+            </View>
+
+            <View>{errMsg.password !== '' && <Text style={ERR_MSG_TEXT}>{errMsg.password}</Text>}</View>
+          </View>
+
+          <View style={[Layout.fullWidth, Layout.center, Gutters.regularVPadding, { flex: 1, justifyContent: 'center' }]}>
+            <View
+              style={{
+                width: '100%',
+                paddingHorizontal: 30,
+                paddingTop: 30,
+              }}
+            >
+              <ActionButton onPress={() => onLoginOptionPress('normal')} text={t('signIn')} />
+            </View>
+
+            <Pressable style={[Layout.fullWidth, Layout.center, { marginBottom: 30, marginTop: 10 }]} onPress={onForgotPasswordPress}>
+              <Animated.Text entering={FadeInDown.duration(1000)} style={{ color: colors.darkBlueGray, textDecorationLine: 'underline' }}>
+                {t('forgotPassword')}
+              </Animated.Text>
             </Pressable>
+          </View>
+
+          <View style={[Gutters.largeVPadding, { flex: 1, justifyContent: 'center', alignItems: 'center' }]}>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+              <Text style={{ color: colors.darkBlueGray }}>{t('dontHaveAnAccount')}</Text>
+              <Pressable style={{ paddingLeft: 6 }} onPress={() => navigation.navigate(RouteStacks.signUp)}>
+                <Text style={{ color: colors.darkBlueGray, fontWeight: 'bold' }}>{t('signUp')}</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </KeyboardAwareScrollView>

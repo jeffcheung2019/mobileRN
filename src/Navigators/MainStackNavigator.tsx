@@ -8,7 +8,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { useTranslation } from 'react-i18next'
-import { colors } from '@/Utils/constants'
+import { colors, config } from '@/Utils/constants'
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack'
 import { RouteStacks, RouteTabs } from './routes'
 
@@ -29,6 +29,7 @@ import HomeScreen, { HomeScreenNavigatorParamList } from '@/Screens/App/HomeScre
 import EarningScreen, { EarningScreenNavigatorParamList } from '@/Screens/App/EarningScreen'
 import SearchScreen, { SearchScreenNavigatorParamList } from '@/Screens/App/SearchScreen'
 import SettingScreen, { SettingScreenNavigatorParamList } from '@/Screens/App/SettingScreen'
+import NotificationScreen, { NotificationScreenNavigatorParamList } from '@/Screens/App/NotificationScreen'
 import MainCustomTabBar from './MainCustomTabBar'
 import Animated from 'react-native-reanimated'
 import { t } from 'i18next'
@@ -39,10 +40,13 @@ import StockInfoScreen, { StockInfoTopTabNavigatorParamList } from '@/Screens/Ap
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
 
-export type MainStackNavigtorProps = StackScreenProps<ApplicationNavigatorParamList>
+export type MainStackNavigtorProps = StackScreenProps<ApplicationNavigatorParamList, RouteStacks.mainStack>
 export type MainStackNavigatorParamList = {
   [RouteStacks.mainTab]: NavigatorScreenParams<MainTabNavigatorParamList>
   [RouteStacks.setting]: NavigatorScreenParams<SettingScreenNavigatorParamList>
+  [RouteStacks.notification]: NavigatorScreenParams<NotificationScreenNavigatorParamList>
+  // [RouteStacks.mainTab]: undefined
+  // [RouteStacks.setting]: undefined
 }
 
 export type MainTabNavigatorParamList = {
@@ -71,27 +75,27 @@ const MainTabNavigator: FC<MainTabNavigatorProps> = ({ navigation }) => {
   } = {
     home: () => (
       <View style={TABBAR_ICON_VIEW}>
-        <MaterialIcons name='home' size={20} color={colors.darkBlueGray} />
+        <MaterialIcons name='home' size={config.iconSize} color={colors.darkBlueGray} />
       </View>
     ),
     earning: () => (
       <View style={TABBAR_ICON_VIEW}>
-        <MaterialCommunityIcons name='calendar-multiselect' size={20} color={colors.darkBlueGray} />
+        <MaterialCommunityIcons name='calendar-multiselect' size={config.iconSize} color={colors.darkBlueGray} />
       </View>
     ),
     search: () => (
       <View style={TABBAR_ICON_VIEW}>
-        <MaterialIcons name='search' size={20} color={colors.darkBlueGray} />
+        <MaterialIcons name='search' size={config.iconSize} color={colors.darkBlueGray} />
       </View>
     ),
     stockInfo: () => (
       <View style={TABBAR_ICON_VIEW}>
-        <Foundation name='results' size={20} color={colors.darkBlueGray} />
+        <Foundation name='results' size={config.iconSize} color={colors.darkBlueGray} />
       </View>
     ),
     event: () => (
       <View style={TABBAR_ICON_VIEW}>
-        <MaterialIcons name='announcement' size={20} color={colors.darkBlueGray} />
+        <MaterialIcons name='announcement' size={config.iconSize} color={colors.darkBlueGray} />
       </View>
     ),
   }
@@ -118,6 +122,7 @@ const MainStackNavigator: FC<MainStackNavigtorProps> = ({ navigation }) => {
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={RouteStacks.mainTab}>
       <Stack.Screen name={RouteStacks.mainTab} component={MainTabNavigator} />
       <Stack.Screen name={RouteStacks.setting} component={SettingScreen} />
+      <Stack.Screen name={RouteStacks.notification} component={NotificationScreen} />
     </Stack.Navigator>
   )
 }

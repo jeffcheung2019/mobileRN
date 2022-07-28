@@ -16,7 +16,7 @@ import { HeaderLayout } from '@/Styles'
 import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import WhiteInput from '@/Components/Inputs/WhiteInput'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { startLoading } from '@/Store/UI/actions'
 import AppLogo from '@/Components/Icons/AppLogo'
@@ -24,6 +24,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import StandardInput from '@/Components/Inputs/StandardInput'
 import { emailUsernameHash } from '@/Utils/helpers'
 import { Header } from '@/Components'
+import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated'
+import { SharedElement } from 'react-navigation-shared-element'
+import signUpGif from '@/Assets/Images/Illustrations/signup.gif'
 
 const BUTTON_ICON = {
   width: 30,
@@ -85,7 +88,7 @@ const SignUpScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.sign
       setIsCreatingAccount(true)
       // any type here as aws amplify has no typescript support
       const { user }: any = await Auth.signUp({
-        username: emailUsernameHash(credential.email),
+        username: credential.email,
         password: credential.password,
         attributes: {
           email: credential.email,
@@ -126,64 +129,80 @@ const SignUpScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.sign
   return (
     <ScreenBackgrounds screenName={RouteStacks.signUp}>
       <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter, Layout.justifyContentStart]}>
-        <Header titleStyle={{ color: colors.darkCharcoal }} headerText={t('createAccount')} onLeftPress={goBack} />
+        <Header headerText={t('createAccount')} onLeftPress={goBack} withProfile={false} />
 
         <View
           style={[
             {
-              height: '25%',
+              flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
             },
             Layout.fullWidth,
           ]}
         >
-          <View style={{ flexBasis: 100 }}>
-            <AppLogo type='white' />
-          </View>
-
-          <View style={[Layout.fullWidth, { flex: 1, justifyContent: 'center', paddingVertical: 30, paddingHorizontal: 20 }]}>
-            <Text style={[{ color: colors.darkCharcoal, fontWeight: 'bold' }, Fonts.textMD, Fonts.textCenter]}>{t('getStarted')} !</Text>
-          </View>
-        </View>
-
-        <View style={[Layout.fullWidth, Gutters.largeHPadding, INPUT_VIEW_LAYOUT, { flexBasis: 80 }]}>
-          <StandardInput
-            onChangeText={text => onCredentialFieldChange('email', text)}
-            value={credential.email}
-            placeholder={t('email')}
-            placeholderTextColor={colors.spanishGray}
-            autoCapitalize={'none'}
-          />
-          {errMsg.email !== '' && <Text style={[ERR_MSG_TEXT, Gutters.smallHPadding]}>{errMsg.email}</Text>}
-        </View>
-
-        <View style={[Layout.fullWidth, Gutters.largeHPadding, INPUT_VIEW_LAYOUT, { flexBasis: 80 }]}>
-          <StandardInput
-            onChangeText={text => onCredentialFieldChange('password', text)}
-            value={credential.password}
-            placeholder={t('password')}
-            placeholderTextColor={colors.spanishGray}
-            secureTextEntry={!showPassword}
-            showPassword={showPassword}
-            onPasswordEyePress={onPasswordEyePress}
-          />
-          {errMsg.password !== '' && <Text style={[ERR_MSG_TEXT, Gutters.smallHPadding]}>{errMsg.password}</Text>}
-        </View>
-
-        <View style={[Layout.fullWidth, Layout.center, Gutters.largeVPadding, { flex: 1, justifyContent: 'space-between' }]}>
-          <TurquoiseButton
-            onPress={onCreateAccountPress}
-            text={t('create')}
-            containerStyle={{
-              width: '45%',
+          <Image
+            source={signUpGif}
+            style={{
+              height: '100%',
+              resizeMode: 'contain',
             }}
           />
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ color: colors.black }}>{t('alreadyHaveAnAccount')}</Text>
-            <Pressable style={{ paddingLeft: 6 }} onPress={() => navigation.navigate(RouteStacks.logIn)}>
-              <Text style={{ color: colors.darkCharcoal, fontWeight: 'bold' }}>{t('logIn')}</Text>
-            </Pressable>
+        </View>
+
+        <View
+          style={{
+            flex: 1,
+            width: '100%',
+          }}
+        >
+          <View style={[Layout.fullWidth, Gutters.largeHPadding, INPUT_VIEW_LAYOUT, { flexBasis: 80 }]}>
+            <StandardInput
+              onChangeText={text => onCredentialFieldChange('email', text)}
+              value={credential.email}
+              placeholder={t('email')}
+              placeholderTextColor={colors.spanishGray}
+              autoCapitalize={'none'}
+            />
+            {errMsg.email !== '' && <Text style={[ERR_MSG_TEXT, Gutters.smallHPadding]}>{errMsg.email}</Text>}
+          </View>
+
+          <View style={[Layout.fullWidth, Gutters.largeHPadding, INPUT_VIEW_LAYOUT, { flexBasis: 80 }]}>
+            <StandardInput
+              onChangeText={text => onCredentialFieldChange('password', text)}
+              value={credential.password}
+              placeholder={t('password')}
+              placeholderTextColor={colors.spanishGray}
+              secureTextEntry={!showPassword}
+              showPassword={showPassword}
+              onPasswordEyePress={onPasswordEyePress}
+            />
+            {errMsg.password !== '' && <Text style={[ERR_MSG_TEXT, Gutters.smallHPadding]}>{errMsg.password}</Text>}
+          </View>
+
+          <View
+            style={[
+              Layout.fullWidth,
+              Layout.center,
+              Gutters.largeVPadding,
+              { flex: 1, justifyContent: 'space-between', paddingHorizontal: 30 },
+            ]}
+          >
+            <Animated.View entering={FadeInDown} style={{ width: '100%' }}>
+              <ActionButton
+                onPress={onCreateAccountPress}
+                text={t('create')}
+                containerStyle={{
+                  width: '100%',
+                }}
+              />
+            </Animated.View>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ color: colors.darkBlueGray }}>{t('alreadyHaveAnAccount')}</Text>
+              <Pressable style={{ paddingLeft: 6 }} onPress={() => navigation.navigate(RouteStacks.logIn)}>
+                <Text style={{ color: colors.darkBlueGray, fontWeight: 'bold' }}>{t('logIn')}</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </KeyboardAwareScrollView>

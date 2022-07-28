@@ -34,7 +34,7 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import CircleButton from '@/Components/Buttons/CircleButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { awsLogout, triggerSnackbar } from '@/Utils/helpers'
@@ -49,6 +49,7 @@ import { startLoading } from '@/Store/UI/actions'
 import { Results } from 'realm'
 import { forEach, map } from 'lodash'
 import Animated, {
+  FadeInDown,
   measure,
   runOnUI,
   useAnimatedRef,
@@ -67,7 +68,7 @@ type NewsCardProps = {
   onPress: (newsId: string) => void
   news: {
     id: string
-    imgSrc: string
+    imgUrl: string
     title: string
     content: string
   }
@@ -78,53 +79,62 @@ const NewsCard: FC<NewsCardProps> = ({ onPress, news }) => {
   const { Common, Fonts, Gutters, Layout } = useTheme()
 
   return (
-    <Pressable
+    <Animated.View
       style={{
-        borderWidth: 1,
-        borderRadius: 20,
-        borderColor: colors.brightGray,
-        flexDirection: 'row',
-        padding: 10,
+        width: '100%',
+        height: '100%',
       }}
-      onPress={() => onPress(news.id)}
+      entering={FadeInDown}
     >
-      <View
+      <Pressable
         style={{
-          flex: 1,
-        }}
-      >
-        <SharedElement id={`news.${news.id}.image`}>
-          <Image
-            source={{
-              uri: news.imgSrc,
-            }}
-            style={{
-              resizeMode: 'cover',
-              height: '100%',
-              borderRadius: 20,
-            }}
-          />
-        </SharedElement>
-      </View>
-
-      <View
-        style={{
-          flex: 3,
+          borderWidth: 1,
+          borderColor: colors.brightGray,
+          flexDirection: 'row',
           padding: 10,
         }}
+        onPress={() => onPress(news?.id)}
       >
-        <SharedElement id={`news.${news.id}.title`}>
-          <Text numberOfLines={2} style={[{ color: colors.darkCharcoal, fontWeight: 'bold' }, Fonts.textSM]}>
-            {news.title}
-          </Text>
-        </SharedElement>
-        <SharedElement id={`news.${news.id}.content`}>
-          <Text numberOfLines={2} style={[{ color: colors.spanishGray }, Fonts.textXS]}>
-            {news.content}
-          </Text>
-        </SharedElement>
-      </View>
-    </Pressable>
+        <View
+          style={{
+            height: 100,
+            width: '30%',
+            backgroundColor: colors.white,
+          }}
+        >
+          <SharedElement id={`news.${news?.id}.image`}>
+            <Image
+              source={{
+                uri: news?.imgUrl === '' ? config.defaultNewsImgUrl : news?.imgUrl,
+              }}
+              style={{
+                resizeMode: 'center',
+                height: '100%',
+              }}
+            />
+          </SharedElement>
+        </View>
+
+        <View
+          style={{
+            flex: 4,
+            alignItems: 'flex-start',
+            paddingHorizontal: 10,
+          }}
+        >
+          <SharedElement id={`news.${news?.id}.title`}>
+            <Text numberOfLines={2} style={[{ color: colors.darkBlueGray, fontWeight: 'bold' }, Fonts.textSM]}>
+              {news?.title}
+            </Text>
+          </SharedElement>
+          <SharedElement id={`news.${news?.id}.content`}>
+            <Text numberOfLines={3} style={[{ color: colors.darkBlueGray }, Fonts.textXS]}>
+              {news?.content}
+            </Text>
+          </SharedElement>
+        </View>
+      </Pressable>
+    </Animated.View>
   )
 }
 

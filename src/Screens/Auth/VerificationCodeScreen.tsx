@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, FC } from 'react'
 import { StackScreenProps } from '@react-navigation/stack'
-import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle } from 'react-native'
+import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle, Image } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { Header } from '@/Components'
 import { useTheme } from '@/Hooks'
@@ -15,7 +15,7 @@ import { colors, config } from '@/Utils/constants'
 import { AuthNavigatorParamList } from '@/Navigators/AuthNavigator'
 import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { startLoading } from '@/Store/UI/actions'
 import WhiteInput from '@/Components/Inputs/WhiteInput'
@@ -23,6 +23,7 @@ import axios from 'axios'
 import { emailUsernameHash, triggerSnackbar } from '@/Utils/helpers'
 import crashlytics from '@react-native-firebase/crashlytics'
 import CountDown from 'react-native-countdown-component'
+import verificationGif from '@/Assets/Images/Illustrations/verification.gif'
 
 const TEXT_INPUT = {
   height: 40,
@@ -53,8 +54,8 @@ const CELL: TextStyle = {
   height: 50,
   fontSize: 24,
   borderWidth: 1,
-  color: colors.eucalyptus,
-  backgroundColor: colors.charcoal,
+  color: colors.darkBlueGray,
+  backgroundColor: colors.brightGray,
   borderRadius: 4,
   textAlign: 'center',
   lineHeight: 48,
@@ -62,7 +63,7 @@ const CELL: TextStyle = {
 
 const FOCUSED_CELL = {
   borderWidth: 1,
-  borderColor: colors.eucalyptus,
+  borderColor: colors.darkBlueGray,
 }
 
 // TBD: set to 60s later
@@ -115,36 +116,36 @@ const VerificationCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteS
         let user = await Auth.currentAuthenticatedUser()
         let jwtToken = user.signInUserSession.idToken.jwtToken
 
-        let [referralConfirmationRes, userProfileRes] = await Promise.all([
-          axios.post(
-            config.emailVerification,
-            {
-              emailVerificationCode: validationCode,
-            },
-            {
-              headers: {
-                Authorization: jwtToken, //the token is a variable which holds the token
-              },
-            },
-          ),
-          axios.get(config.userProfile, {
-            headers: {
-              Authorization: jwtToken, //the token is a variable which holds the token
-            },
-          }),
-        ])
+        // let [referralConfirmationRes, userProfileRes] = await Promise.all([
+        //   axios.post(
+        //     config.emailVerification,
+        //     {
+        //       emailVerificationCode: validationCode,
+        //     },
+        //     {
+        //       headers: {
+        //         Authorization: jwtToken, //the token is a variable which holds the token
+        //       },
+        //     },
+        //   ),
+        //   axios.get(config.userProfile, {
+        //     headers: {
+        //       Authorization: jwtToken, //the token is a variable which holds the token
+        //     },
+        //   }),
+        // ])
 
-        const { email, uuid } = userProfileRes?.data
+        // const { email, uuid } = userProfileRes?.data
 
         dispatch(
           login({
             email: params.email,
             username: user.username,
-            uuid,
+            // uuid,
           }),
         )
       } catch (err: any) {
-        crashlytics().recordError(err)
+        //crashlytics().recordError(err)
         setErrMsg(t('error.invalidVerificationCode'))
       } finally {
         dispatch(startLoading(false))
@@ -161,7 +162,7 @@ const VerificationCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteS
         await Auth.confirmSignUp(emailUsernameHash(params.email), validationCode)
         navigation.navigate(RouteStacks.registrationCompleted)
       } catch (err: any) {
-        crashlytics().recordError(err)
+        //crashlytics().recordError(err)
         setErrMsg(err.message)
       } finally {
         dispatch(startLoading(false))
@@ -223,7 +224,7 @@ const VerificationCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteS
   return (
     <ScreenBackgrounds screenName={RouteStacks.validationCode}>
       <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter]}>
-        <Header onLeftPress={goBack} headerText={t('emailVerificationCode')} />
+        <Header onLeftPress={goBack} headerText={t('emailVerificationCode')} withProfile={false} />
         <View
           style={[
             {
@@ -234,86 +235,103 @@ const VerificationCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteS
             Layout.colCenter,
           ]}
         >
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 60 }]}>
-            <Text style={[{ color: colors.white, lineHeight: 26 }, Fonts.textSM, Fonts.textLeft]}>{t('verificationCodeDesc')}</Text>
-          </View>
-
           <View
-            style={[
-              CONTENT_ELEMENT_WRAPPER,
-              { flexBasis: 100, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start' },
-            ]}
+            style={{
+              flex: 1,
+            }}
           >
-            <View style={{ justifyContent: 'center', height: '100%' }}>
-              <CountDown
-                key={countDownKey}
-                until={currUntil}
-                digitStyle={{ backgroundColor: 'transparent' }}
-                digitTxtStyle={{ color: colors.eucalyptus, fontSize: 18, height: 30, fontWeight: '400' }}
-                timeLabels={{}}
-                size={10}
-                separatorStyle={{ height: 25, fontSize: 14, color: colors.eucalyptus }}
-                timeToShow={['M', 'S']}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: 8,
-                  marginRight: 10,
-                  display: canResendVeriCode ? 'none' : 'flex',
-                }}
-                showSeparator
-                onFinish={onFinish}
-              />
-            </View>
-            <View style={{ justifyContent: 'center', height: '100%' }}>
-              <Pressable onPress={onResendVerificationCodePress}>
-                <Text
-                  style={[
-                    {
-                      color: colors.white,
-                      lineHeight: 26,
-                      textDecorationLine: canResendVeriCode ? 'underline' : 'none',
-                    },
-                    Fonts.textSM,
-                    Fonts.textLeft,
-                  ]}
-                >
-                  {t('resendVerificationCode')}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 80, justifyContent: 'flex-start' }]}>
-            <CodeField
-              ref={ref}
-              value={validationCode}
-              onChangeText={setValidationCode}
-              cellCount={6}
-              rootStyle={CODE_FIELD_ROOT}
-              keyboardType='number-pad'
-              textContentType='oneTimeCode'
-              renderCell={({ index, symbol, isFocused }) => (
-                <Text key={index} style={[CELL, isFocused && FOCUSED_CELL]} onLayout={getCellOnLayoutHandler(index)}>
-                  {symbol || (isFocused ? <Cursor /> : null)}
-                </Text>
-              )}
+            <Image
+              source={verificationGif}
+              style={{
+                height: '100%',
+                resizeMode: 'contain',
+              }}
             />
           </View>
 
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flex: 1, justifyContent: 'flex-start' }]}>
-            {errMsg !== '' && (
-              <Text style={[{ color: colors.magicPotion, paddingHorizontal: 10 }, Fonts.textSM, Fonts.textLeft]}>{errMsg}</Text>
-            )}
+          <View
+            style={{
+              flex: 1,
+              width: '100%',
+              alignItems: 'center',
+            }}
+          >
+            <View
+              style={[
+                CONTENT_ELEMENT_WRAPPER,
+                { flexBasis: 100, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start' },
+              ]}
+            >
+              <View style={{ justifyContent: 'center', height: '100%' }}>
+                <CountDown
+                  key={countDownKey}
+                  until={currUntil}
+                  digitStyle={{ backgroundColor: 'transparent' }}
+                  digitTxtStyle={{ color: colors.darkBlueGray, fontSize: 18, height: 30, fontWeight: '400' }}
+                  timeLabels={{}}
+                  size={10}
+                  separatorStyle={{ height: 25, fontSize: 14, color: colors.darkBlueGray }}
+                  timeToShow={['M', 'S']}
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 8,
+                    marginRight: 10,
+                    display: canResendVeriCode ? 'none' : 'flex',
+                  }}
+                  showSeparator
+                  onFinish={onFinish}
+                />
+              </View>
+              <View style={{ justifyContent: 'center', height: '100%' }}>
+                <Pressable onPress={onResendVerificationCodePress}>
+                  <Text
+                    style={[
+                      {
+                        color: colors.darkBlueGray,
+                        lineHeight: 26,
+                        fontSize: 14,
+                        textDecorationLine: canResendVeriCode ? 'underline' : 'none',
+                      },
+                      Fonts.textLeft,
+                    ]}
+                  >
+                    {t('resendVerificationCode')}
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+
+            <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 80, justifyContent: 'flex-start' }]}>
+              <CodeField
+                ref={ref}
+                value={validationCode}
+                onChangeText={setValidationCode}
+                cellCount={6}
+                rootStyle={CODE_FIELD_ROOT}
+                keyboardType='number-pad'
+                textContentType='oneTimeCode'
+                renderCell={({ index, symbol, isFocused }) => (
+                  <Text key={index} style={[CELL, isFocused && FOCUSED_CELL]} onLayout={getCellOnLayoutHandler(index)}>
+                    {symbol || (isFocused ? <Cursor /> : null)}
+                  </Text>
+                )}
+              />
+            </View>
+
+            <View style={[CONTENT_ELEMENT_WRAPPER, { flex: 1, justifyContent: 'flex-start' }]}>
+              {errMsg !== '' && (
+                <Text style={[{ color: colors.magicPotion, paddingHorizontal: 10 }, Fonts.textSM, Fonts.textLeft]}>{errMsg}</Text>
+              )}
+            </View>
           </View>
         </View>
 
         <View style={[Layout.fullWidth, Layout.center, { flex: 1, justifyContent: 'flex-start' }]}>
-          <TurquoiseButton
+          <ActionButton
             text={t('confirm')}
             isLoading={isVerifyingAccount}
             onPress={onVerifyAccountPress}
-            isTransparentBackground
             containerStyle={{
               width: '45%',
             }}

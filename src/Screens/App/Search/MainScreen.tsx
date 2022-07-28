@@ -12,72 +12,22 @@ import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/M
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { Header } from '@/Components'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { gql, useQuery } from '@apollo/client'
 import map from 'lodash/map'
 import { StackScreenProps } from '@react-navigation/stack'
 import { SearchScreenNavigationProps, SearchScreenNavigatorParamList } from '../SearchScreen'
+import { getTickers } from '@/Queries/SearchTab'
+import { SharedElement } from 'react-navigation-shared-element'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 
 export type SearchMainScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.searchMain>,
   SearchScreenNavigationProps
 >
-
-const getTicker = (searchText: string) => {
-  const GET_TICKER = gql`
-    query CompanySearch(
-      $ids: [int64!]
-      $first: int64
-      $last: int64
-      $after: string
-      $before: string
-      $filterText: string
-      $sortBy: string
-      $searchTerm: string!
-    ) {
-      getCompanies(
-        ids: $ids
-        first: $first
-        last: $last
-        after: $after
-        before: $before
-        filterText: $filterText
-        sortBy: $sortBy
-        searchTerm: $searchTerm
-      ) {
-        totalCount
-        edges {
-          node {
-            id
-            ticker
-            name
-            exchange
-            industry
-            sector
-            __typename
-          }
-          __typename
-        }
-        __typename
-      }
-    }
-  `
-
-  const { loading, error, data } = useQuery(GET_TICKER, {
-    variables: { first: 10, filterText: searchText, searchTerm: searchText },
-  })
-
-  return {
-    data,
-  }
-
-  // return useMemo(() => {
-
-  // }, [loading])
-}
 
 const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
@@ -87,49 +37,116 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
   const params = route!.params || { username: null }
 
   const [searchText, setSearchText] = useState('')
+  const tickers: any = getTickers(searchText)
 
   const onSearchTextChange = (text: string) => {
     setSearchText(text)
   }
 
-  const data: any = getTicker(searchText)
-
-  let tickers = useMemo(() => {
-    return data?.getCompanies?.edges.map((elem: any) => {
-      return elem.node
-    })
-  }, [data, searchText])
-
   return (
     <ScreenBackgrounds screenName={RouteStacks.setting}>
-      <Header
-        headerText={t('search')}
-        onLeftPress={() => {
-          navigation.goBack()
+      <Header headerText={t('searchTicker')} withProfile={false} />
+      <View
+        style={{
+          width: '100%',
+          paddingHorizontal: 20,
         }}
-        leftIcon={() => <MaterialCommunityIcons name='chevron-left' size={22} />}
-      />
-      <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
-        <View
+      >
+        <Animated.View
+          entering={FadeInDown}
           style={{
             alignItems: 'center',
-            width: '100%',
-            flex: 1,
-            alignContent: 'flex-start',
+            flexBasis: 50,
+            alignContent: 'center',
+            flexDirection: 'row',
+            backgroundColor: colors.brightGray,
+            paddingHorizontal: 20,
+            borderRadius: 10,
           }}
         >
-          <TextInput value={searchText} onChangeText={onSearchTextChange} placeholder={t('searchTicker')} />
-        </View>
-        <ScrollView style={{}}>
-          {map(tickers, (elem, idx) => {
+          <MaterialIcons name='search' size={20} color={colors.darkBlueGray} />
+          <TextInput
+            style={[{ paddingLeft: 20, flex: 6, height: 50 }]}
+            value={searchText}
+            autoCapitalize={'characters'}
+            onChangeText={onSearchTextChange}
+            placeholder={t('searchTickerPrompt')}
+          />
+        </Animated.View>
+      </View>
+      <KeyboardAwareScrollView style={[Layout.fullWidth]} contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-start' }}>
+        {tickers.length === 0 ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text
+              style={{
+                color: colors.darkBlueGray,
+                fontSize: 12,
+              }}
+            >
+              {t('No Result')}
+            </Text>
+          </View>
+        ) : (
+          map(tickers, (elem, idx: number) => {
             return (
-              <View>
-                <Text style={{ width: '100%', fontSize: 14, color: colors.darkBlueGray }}>{elem.name}</Text>
-                <Text style={{ width: '100%', fontSize: 14, color: colors.darkBlueGray }}>{elem.ticker}</Text>
-              </View>
+              <Animated.View entering={FadeInDown.delay(100 * idx).duration(300)}>
+                <Pressable
+                  key={`ticker-${elem.name}`}
+                  onPress={() => {
+                    navigation.navigate(RouteStacks.tickerDetail, {
+                      ticker: elem.ticker,
+                      id: elem.id,
+                      name: elem.name,
+                    })
+                  }}
+                  style={[
+                    Layout.fullWidth,
+                    {
+                      flexBasis: 50,
+                      flexDirection: 'row',
+                      borderWidth: 1,
+                      paddingVertical: 10,
+                      borderColor: colors.brightGray,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    },
+                  ]}
+                >
+                  <View style={{ flex: 1, alignItems: 'flex-start', paddingHorizontal: 20 }}>
+                    <SharedElement id={`ticker.${elem.ticker}`}>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          textAlign: 'center',
+                          fontSize: 14,
+                          width: 80,
+                          fontWeight: 'bold',
+                          paddingHorizontal: 6,
+                          paddingVertical: 6,
+                          backgroundColor: colors.darkBlueGray,
+                          color: colors.white,
+                        }}
+                      >
+                        ${elem.ticker}
+                      </Text>
+                    </SharedElement>
+                  </View>
+                  <View style={{ flex: 2, alignItems: 'center' }}>
+                    <Text numberOfLines={1} style={{ width: '100%', textAlign: 'left', fontSize: 14, color: colors.darkBlueGray }}>
+                      {elem.name}
+                    </Text>
+                  </View>
+                </Pressable>
+              </Animated.View>
             )
-          })}
-        </ScrollView>
+          })
+        )}
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )

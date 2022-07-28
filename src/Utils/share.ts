@@ -1,19 +1,19 @@
-import { Platform } from 'react-native';
-import Share from 'react-native-share';
+import { Platform } from 'react-native'
+import Share from 'react-native-share'
 //@ts-ignore
 import moment from 'moment'
-import { ShareOpenResult } from 'react-native-share/lib/typescript/types';
-import crashlytics from '@react-native-firebase/crashlytics';
+import { ShareOpenResult } from 'react-native-share/lib/typescript/types'
+import crashlytics from '@react-native-firebase/crashlytics'
 
 type ShareOptionsProps = {
-    url: string,
-    title: string,
-    message: string,
-    icon?: string
+  url: string
+  title: string
+  message: string
+  icon?: string
 }
 
-const shareOptions = ({ url, title, message, icon = 'data:<data_type>/<file_extension>;base64,<base64_data>' } : ShareOptionsProps) => 
-Platform.select({
+const shareOptions = ({ url, title, message, icon = 'data:<data_type>/<file_extension>;base64,<base64_data>' }: ShareOptionsProps) =>
+  Platform.select({
     //https://react-native-share.github.io/react-native-share/docs/share-open
     // ios: {
     //     activityItemSources: [
@@ -56,28 +56,22 @@ Platform.select({
     //     ],
     // },
     default: {
-        title,
-        subject: title,
-        message: `${message}\n${url}`,
-        // title: title,
-        // subject: message,
-        // message: `${url}`,
-        // url: `${url}`,
+      title,
+      subject: title,
+      message: `${message}\n${url}`,
+      // title: title,
+      // subject: message,
+      // message: `${url}`,
+      // url: `${url}`,
     },
-});
+  })
 
-export default async ({ url, title, message } : {
-    url: string,
-    title: string,
-    message: string,
-}) : Promise<ShareOpenResult | boolean> => {
-
-    const options = shareOptions({ url, title, message })
-    try {
-        return await Share.open(options)
-    } catch (err: any) {
-        crashlytics().recordError(err)
-        return false
-    }
-};
-
+export default async ({ url, title, message }: { url: string; title: string; message: string }): Promise<ShareOpenResult | boolean> => {
+  const options = shareOptions({ url, title, message })
+  try {
+    return await Share.open(options)
+  } catch (err: any) {
+    //crashlytics().recordError(err)
+    return false
+  }
+}

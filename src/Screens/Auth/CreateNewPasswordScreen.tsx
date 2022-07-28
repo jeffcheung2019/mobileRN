@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, FC } from 'react'
 import { StackScreenProps } from '@react-navigation/stack'
-import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle } from 'react-native'
+import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle, Image } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/Hooks'
 import { changeTheme, ThemeState } from '@/Store/Theme'
@@ -16,13 +16,14 @@ import { colors, config } from '@/Utils/constants'
 import { AuthNavigatorParamList } from '@/Navigators/AuthNavigator'
 import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { startLoading } from '@/Store/UI/actions'
 import WhiteInput from '@/Components/Inputs/WhiteInput'
 import StandardInput from '@/Components/Inputs/StandardInput'
 import { emailUsernameHash } from '@/Utils/helpers'
 import { Header } from '@/Components'
+import newPasswordGif from '@/Assets/Images/Illustrations/newPassword.gif'
 
 const TEXT_INPUT = {
   height: 40,
@@ -111,7 +112,7 @@ const CreateNewPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, Route
   return (
     <ScreenBackgrounds screenName={RouteStacks.createNewPassword}>
       <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter]}>
-        <Header onLeftPress={goBack} headerText={t('createNewPassword')} />
+        <Header onLeftPress={goBack} headerText={t('createNewPassword')} withProfile={false} />
         <View
           style={[
             {
@@ -122,50 +123,60 @@ const CreateNewPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, Route
             Layout.colCenter,
           ]}
         >
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 60 }]}>
-            <Text style={[{ color: colors.white, lineHeight: 26 }, Fonts.textSM, Fonts.textLeft]}>{t('createNewPasswordPrompt')}</Text>
-          </View>
-
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 80, justifyContent: 'center' }]}>
-            <StandardInput
-              onChangeText={text => onCredentialChange(text, 'password')}
-              value={credential.password}
-              placeholder={t('newPassword')}
-              placeholderTextColor={colors.spanishGray}
-              secureTextEntry={true}
-            />
-            {
-              // errMsg !== "" && <Text style={[{ color: colors.magicPotion }, Fonts.textSM, Fonts.textCenter]}>
-              //     {errMsg}
-              // </Text>
-            }
-          </View>
-
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 80, justifyContent: 'center' }]}>
-            <StandardInput
-              onChangeText={text => onCredentialChange(text, 'confirmPassword')}
-              value={credential.confirmPassword}
-              placeholder={t('confirmPassword')}
-              placeholderTextColor={colors.spanishGray}
-              secureTextEntry={true}
-            />
-            {errMsg !== '' && (
-              <Text style={[{ color: colors.magicPotion, paddingHorizontal: 10 }, Fonts.textSM, Fonts.textLeft]}>{errMsg}</Text>
-            )}
-          </View>
-
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flex: 2, justifyContent: 'flex-start' }]}></View>
-        </View>
-
-        <View style={[Layout.fullWidth, Layout.center, { flex: 1, justifyContent: 'flex-start' }]}>
-          <TurquoiseButton
-            text={t('confirm')}
-            onPress={onConfirmPress}
-            containerStyle={{
-              width: '45%',
+          <View
+            style={{
+              flex: 1,
             }}
-            isTransparentBackground
-          />
+          >
+            <Image
+              source={newPasswordGif}
+              style={{
+                height: '100%',
+                resizeMode: 'contain',
+              }}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              width: '100%',
+              alignItems: 'center',
+            }}
+          >
+            <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 80, justifyContent: 'center' }]}>
+              <StandardInput
+                onChangeText={text => onCredentialChange(text, 'password')}
+                value={credential.password}
+                placeholder={t('newPassword')}
+                placeholderTextColor={colors.spanishGray}
+                secureTextEntry={true}
+              />
+            </View>
+
+            <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 80, justifyContent: 'center' }]}>
+              <StandardInput
+                onChangeText={text => onCredentialChange(text, 'confirmPassword')}
+                value={credential.confirmPassword}
+                placeholder={t('confirmPassword')}
+                placeholderTextColor={colors.spanishGray}
+                secureTextEntry={true}
+              />
+              {errMsg !== '' && (
+                <Text style={[{ color: colors.magicPotion, paddingHorizontal: 10 }, Fonts.textSM, Fonts.textLeft]}>{errMsg}</Text>
+              )}
+            </View>
+
+            <View style={[Layout.fullWidth, Layout.center, { paddingHorizontal: 20, flex: 1, justifyContent: 'center' }]}>
+              <ActionButton
+                text={t('confirm')}
+                onPress={onConfirmPress}
+                containerStyle={{
+                  width: '100%',
+                  paddingHorizontal: 20,
+                }}
+              />
+            </View>
+          </View>
         </View>
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>

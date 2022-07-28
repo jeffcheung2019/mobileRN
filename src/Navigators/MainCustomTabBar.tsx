@@ -64,7 +64,7 @@ type MainCustomTabBarProps = BottomTabBarProps & {
 
 let dimensionRatioTimeout: NodeJS.Timeout
 
-const nameColorMap = [colors.skyBlueCrayola, colors.babyBlueEyes, colors.lavendarWeb, colors.pinkLavendar, colors.englishLavendar]
+const nameColorMap = [colors.homeTheme, colors.earningTheme, colors.searchTheme, colors.stockInfoTheme, colors.eventTheme]
 
 const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navigation: bottomTabNavigation, tabBarIconsMap }) => {
   const routeIdxSharedValue = useSharedValue<number>(0)
@@ -74,7 +74,6 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
   const highlightRef = useRef(null)
 
   let routeNames: string[] = state.routeNames
-  console.log('routeNames', routeNames)
   const containerAnimationStyle = useAnimatedStyle(() => {
     return {
       left: withTiming(windowWidth * (routeIdxSharedValue.value * 0.2) + windowWidth / 10, {
@@ -108,7 +107,6 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
   }
 
   useEffect(() => {
-    // tab from left to right
     routeIdxSharedValue.value = state.index
     highlightDimensionScale.value = 0.8
     dimensionRatioTimeout = setTimeout(() => {

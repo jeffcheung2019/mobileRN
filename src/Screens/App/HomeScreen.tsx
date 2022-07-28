@@ -47,16 +47,16 @@ const HomeScreen: FC<HomeScreenNavigationProps> = ({ navigation, route }) => {
           const { news } = route.params
           return [
             {
-              id: `news.${news.id}.image`,
-              animation: 'move',
+              id: `news.${news?.id}.image`,
+              animation: 'fade',
             },
             {
-              id: `news.${news.id}.title`,
-              animation: 'move',
+              id: `news.${news?.id}.title`,
+              animation: 'fade',
             },
             {
-              id: `news.${news.id}.content`,
-              animation: 'move',
+              id: `news.${news?.id}.content`,
+              animation: 'fade',
             },
           ]
         }}

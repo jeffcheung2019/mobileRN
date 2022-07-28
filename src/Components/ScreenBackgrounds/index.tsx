@@ -49,11 +49,11 @@ const windowWidth = Dimensions.get('window').width
 const nameColorMap: {
   [K in RouteStacks as string]?: string
 } = {
-  [RouteStacks.homeMain]: colors.skyBlueCrayola,
-  [RouteStacks.earningMain]: colors.babyBlueEyes,
-  [RouteStacks.searchMain]: colors.lavendarWeb,
-  [RouteTopTabs.stockInfoMain]: colors.pinkLavendar,
-  [RouteStacks.eventMain]: colors.englishLavendar,
+  [RouteStacks.homeMain]: colors.homeTheme,
+  [RouteStacks.earningMain]: colors.earningTheme,
+  [RouteStacks.searchMain]: colors.searchTheme,
+  [RouteTopTabs.stockInfoMain]: colors.stockInfoTheme,
+  [RouteStacks.eventMain]: colors.eventTheme,
 }
 
 const ScreenBackgrounds = ({ uri, screenName, children }: ScreenBackgroundsProps) => {
@@ -87,7 +87,7 @@ const ScreenBackgrounds = ({ uri, screenName, children }: ScreenBackgroundsProps
         repeat={true}
         ignoreSilentSwitch='obey'
       /> */}
-      <LinearGradient
+      {/* <LinearGradient
         start={{ x: 0.0, y: 0.0 }}
         end={{ x: 1.0, y: 1.0 }}
         style={{
@@ -96,7 +96,15 @@ const ScreenBackgrounds = ({ uri, screenName, children }: ScreenBackgroundsProps
         colors={['#8e9eab', '#eef2f3']}
       >
         {children}
-      </LinearGradient>
+      </LinearGradient> */}
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.white,
+        }}
+      >
+        {children}
+      </View>
     </>
   ) : (
     <>

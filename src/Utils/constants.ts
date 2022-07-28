@@ -1,4 +1,5 @@
 export const config = {
+  iconSize: 22,
   urlScheme: `com.fitnessevo://`,
   dynamicLink: `https://fitevo.page.link/xEYL`,
   userAuthInfo: `https://api-dev.dragonevolution.gg/users/auth`,
@@ -15,6 +16,23 @@ export const config = {
   referralConfirmation: `https://api-dev.dragonevolution.gg/users/referral-confirmation`,
   fitnessInfoApiKey: 'QEwArOceQy5zGNyisQpj71JNds2cWxzkpFRdY2S6',
   totalPointsMaxCap: 9680,
+  defaultSECImg: 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg',
+  defaultAvatarUrl: 'https://kodamo.org/img/no-profile-picture-icon-15.png',
+  defaultNewsImgUrl:
+    'https://images.moneycontrol.com/static-mcnews/2022/07/stocks_sensex_nifty_stockmarket-1-770x433.jpg?impolicy=website&width=400&height=225',
+}
+
+export const api = {
+  djiUri:
+    'https://query1.finance.yahoo.com/v7/finance/spark?symbols=%5EDJI&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance',
+  sandpUri:
+    'https://query1.finance.yahoo.com/v7/finance/spark?symbols=^GSPC&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance',
+  nasdaqUri:
+    'https://query1.finance.yahoo.com/v7/finance/spark?symbols=^IXIC&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance',
+  russellUri:
+    'https://query1.finance.yahoo.com/v7/finance/spark?symbols=^RUT&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance',
+  crudeOilUri:
+    'https://query1.finance.yahoo.com/v7/finance/spark?symbols=CL=F&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance',
 }
 
 // Color naming https://www.color-name.com/hex/749597
@@ -57,28 +75,28 @@ export const colors = {
   tealDeer: '#87F4B5',
   cornflower: '#93CBF1',
 
-  // Theme colors for each tab, home, earning, stock, priceTarget, favourite
-  skyBlueCrayola: '#69DDFF',
-  babyBlueEyes: '#96CDFF',
-  lavendarWeb: '#D8E1FF',
-  pinkLavendar: '#DBBADD',
-  englishLavendar: '#BE92A2',
-  // Theme colors for each tab, home, earning, stock, priceTarget, favourite
+  // Theme colors for each tab, home, earning, search, priceTarget, event
+  homeTheme: '#69DDFF',
+  earningTheme: '#96CDFF',
+  searchTheme: '#D8E1FF',
+  stockInfoTheme: '#DBBADD',
+  eventTheme: '#BE92A2',
+  // Theme colors for each tab, home, earning, search, priceTarget, event
 
   navyBlue: '#090979',
   vividSkyBlue: '#00d4ff',
   darkCharcoal: '#333333',
   brightGray: '#efefef',
+  lawnGreen: '#7CFC00',
+
+  electricGreen: '#00ff00',
+  fernGreen: '#3C7E40',
 }
 
-export const speedconst = {
-  //in meter / second
-
-  runningUpperLimit: 6,
-  runningLowerLimit: 0,
-}
-
-export const mapViewConst = {
-  pathStokeWidth: 8,
-  overSpeedPathStrokeWidth: 8,
+export const elevationStyle = {
+  elevation: 2,
+  shadowColor: colors.black,
+  shadowOpacity: 0.26,
+  shadowOffset: { width: 0, height: 2 },
+  shadowRadius: 10,
 }

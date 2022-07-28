@@ -22,6 +22,8 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export type StockInfoMainScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<StockInfoTopTabNavigatorParamList, RouteTopTabs.stockInfoMain>,

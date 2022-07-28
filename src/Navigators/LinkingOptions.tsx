@@ -52,9 +52,9 @@ export const publicLinking: LinkingOptions<ApplicationNavigatorParamList> = {
   getInitialURL,
   subscribe,
   config: {
-    initialRouteName: RouteStacks.application,
+    initialRouteName: RouteStacks.splashScreen,
     screens: {
-      [RouteStacks.application]: RouteStacks.application,
+      [RouteStacks.splashScreen]: RouteStacks.splashScreen,
       [RouteStacks.mainStack]: {
         screens: {
           [RouteStacks.welcomeGallery]: {
@@ -102,9 +102,9 @@ export const privateLinking: LinkingOptions<ApplicationNavigatorParamList> = {
   getInitialURL,
   subscribe,
   config: {
-    initialRouteName: RouteStacks.application,
+    initialRouteName: RouteStacks.splashScreen,
     screens: {
-      [RouteStacks.application]: RouteStacks.application,
+      [RouteStacks.splashScreen]: RouteStacks.splashScreen,
       [RouteStacks.mainStack]: {
         screens: {
           [RouteStacks.mainTab]: {

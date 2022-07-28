@@ -14,29 +14,35 @@ import { ApplicationNavigatorParamList } from '@/Navigators/Application'
 // @ts-nocheck
 import Animated, { EasingNode, timing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { AuthNavigatorParamList } from '@/Navigators/AuthNavigator'
+// @ts-ignore
+import { LineChart } from 'react-native-gifted-charts' // this lib's typescript is incorrect
+import { SharedElement } from 'react-navigation-shared-element'
+import { colors } from '@/Utils/constants'
+import { times } from 'lodash'
 
 const appLogoHeight = 150
 let nodeJsTimeout: NodeJS.Timeout
 
-const ApplicationStartupContainer: FC<StackScreenProps<ApplicationNavigatorParamList, RouteStacks.application>> = ({ navigation }) => {
+const ApplicationStartupContainer: FC<StackScreenProps<ApplicationNavigatorParamList, RouteStacks.splashScreen>> = ({ navigation }) => {
   const { Layout, Gutters, Fonts } = useTheme()
   const windowHeight = Dimensions.get('window').height
+  const windowWidth = Dimensions.get('window').width
   const { t } = useTranslation()
   const topAnimatedVal = new Animated.Value(200)
   const animation = useSharedValue({ top: windowHeight / 2 - appLogoHeight / 2 })
   const animationStyle = useAnimatedStyle(() => {
     return {
       top: withTiming(animation.value.top, {
-        duration: 500,
+        duration: 1000,
       }),
     }
   })
 
   useEffect(() => {
-    animation.value = { top: 80 }
+    // animation.value = { top: 80 }
     nodeJsTimeout = setTimeout(() => {
-      navigation.replace(RouteStacks.mainStack)
-    }, 500)
+      navigation.navigate(RouteStacks.mainStack)
+    }, 1000)
 
     return () => {
       clearTimeout(nodeJsTimeout)
@@ -62,14 +68,49 @@ const ApplicationStartupContainer: FC<StackScreenProps<ApplicationNavigatorParam
         repeat={true}
         ignoreSilentSwitch='obey'
       /> */}
-      <Animated.View style={[{ position: 'absolute' }, animationStyle]}>
+      {/* <Animated.View style={[{ position: 'absolute' }, animationStyle]}> */}
+      <SharedElement id='app.icon'>
         <AppLogo
           style={{
             height: appLogoHeight,
           }}
           type='color'
         />
-      </Animated.View>
+      </SharedElement>
+      {/* </Animated.View> */}
+
+      <View style={{ position: 'absolute', bottom: 0, left: -40, height: 300, opacity: 0.4 }}>
+        <LineChart
+          areaChart
+          isAnimated={true}
+          animationDuration={1000}
+          showXAxisIndices={false}
+          showYAxisIndices={false}
+          hideYAxisText={true}
+          yAxisThickness={0}
+          yAxisIndicesWidth={0}
+          yAxisLabelWidth={0}
+          yAxisOffset={0}
+          disableScroll
+          hideDataPoints
+          hideOrigin
+          initialSpacing={0}
+          width={windowWidth + 60}
+          height={300}
+          yAxisTextNumberOfLines={0}
+          thickness={0}
+          adjustToWidth
+          startFillColor={colors.electricGreen}
+          endFillColor={colors.green}
+          data={
+            times(10, e => {
+              return {
+                value: Math.random() * 4 + e,
+              }
+            }) as any
+          }
+        />
+      </View>
     </View>
   )
 }

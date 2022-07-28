@@ -43,14 +43,19 @@ export type NewsDetail = {
   id: string
   title: string
   content: string
-  imgSrc: string
+  imgUrl: string
 }
 
 let nodeJsTimeout: NodeJS.Timeout
 
 const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
-  const news = route.params?.news
+  const news: NewsDetail = route.params?.news ?? {
+    id: '',
+    title: '',
+    content: '',
+    imgUrl: '',
+  }
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
   const [refreshing, setRefreshing] = useState(false)
@@ -69,11 +74,24 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
     }
   }, [])
 
+  // useEffect(() => {
+  //   if (!!news) {
+  //     navigation.navigate(RouteStacks.homeMain)
+  //   }
+  // }, [news])
+
   return (
     <ScreenBackgrounds screenName={RouteStacks.homeMain}>
-      <Header onLeftPress={() => navigation.goBack()} />
+      <Header onLeftPress={() => navigation.goBack()} withProfile={false} />
       <KeyboardAwareScrollView
-        contentContainerStyle={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}
+        contentContainerStyle={[
+          Layout.fill,
+          Layout.colCenter,
+          Gutters.regularHPadding,
+          {
+            alignItems: 'flex-start',
+          },
+        ]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} progressViewOffset={50} tintColor={colors.eucalyptus} />
         }
@@ -83,13 +101,16 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
             Layout.fullWidth,
             {
               alignItems: 'center',
-              flex: 4,
+              height: 200,
               justifyContent: 'center',
             },
           ]}
         >
-          <SharedElement style={{ width: '100%', height: '100%' }} id={`news.${news.id}.image`}>
-            <Image source={{ uri: news.imgSrc }} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+          <SharedElement style={{ width: '100%', height: '100%' }} id={`news.${news?.id}.image`}>
+            <Image
+              source={{ uri: news?.imgUrl === '' ? config.defaultNewsImgUrl : news?.imgUrl }}
+              style={{ resizeMode: 'contain', backgroundColor: colors.brightGray, width: '100%', height: '100%' }}
+            />
           </SharedElement>
         </View>
 
@@ -102,7 +123,7 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
           ]}
         >
           <SharedElement id={`news.${news.id}.title`}>
-            <Text style={[Fonts.textSM, { color: colors.darkCharcoal, fontWeight: 'bold' }]}>{news.title}</Text>
+            <Text style={[Fonts.textSM, { color: colors.darkBlueGray, fontWeight: 'bold' }]}>{news.title}</Text>
           </SharedElement>
         </View>
 
@@ -115,7 +136,7 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
           ]}
         >
           <SharedElement id={`news.${news.id}.content`}>
-            <Text style={[Fonts.textXS, { color: colors.darkCharcoal }]}>{news.content}</Text>
+            <Text style={[Fonts.textXS, { color: colors.darkBlueGray }]}>{news.content}</Text>
           </SharedElement>
         </View>
       </KeyboardAwareScrollView>

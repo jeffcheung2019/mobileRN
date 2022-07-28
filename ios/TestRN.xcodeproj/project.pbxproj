@@ -10,7 +10,7 @@
 		00E356F31AD99517003FC87E /* TestRNTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TestRNTests.m */; };
 		011408FFC1C84EA48D6D40CC /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A77D9E926BA8439999CE7CB7 /* Poppins-Thin.ttf */; };
 		0303D1DEF9AF4545935525F1 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F736A330FA9541D6B427BF4E /* Poppins-SemiBold.ttf */; };
-		0ABFF4E57ABBF7C2A9517EF9 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		0ABFF4E57ABBF7C2A9517EF9 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		0F0BBFA861BE45D582DC6CF9 /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 707FE37C147840959D575428 /* Poppins-MediumItalic.ttf */; };
 		1011A9CDACD542AEA8C263D8 /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD100D05C0824FC0B66AA8BE /* Poppins-ExtraLight.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -79,13 +79,13 @@
 		D49AE2FA37854816A7C6943F /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50DA38B3470840078D954869 /* Poppins-BlackItalic.ttf */; };
 		DF51CEAF46C3483A9E7A8A7F /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 569C1599401945429EC1E395 /* Poppins-ThinItalic.ttf */; };
 		E35D9210282CA4C0000CD920 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E35D920F282CA4C0000CD920 /* BootSplash.storyboard */; };
-		E36243EF283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F0283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F1283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F2283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F3283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F4283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F5283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		E36243EF283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F0283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F1283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F2283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F3283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F4283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F5283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
 		E3ECF3C5285997C300C3BECB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E3ECF3C4285997C300C3BECB /* GoogleService-Info.plist */; };
 		ED552533436A4875A2D4C5E8 /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98159A6563AE4D13823F8B63 /* Poppins-BoldItalic.ttf */; };
 		FE05D5C2EBFF464F96598A91 /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 367457BE5B8A46B2892C99B3 /* Poppins-ExtraBoldItalic.ttf */; };
@@ -238,7 +238,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0ABFF4E57ABBF7C2A9517EF9 /* BuildFile in Frameworks */,
+				0ABFF4E57ABBF7C2A9517EF9 /* (null) in Frameworks */,
 				799D0C3145754A7421C23CF1 /* libPods-TestRN-TestRNTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -660,7 +660,7 @@
 					};
 					C4114DD2282258E100074A62 = {
 						CreatedOnToolsVersion = 13.3;
-						DevelopmentTeam = 5R7ML6LATH;
+						DevelopmentTeam = FN33UR9X45;
 						ProvisioningStyle = Automatic;
 						TestTargetID = C4114DBC282258E000074A62;
 					};
@@ -702,7 +702,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4EE769F28227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
-				E36243F0283E04C20098154B /* BuildFile in Resources */,
+				E36243F0283E04C20098154B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -752,7 +752,7 @@
 				0F0BBFA861BE45D582DC6CF9 /* Poppins-MediumItalic.ttf in Resources */,
 				0303D1DEF9AF4545935525F1 /* Poppins-SemiBold.ttf in Resources */,
 				8DDD228272DA4DCCABCE30B2 /* Poppins-SemiBoldItalic.ttf in Resources */,
-				E36243EF283E04C20098154B /* BuildFile in Resources */,
+				E36243EF283E04C20098154B /* (null) in Resources */,
 				011408FFC1C84EA48D6D40CC /* Poppins-Thin.ttf in Resources */,
 				DF51CEAF46C3483A9E7A8A7F /* Poppins-ThinItalic.ttf in Resources */,
 			);
@@ -764,7 +764,7 @@
 			files = (
 				C4EE76A028227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
 				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
-				E36243F1283E04C20098154B /* BuildFile in Resources */,
+				E36243F1283E04C20098154B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -773,7 +773,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4EE76A128227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
-				E36243F2283E04C20098154B /* BuildFile in Resources */,
+				E36243F2283E04C20098154B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -783,7 +783,7 @@
 			files = (
 				C4EE76A228227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
 				C4114DCC282258E100074A62 /* LaunchScreen.storyboard in Resources */,
-				E36243F3283E04C20098154B /* BuildFile in Resources */,
+				E36243F3283E04C20098154B /* (null) in Resources */,
 				C4114DC9282258E100074A62 /* Assets.xcassets in Resources */,
 				C4114DC7282258E000074A62 /* Main.storyboard in Resources */,
 			);
@@ -794,7 +794,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4EE76A328227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
-				E36243F4283E04C20098154B /* BuildFile in Resources */,
+				E36243F4283E04C20098154B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -803,7 +803,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4EE76A428227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
-				E36243F5283E04C20098154B /* BuildFile in Resources */,
+				E36243F5283E04C20098154B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1614,7 +1614,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 5R7ML6LATH;
+				DEVELOPMENT_TEAM = FN33UR9X45;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
@@ -1648,7 +1648,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 5R7ML6LATH;
+				DEVELOPMENT_TEAM = FN33UR9X45;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.4;

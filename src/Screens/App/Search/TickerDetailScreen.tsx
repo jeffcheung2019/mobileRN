@@ -1,0 +1,543 @@
+import React, { useState, useEffect, useCallback, FC, useMemo } from 'react'
+import { StackScreenProps } from '@react-navigation/stack'
+import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle, Image } from 'react-native'
+import { useTranslation } from 'react-i18next'
+import { useTheme } from '@/Hooks'
+import { changeTheme, ThemeState } from '@/Store/Theme'
+
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { colors, config, elevationStyle } from '@/Utils/constants'
+import { RouteStacks } from '@/Navigators/routes'
+import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
+import { HomeScreenNavigatorParamList } from '../HomeScreen'
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
+import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { SearchScreenNavigationProps, SearchScreenNavigatorParamList } from '../SearchScreen'
+import Header from '@/Components/Header'
+import { getCompanyPage, getMetricsChart, getNewsItemPanel, getRatingsPanel, NewsItem, PriceTarget } from '@/Queries/SearchTab'
+import moment from 'moment'
+import LineStockChart from '@/Components/Graph/LineStockChart'
+import { queryConstants } from '@/Queries/Constants'
+import { map } from 'lodash'
+import InAppBrowser from 'react-native-inappbrowser-reborn'
+import { SharedElement } from 'react-navigation-shared-element'
+import Animated, { FadeInDown } from 'react-native-reanimated'
+
+type TickerDetailScreenNavigationProps = CompositeScreenProps<
+  StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.tickerDetail>,
+  SearchScreenNavigationProps
+>
+
+const SECTION_VIEW: ViewStyle = {
+  paddingHorizontal: 20,
+  width: '100%',
+  borderRadius: 20,
+}
+
+const SECTION_TITLE_TEXT: TextStyle = {
+  color: colors.darkBlueGray,
+  fontWeight: 'bold',
+  fontSize: 16,
+  textAlign: 'left',
+  paddingTop: 20,
+  textDecorationLine: 'underline',
+}
+
+const INSIDER_TRANSACTION_CELL_TEXT: TextStyle = {
+  color: colors.darkBlueGray,
+  textAlign: 'left',
+  fontSize: 10,
+}
+
+const TABLE_HEADER_TEXT: TextStyle = {
+  color: colors.darkBlueGray,
+  fontWeight: 'bold',
+  fontSize: 12,
+  textAlign: 'center',
+  borderWidth: 1,
+  borderColor: colors.brightGray,
+  paddingVertical: 10,
+  width: 80,
+}
+
+const SECTION_TITLE_VIEW: ViewStyle = {
+  width: '100%',
+  paddingHorizontal: 20,
+  backgroundColor: colors.white,
+  paddingVertical: 10,
+}
+
+type InsiderTransaction = NewsItem & {
+  action: string
+  unitsSold: RegExpMatchArray | null
+  unitsBought: RegExpMatchArray | null
+  unitsWorth: RegExpMatchArray | null
+  unitsOptionsCoverted: RegExpMatchArray | null
+}
+
+type EarningResult = {
+  earningDate: string
+  quarterYearDate: string
+  pmAm: string
+}
+
+let quarterNumMap: { [key: string]: number } = {
+  First: 1,
+  Second: 2,
+  Third: 3,
+  Fourth: 4,
+}
+
+const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation, route }) => {
+  const { t } = useTranslation()
+  const { Common, Fonts, Gutters, Layout } = useTheme()
+  const dispatch = useDispatch()
+
+  const { id: companyId, ticker, name } = route?.params
+
+  const companyPage = getCompanyPage(ticker)
+
+  const chartData = getMetricsChart([companyId])
+
+  const rawEarningResult: NewsItem[] | undefined = getNewsItemPanel(
+    [companyId],
+    queryConstants.getNewsItemPanel.earningResult.sourceIds,
+    queryConstants.getNewsItemPanel.earningResult.categoryIds,
+    20,
+  )
+
+  const earningResult: EarningResult[] = useMemo(() => {
+    let res: EarningResult[] = []
+    if (rawEarningResult) {
+      for (let i = rawEarningResult.length - 1; i >= 0; i--) {
+        let elem = rawEarningResult[i]
+        let elemTitle = elem?.title
+        let elemSummary = elem?.summary
+        let isEarningDateAnnouncement = elemTitle?.match(/to Report/g)
+        let isPerliminaryRes = elemTitle?.match(/Preliminary Unaudited/g)
+        let eanringYear = elemTitle?.match(/[0-9]+ (?=Earnings on)/g)
+        let earningDate = elemTitle?.match(/[a-zA-Z]+ [0-9]+, [0-9]+/g)
+        let earningQuarter = elemTitle?.match(/First|Second|Third|Fourth/g)
+        let earningReleaseMarketTime = elemSummary?.match(/before|after the market open|close/g)
+        let earnignPTET = elemSummary?.match(/[0-9]+:[0-9]+ a.m.|p.m. PT \/ [0-9]+:[0-9]+ a.m|p.m. ET/g)
+
+        if (isPerliminaryRes && earningReleaseMarketTime) {
+          let pmAm = earningReleaseMarketTime[0] === 'before the market open' ? 'PM' : 'AM'
+          let quarter = elemTitle?.match(/Q[0-4]/g)
+          eanringYear = elemTitle?.match(/[0-4]+ (?=Financial Results)/g)
+          earningDate = elemSummary?.match(/[a-zA-Z]+ [0-9]+, [0-9]+/g)
+
+          if (quarter && earningDate && eanringYear) {
+            res.push({
+              earningDate: `${earningDate[0]}`,
+              pmAm,
+              quarterYearDate: `${quarter[0]} 20${eanringYear[0]}`,
+            })
+          }
+        } else if (isEarningDateAnnouncement && eanringYear && earningDate && earningReleaseMarketTime) {
+          let pmAm = earningReleaseMarketTime[0] === 'before the market open' ? 'PM' : 'AM'
+          if (earningQuarter && ['First', 'Second', 'Third', 'Fourth'].includes(earningQuarter[0])) {
+            res.push({
+              earningDate: `${earningDate[0]}`,
+              pmAm,
+              quarterYearDate: `Q${quarterNumMap[earningQuarter[0]]} ${eanringYear[0]}`,
+            })
+          }
+        }
+      }
+    }
+    return res
+  }, [rawEarningResult])
+
+  const rawInsiderTransactions: NewsItem[] | undefined = getNewsItemPanel(
+    [companyId],
+    queryConstants.getNewsItemPanel.insiderTransactions.sourceIds,
+    queryConstants.getNewsItemPanel.insiderTransactions.categoryIds,
+    40,
+  )
+
+  const insiderTransactions: InsiderTransaction[] | [] = useMemo(() => {
+    let res: InsiderTransaction[] | undefined = []
+    if (rawInsiderTransactions === undefined) return res
+    for (let i = 0; i < rawInsiderTransactions.length; i++) {
+      let title = rawInsiderTransactions[i]?.title
+      let isBuy = title?.match(/bought [$0-9,.]+ worth of shares/g)
+      let isSell = title?.match(/sold [$0-9,.]+ worth of shares/g)
+      let shareUnits = title?.match(/[0-9.,]+(?= units at)/g)
+      let unitsWorth = title?.match(/[0-9,]+(?= worth of shares)/g)
+      let isOptionExercised = title?.match(/exercised/g)
+      let unitsOptionsCoverted = title?.match(/[0-9,]+ (?=shares)/g)
+
+      let action: string = ''
+      if (isSell) {
+        action = 'Sale'
+      } else if (isBuy) {
+        action = 'Buy'
+      } else if (isOptionExercised) {
+        action = 'Option'
+      } else {
+        action = ''
+      }
+      if (['Sale', 'Buy', 'Option'].includes(action)) {
+        res.push({
+          ...rawInsiderTransactions[i],
+          action,
+          unitsSold: isSell ? shareUnits : null,
+          unitsBought: isBuy ? shareUnits : null,
+          unitsWorth,
+          unitsOptionsCoverted,
+        })
+      }
+    }
+
+    return res
+  }, [rawInsiderTransactions])
+
+  const priceTargets: PriceTarget[] | undefined = getRatingsPanel([companyId], 10)
+
+  const secFilings: NewsItem[] | undefined = getNewsItemPanel(
+    [companyId],
+    queryConstants.getNewsItemPanel.secFiling.sourceIds,
+    queryConstants.getNewsItemPanel.secFiling.categoryIds,
+    5,
+  )
+
+  let priceChangePercent: number = useMemo(() => {
+    let values: number[] = chartData?.series[0].values ?? []
+    let lst1 = 0,
+      lst2 = 0
+    for (let i = values.length - 1; i > 0; i--) {
+      if (values[i] !== null) {
+        if (lst1 === 0) {
+          lst1 = values[i]
+        } else if (lst2 === 0) {
+          lst2 = values[i]
+        }
+      }
+      if (lst2 !== 0 && lst1 !== 0) {
+        break
+      }
+    }
+
+    return (lst1 / lst2) * 100 - 100
+  }, [chartData])
+
+  return (
+    <ScreenBackgrounds screenName={RouteStacks.eventMain}>
+      <Header headerText={`${name}`} onLeftPress={() => navigation.navigate(RouteStacks.searchMain)} withProfile={false} />
+      <KeyboardAwareScrollView
+        style={Layout.fill}
+        stickyHeaderIndices={[1, 3, 5, 7, 9]}
+        contentContainerStyle={[Layout.colCenter, Gutters.smallHPadding, { flexGrow: 1, justifyContent: 'flex-start' }]}
+      >
+        <View
+          style={[
+            SECTION_VIEW,
+            {
+              height: 200,
+            },
+          ]}
+        >
+          <View style={{ justifyContent: 'center' }}>
+            <SharedElement id={`ticker.${ticker}`}>
+              <Text
+                numberOfLines={1}
+                style={{
+                  textAlign: 'center',
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  paddingHorizontal: 6,
+                  width: 80,
+                  paddingVertical: 6,
+                  backgroundColor: colors.darkBlueGray,
+                  color: colors.white,
+                }}
+              >
+                ${ticker}
+              </Text>
+            </SharedElement>
+            <Animated.View entering={FadeInDown.duration(500)}>
+              <Text style={[{ color: colors.darkBlueGray, fontSize: 24, fontWeight: 'bold', textAlign: 'left' }]}>{`$${
+                companyPage?.quote?.cents / 100
+              }`}</Text>
+            </Animated.View>
+            <Animated.View
+              entering={FadeInDown.duration(500)}
+              style={{
+                flexDirection: 'row',
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: priceChangePercent > 0 ? colors.fernGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
+                }}
+              >
+                {priceChangePercent === 0 ? '-' : priceChangePercent > 0 ? '▲' : '▼'} {priceChangePercent?.toFixed(2)}%
+              </Text>
+            </Animated.View>
+          </View>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingTop: 20,
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <LineStockChart chartData={chartData} />
+          </View>
+        </View>
+
+        <Animated.View entering={FadeInDown.delay(500).duration(500)} style={SECTION_TITLE_VIEW}>
+          <Text style={SECTION_TITLE_TEXT}>{t('priceTarget')}</Text>
+        </Animated.View>
+
+        <Animated.ScrollView
+          stickyHeaderIndices={[0]}
+          entering={FadeInDown.delay(1000).duration(500)}
+          style={[SECTION_VIEW, { maxHeight: 300 }]}
+        >
+          <View style={{ backgroundColor: colors.white, width: '100%' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={[TABLE_HEADER_TEXT, { flex: 1 }]}>{t('date')}</Text>
+              <Text style={[TABLE_HEADER_TEXT, { flex: 1 }]}>{t('analyst')}</Text>
+              <Text style={[TABLE_HEADER_TEXT, { flex: 1 }]}>{t('priceTarget')}</Text>
+              <Text style={[TABLE_HEADER_TEXT, { flex: 1 }]}>{t('rating')}</Text>
+            </View>
+          </View>
+          {map(priceTargets, (priceTarget: PriceTarget, idx: number) => {
+            let ptPrior = priceTarget.ptPrior ? priceTarget.ptPrior / 100 : null
+            let pt = priceTarget.pt ? priceTarget.pt / 100 : null
+            let { rating, date, analyst, ratingPrior } = priceTarget
+            return (
+              <Pressable
+                key={`PriceTarget-${idx}`}
+                style={{
+                  height: 50,
+                  width: '100%',
+                  borderColor: colors.brightGray,
+                  borderWidth: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
+                }}
+                onPress={() => {
+                  // InAppBrowser.open(pt.link)
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    flex: 1,
+                  }}
+                >
+                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>{moment(date).format('DD-MM-YYYY')}</Text>
+                  </View>
+                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>{analyst}</Text>
+                  </View>
+                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                      {ptPrior} {ptPrior ? '->' : ''} {pt}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                      {ratingPrior} {ratingPrior ? '->' : ''} {rating}
+                    </Text>
+                  </View>
+                </View>
+              </Pressable>
+            )
+          })}
+        </Animated.ScrollView>
+
+        <Animated.View entering={FadeInDown.delay(1500).duration(500)} style={SECTION_TITLE_VIEW}>
+          <Text style={SECTION_TITLE_TEXT}>{t('earning')}</Text>
+        </Animated.View>
+
+        <Animated.ScrollView
+          entering={FadeInDown.delay(2000).duration(500)}
+          stickyHeaderIndices={[0]}
+          style={[SECTION_VIEW, { maxHeight: 300 }]}
+        >
+          <View style={{ backgroundColor: colors.white, width: '100%' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={[TABLE_HEADER_TEXT, { width: 120 }]}>{t('earningQuarter')}</Text>
+
+              <Text
+                style={[
+                  TABLE_HEADER_TEXT,
+                  {
+                    flex: 1,
+                  },
+                ]}
+              >
+                {t('date')}
+              </Text>
+            </View>
+          </View>
+          {map(earningResult, (earning, idx) => {
+            return (
+              <View
+                key={`EarningResult-${idx}`}
+                style={{
+                  height: 50,
+                  width: '100%',
+                  borderColor: colors.brightGray,
+                  borderWidth: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
+                }}
+              >
+                <View style={{ width: 120 }}>
+                  <Text style={{ color: colors.darkBlueGray, fontSize: 10, textAlign: 'center' }}>{earning.quarterYearDate}</Text>
+                </View>
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ color: colors.darkBlueGray, fontSize: 10, marginHorizontal: 20 }}>
+                    {moment(earning.earningDate, 'MMMM DD, YYYY').format('DD-MM-YYYY')}
+                  </Text>
+                  <Text
+                    style={{
+                      color: colors.white,
+                      backgroundColor: colors.darkBlueGray,
+                      width: 36,
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      fontSize: 12,
+                    }}
+                  >
+                    {earning.pmAm}
+                  </Text>
+                </View>
+              </View>
+            )
+          })}
+        </Animated.ScrollView>
+
+        <View style={SECTION_TITLE_VIEW}>
+          <Text style={SECTION_TITLE_TEXT}>{t('insiderTransactions')}</Text>
+        </View>
+
+        <ScrollView
+          style={{ maxHeight: 300 }}
+          contentContainerStyle={[SECTION_VIEW, {}]}
+          stickyHeaderIndices={[0]}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={{ backgroundColor: colors.white, width: '100%' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={[TABLE_HEADER_TEXT]}>{t('date')}</Text>
+              <Text style={[TABLE_HEADER_TEXT]}>{t('transaction')}</Text>
+              <Text style={[TABLE_HEADER_TEXT]}>{t('shares')}</Text>
+              <Text style={[TABLE_HEADER_TEXT]}>{t('value')}($)</Text>
+            </View>
+          </View>
+          {map(insiderTransactions, (transaction, idx: number) => {
+            const { unitsSold, unitsBought, unitsOptionsCoverted, unitsWorth, action, publishedAt, link } = transaction
+
+            return action === '' ? null : (
+              <Pressable
+                style={{
+                  height: 50,
+                  width: '100%',
+                  borderColor: colors.brightGray,
+                  borderWidth: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
+                }}
+                key={`InsiderTransaction-${idx}`}
+                onPress={() => InAppBrowser.open(link)}
+              >
+                {
+                  <>
+                    <View style={{ width: 80, alignItems: 'center' }}>
+                      <Text style={[INSIDER_TRANSACTION_CELL_TEXT]}>{moment(publishedAt).format('DD-MM-YYYY')}</Text>
+                    </View>
+                    <View style={{ width: 80, alignItems: 'center' }}>
+                      <Text
+                        style={{
+                          width: '80%',
+                          textAlign: 'center',
+                          backgroundColor: colors.darkBlueGray,
+                          color: colors.white,
+                          fontWeight: 'bold',
+                          fontSize: 10,
+                          paddingVertical: 4,
+                        }}
+                      >
+                        {action}
+                      </Text>
+                    </View>
+                    <View style={{ width: 80, alignItems: 'center' }}>
+                      <Text style={[INSIDER_TRANSACTION_CELL_TEXT, {}]}>
+                        {action === 'Sale' ? unitsSold : action === 'Buy' ? unitsBought : action === 'Option' ? unitsOptionsCoverted : ''}
+                      </Text>
+                    </View>
+                    <View style={{ width: 80, alignItems: 'center' }}>
+                      <Text style={[INSIDER_TRANSACTION_CELL_TEXT]}>{unitsWorth}</Text>
+                    </View>
+                  </>
+                }
+              </Pressable>
+            )
+          })}
+        </ScrollView>
+
+        <View style={SECTION_TITLE_VIEW}>
+          <Text style={SECTION_TITLE_TEXT}>{t('secFilings')}</Text>
+        </View>
+
+        <ScrollView style={{ maxHeight: 300 }} contentContainerStyle={[SECTION_VIEW, {}]} showsVerticalScrollIndicator={false}>
+          {map(secFilings, (sec, idx: number) => {
+            return (
+              <Pressable
+                style={{
+                  height: 60,
+                  paddingHorizontal: 10,
+                  width: '100%',
+                  borderColor: colors.brightGray,
+                  borderWidth: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
+                }}
+                key={`SecFiling-${idx}`}
+                onPress={() => InAppBrowser.open(sec.link)}
+              >
+                {
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 1 }}>
+                      <Image source={{ uri: config.defaultSECImg }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
+                    </View>
+                    <View style={{ flex: 4, justifyContent: 'center', paddingHorizontal: 10 }}>
+                      <View style={{}}>
+                        <Text numberOfLines={1} style={{ color: colors.darkBlueGray, fontSize: 12, fontWeight: 'bold' }}>
+                          {sec.title}
+                        </Text>
+                      </View>
+                      <View style={{}}>
+                        <Text numberOfLines={2} style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                          {sec.summary}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                }
+              </Pressable>
+            )
+          })}
+        </ScrollView>
+      </KeyboardAwareScrollView>
+    </ScreenBackgrounds>
+  )
+}
+
+export default TickerDetailScreen

@@ -29,7 +29,7 @@ import { colors, config } from '@/Utils/constants'
 import { AuthNavigatorParamList } from '@/Navigators/AuthNavigator'
 import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TabView, SceneMap, Route } from 'react-native-tab-view'
@@ -214,7 +214,7 @@ const WelcomeGalleryScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
             },
           ]}
         >
-          <TurquoiseButton
+          <ActionButton
             onPress={onEnterPress}
             text={t('getStarted')}
             containerStyle={{

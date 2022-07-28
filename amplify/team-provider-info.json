@@ -1,0 +1,25 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-stracker-staging-92152-authRole",
+      "UnauthRoleArn": "arn:aws:iam::677246270012:role/amplify-stracker-staging-92152-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::677246270012:role/amplify-stracker-staging-92152-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-stracker-staging-92152-deployment",
+      "UnauthRoleName": "amplify-stracker-staging-92152-unauthRole",
+      "StackName": "amplify-stracker-staging-92152",
+      "StackId": "arn:aws:cloudformation:us-east-1:677246270012:stack/amplify-stracker-staging-92152/384869c0-0bfb-11ed-a661-12d99ed4ea3f",
+      "AmplifyAppId": "d34d2rvummhg6z"
+    },
+    "categories": {
+      "auth": {
+        "stracker": {
+          "userPoolId": "us-east-1_0Ni9a9cPi",
+          "userPoolName": "Tracker-user-pool",
+          "webClientId": "552j6iurcghvocb1sbhq6edojp",
+          "nativeClientId": "552j6iurcghvocb1sbhq6edojp"
+        }
+      }
+    }
+  }
+}

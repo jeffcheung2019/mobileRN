@@ -42,13 +42,14 @@ import WelcomeGalleryScreen from '@/Screens/Auth/WelcomeGalleryScreen'
 import { WelcomeScreen } from '@/Screens/Auth'
 import RNBootSplash from 'react-native-bootsplash'
 import times from 'lodash/times'
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 
 export type ApplicationNavigatorParamList = {
-  [RouteStacks.application]: undefined
   [RouteStacks.mainStack]: undefined
+  [RouteStacks.splashScreen]: undefined
   // 🔥 Your screens go here
 }
-const Stack = createStackNavigator<ApplicationNavigatorParamList>()
+const Stack = createSharedElementStackNavigator<ApplicationNavigatorParamList>()
 const abortControllers: AbortController[] = times(2, () => {
   return new AbortController()
 })
@@ -58,8 +59,7 @@ const ApplicationNavigator = () => {
   const { isScreenLoading, snackBarConfig } = useSelector((state: RootState) => state.ui)
   const dispatch = useDispatch()
   let { isLoggedIn } = useSelector((state: RootState) => state.user)
-
-  isLoggedIn = true
+  console.log('isloggedin', isLoggedIn)
   useEffect(() => {
     const retrieveLoggedInUser = async () => {
       try {
@@ -85,7 +85,6 @@ const ApplicationNavigator = () => {
             login({
               username: username,
               email: attributes.email,
-              uuid,
             }),
           )
           dispatch(startLoading(false))
@@ -94,7 +93,7 @@ const ApplicationNavigator = () => {
           dispatch(startLoading(false))
         }
       } catch (err: any) {
-        crashlytics().recordError(err)
+        //crashlytics().recordError(err)
       } finally {
         dispatch(startLoading(false))
       }
@@ -130,27 +129,29 @@ const ApplicationNavigator = () => {
     }
 
     const authListener = async ({ payload: { event, data } }: any) => {
+      console.log('event ', event)
       switch (event) {
         case 'signIn':
         case 'cognitoHostedUI':
           try {
             let userData = await getUser()
             let jwtToken = userData?.signInUserSession?.idToken?.jwtToken
-            const userProfileRes = await axios.get(config.userProfile, {
-              signal: abortControllers[1].signal,
-              headers: {
-                Authorization: jwtToken,
-              },
-            })
+            // const userProfileRes = await axios.get(config.userProfile, {
+            //   signal: abortControllers[1].signal,
+            //   headers: {
+            //     Authorization: jwtToken,
+            //   },
+            // })
 
-            const { email, uuid } = userProfileRes?.data
+            // const { email, uuid } = userProfileRes?.data
 
-            if (email) {
+            console.log('userData', userData)
+
+            if (userData) {
               dispatch(
                 login({
                   username: userData.username,
                   email: userData.email,
-                  uuid,
                 }),
               )
               dispatch(startLoading(false))
@@ -159,7 +160,7 @@ const ApplicationNavigator = () => {
               dispatch(startLoading(false))
             }
           } catch (err: any) {
-            crashlytics().recordError(err)
+            //crashlytics().recordError(err)
           }
           break
         case 'signOut':
@@ -182,7 +183,7 @@ const ApplicationNavigator = () => {
   }, [])
 
   return (
-    <SafeAreaView style={[Layout.fullSize, { opacity: 0.4 }]}>
+    <SafeAreaView style={[Layout.fullSize, { opacity: 1 }]}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SnackBar
           {...snackBarConfig}
@@ -211,9 +212,23 @@ const ApplicationNavigator = () => {
               headerShown: false,
               presentation: 'transparentModal',
             }}
-            initialRouteName={RouteStacks.mainStack}
+            initialRouteName={RouteStacks.splashScreen}
           >
-            <Stack.Screen name={RouteStacks.application} component={ApplicationStartupContainer} />
+            <Stack.Screen
+              name={RouteStacks.splashScreen}
+              component={ApplicationStartupContainer}
+              sharedElements={(route, otherRoute, showing) => {
+                const { news } = route.params
+                return !isLoggedIn
+                  ? [
+                      {
+                        id: `app.icon`,
+                        animation: 'move',
+                      },
+                    ]
+                  : []
+              }}
+            />
             <Stack.Screen name={RouteStacks.mainStack} component={isLoggedIn ? MainStackNavigator : AuthNavigator} />
           </Stack.Navigator>
         </NavigationContainer>

@@ -12,16 +12,19 @@ import { ThemeVariables, ThemeFonts } from '@/Theme/theme.type'
 export default function ({ FontSize }: ThemeVariables): ThemeFonts {
   return StyleSheet.create({
     textXS: {
-      fontSize: 12,
+      fontSize: FontSize.XS,
     },
     textSM: {
-      fontSize: FontSize.small,
+      fontSize: FontSize.SM,
     },
     textMD: {
-      fontSize: FontSize.regular,
+      fontSize: FontSize.MD,
     },
     textLG: {
-      fontSize: FontSize.large,
+      fontSize: FontSize.LG,
+    },
+    textXL: {
+      fontSize: FontSize.XL,
     },
     titleSmall: {
       fontSize: FontSize.small * 2,

@@ -1,27 +1,43 @@
-import React, { FC, useRef } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { View, Image, Text, ActivityIndicator, Pressable, PressableProps, ViewStyle, TextStyle, Dimensions } from 'react-native'
 import { useTheme } from '@/Hooks'
 import { colors } from '@/Utils/constants'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { measure, SharedValue, TransformStyleTypes, useAnimatedRef, useAnimatedStyle } from 'react-native-reanimated'
+import { getMetricsChart } from '@/Queries/SearchTab'
 
-import { LineChart, Grid } from 'react-native-svg-charts'
+// import { LineGraph } from 'react-native-graph'
+// import { GraphPoint } from 'react-native-graph/lib/typescript/LineGraphProps'
 
 type InfoCardProps = {
+  // points: GraphPoint
   ticker: string
-  companyName: string
+  tickerName: string
   containerStyle?: object
   animationType?: 'none' | 'horizontal'
   cardIdx?: number
   scrollPosition?: SharedValue<number>
+  close: number
+  prevClose: number
 }
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
 
-const InfoCard = ({ ticker, companyName, cardIdx, animationType, containerStyle, scrollPosition }: InfoCardProps) => {
+const InfoCard = ({
+  // points,
+  ticker,
+  tickerName,
+  cardIdx,
+  close,
+  prevClose,
+  animationType,
+  containerStyle,
+  scrollPosition,
+}: InfoCardProps) => {
   const { Layout, Images, Fonts } = useTheme()
   const aref: React.LegacyRef<Animated.View> = useAnimatedRef()
+  const [companyId, setCompanyId] = useState<number>()
 
   const containerAnimatedStyle = useAnimatedStyle(() => {
     scrollPosition
@@ -45,13 +61,16 @@ const InfoCard = ({ ticker, companyName, cardIdx, animationType, containerStyle,
     return animatedStyleRes
   }, [scrollPosition])
 
+  let priceChangePercent = (close / prevClose) * 100 - 100
+  let closeDiff = close - prevClose
+
   return (
     <Animated.View
       ref={aref}
       style={[
         {
-          borderRadius: 20,
-          borderWidth: 1,
+          borderRadius: 10,
+          borderWidth: 0,
           minWidth: 200,
           backgroundColor: colors.white,
           paddingVertical: 10,
@@ -80,7 +99,7 @@ const InfoCard = ({ ticker, companyName, cardIdx, animationType, containerStyle,
             style={[
               {
                 width: '100%',
-                color: colors.darkCharcoal,
+                color: colors.darkBlueGray,
                 textAlign: 'left',
               },
               Fonts.textSM,
@@ -92,28 +111,13 @@ const InfoCard = ({ ticker, companyName, cardIdx, animationType, containerStyle,
             style={[
               {
                 width: '100%',
-                color: colors.spanishGray,
+                color: colors.darkBlueGray,
+                fontSize: 14,
+                fontWeight: 'bold',
               },
-              Fonts.textXS,
             ]}
           >
-            {companyName}
-          </Text>
-        </View>
-
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'flex-end',
-          }}
-        >
-          <Text
-            style={{
-              color: colors.crimson,
-            }}
-          >
-            - 10%
+            {tickerName}
           </Text>
         </View>
       </View>
@@ -133,8 +137,27 @@ const InfoCard = ({ ticker, companyName, cardIdx, animationType, containerStyle,
             paddingHorizontal: 10,
           }}
         >
-          <Text style={[Fonts.textXS, Layout.fullWidth, { color: colors.spanishGray, textAlign: 'left' }]}>H: $42</Text>
-          <Text style={[Fonts.textXS, Layout.fullWidth, { color: colors.spanishGray, textAlign: 'left' }]}>L: $40.2</Text>
+          <Text style={[Layout.fullWidth, { fontSize: 12, fontWeight: 'bold', color: colors.darkBlueGray, textAlign: 'left' }]}>
+            {close}
+          </Text>
+          <Text
+            style={{
+              fontSize: 10,
+              textAlign: 'left',
+              color: priceChangePercent > 0 ? colors.lawnGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
+            }}
+          >
+            {priceChangePercent === 0 ? '' : priceChangePercent > 0 ? '▲' : '▼'} {priceChangePercent?.toFixed(2)}%
+          </Text>
+          <Text
+            style={{
+              fontSize: 10,
+              textAlign: 'left',
+              color: closeDiff > 0 ? colors.lawnGreen : closeDiff === 0 ? colors.darkBlueGray : colors.crimson,
+            }}
+          >
+            {closeDiff === 0 ? '' : closeDiff > 0 ? '+' : '-'} {Math.abs(closeDiff)?.toFixed(2)}
+          </Text>
         </View>
         <View
           style={{
@@ -143,13 +166,7 @@ const InfoCard = ({ ticker, companyName, cardIdx, animationType, containerStyle,
             alignContent: 'center',
           }}
         >
-          <LineChart
-            style={{ width: '100%', height: '100%' }}
-            data={[50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]}
-            svg={{ stroke: colors.crimson }}
-            contentInset={{ top: 20, bottom: 20 }}
-            animate
-          ></LineChart>
+          {/* <LineGraph points={points} style={{ width: '100%', height: '100%' }} color={colors.darkBlueGray} animated /> */}
         </View>
       </View>
     </Animated.View>

@@ -5,12 +5,7 @@
  * That allows to change them more easily later on.
  */
 
-import {
-  ThemeColors,
-  ThemeFontSize,
-  ThemeMetricsSizes,
-  ThemeNavigationColors,
-} from '@/Theme/theme.type'
+import { ThemeColors, ThemeFontSize, ThemeMetricsSizes, ThemeNavigationColors } from '@/Theme/theme.type'
 
 /**
  * Colors
@@ -34,9 +29,11 @@ export const NavigationColors: Partial<ThemeNavigationColors> = {
  * FontSize
  */
 export const FontSize: ThemeFontSize = {
-  small: 16,
-  regular: 20,
-  large: 40,
+  XS: 8,
+  SM: 10,
+  MD: 12,
+  LG: 16,
+  XL: 20,
 }
 
 /**

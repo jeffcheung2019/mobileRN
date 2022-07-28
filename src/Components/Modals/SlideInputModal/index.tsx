@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Spacing } from '@/Theme/Variables'
 import backBtn from '@/Assets/Images/buttons/back.png'
 import { useTheme } from '@/Hooks'
-import { colors } from '@/Utils/constants'
+import { colors, elevationStyle } from '@/Utils/constants'
 import ModalBox from 'react-native-modalbox'
 
 type SlideInputModalProps = {
@@ -38,18 +38,13 @@ const SlideInputModal = forwardRef((props: SlideInputModalProps, ref) => {
         backgroundColor: '#efefef',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        elevation: 2,
-        shadowColor: colors.black,
-        shadowOpacity: 0.26,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 10,
-
+        ...elevationStyle,
         ...style,
       }}
     >
       {hasTopBar && (
         <View style={[Layout.fullWidth, Gutters.regularVPadding, Layout.center]}>
-          <View style={{ backgroundColor: colors.darkCharcoal, borderRadius: 20, width: '10%', height: 4 }} />
+          <View style={{ backgroundColor: colors.darkBlueGray, borderRadius: 20, width: '10%', height: 4 }} />
         </View>
       )}
       {children}

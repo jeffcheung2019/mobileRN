@@ -28,7 +28,7 @@ import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import AppLogo from '@/Components/Icons/AppLogo'
 import AppIcon from '@/Components/Icons/AppIcon'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import notifee from '@notifee/react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -103,7 +103,7 @@ const SignUpWithCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
         },
       })
     } catch (err: any) {
-      crashlytics().recordError(err)
+      //crashlytics().recordError(err)
     }
   }
 
@@ -158,7 +158,7 @@ const SignUpWithCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
   return (
     <ScreenBackgrounds screenName={RouteStacks.signUpWithCode}>
       <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter]}>
-        <Header headerText={t('createNewAccount')} onLeftPress={goBack} />
+        <Header headerText={t('createNewAccount')} onLeftPress={goBack} withProfile={false} />
         <View
           style={{
             alignItems: 'center',
@@ -172,7 +172,7 @@ const SignUpWithCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
             style={{
               height: '25%',
             }}
-            type='white'
+            type='color'
           />
 
           <View

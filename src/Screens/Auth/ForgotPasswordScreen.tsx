@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, FC } from 'react'
 import { StackScreenProps } from '@react-navigation/stack'
-import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle } from 'react-native'
+import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle, Image } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/Hooks'
 import { changeTheme, ThemeState } from '@/Store/Theme'
@@ -16,7 +16,7 @@ import { colors, config } from '@/Utils/constants'
 import { AuthNavigatorParamList } from '@/Navigators/AuthNavigator'
 import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { startLoading } from '@/Store/UI/actions'
 import WhiteInput from '@/Components/Inputs/WhiteInput'
@@ -24,6 +24,7 @@ import StandardInput from '@/Components/Inputs/StandardInput'
 import { emailUsernameHash } from '@/Utils/helpers'
 import crashlytics from '@react-native-firebase/crashlytics'
 import { Header } from '@/Components'
+import forgotPasswordGif from '@/Assets/Images/Illustrations/forgotPassword.gif'
 
 const TEXT_INPUT = {
   height: 40,
@@ -94,7 +95,7 @@ const ForgotPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
         action: 'forgotPassword',
       })
     } catch (err: any) {
-      crashlytics().recordError(err)
+      //crashlytics().recordError(err)
       setErrMsg(t('error.invalidEmail'))
     }
   }
@@ -102,7 +103,7 @@ const ForgotPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
   return (
     <ScreenBackgrounds screenName={RouteStacks.forgotPassword}>
       <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter]}>
-        <Header onLeftPress={goBack} headerText={t('forgotPassword')} />
+        <Header onLeftPress={goBack} headerText={t('forgotPassword')} withProfile={false} />
         <View
           style={[
             {
@@ -113,36 +114,50 @@ const ForgotPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
             Layout.colCenter,
           ]}
         >
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 60 }]}>
-            <Text style={[{ color: colors.white, fontWeight: 'bold', lineHeight: 26 }, Fonts.textSM, Fonts.textLeft]}>
-              {t('forgotPasswordPrompt')}
-            </Text>
-          </View>
-
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 80, justifyContent: 'center' }]}>
-            <StandardInput
-              onChangeText={onEmailChange}
-              value={email}
-              placeholder={t('email')}
-              placeholderTextColor={colors.spanishGray}
-              autoCapitalize={'none'}
-            />
-            {errMsg !== '' && (
-              <Text style={[{ color: colors.magicPotion, paddingHorizontal: 10 }, Fonts.textSM, Fonts.textLeft]}>{errMsg}</Text>
-            )}
-          </View>
-
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flex: 2, justifyContent: 'flex-start' }]}></View>
-        </View>
-
-        <View style={[Layout.fullWidth, Layout.center, { flex: 1, justifyContent: 'flex-start' }]}>
-          <TurquoiseButton
-            text={t('confirm')}
-            onPress={onConfirmPress}
-            containerStyle={{
-              width: '45%',
+          <View
+            style={{
+              flex: 1,
             }}
-          />
+          >
+            <Image
+              source={forgotPasswordGif}
+              style={{
+                height: '100%',
+                resizeMode: 'contain',
+              }}
+            />
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+            }}
+          >
+            <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 80, justifyContent: 'center' }]}>
+              <StandardInput
+                onChangeText={onEmailChange}
+                value={email}
+                placeholder={t('email')}
+                placeholderTextColor={colors.spanishGray}
+                autoCapitalize={'none'}
+              />
+              {errMsg !== '' && (
+                <Text style={[{ color: colors.magicPotion, paddingHorizontal: 10 }, Fonts.textSM, Fonts.textLeft]}>{errMsg}</Text>
+              )}
+            </View>
+            <View style={[Layout.fullWidth, Layout.center, { flex: 2, justifyContent: 'center' }]}>
+              <ActionButton
+                text={t('confirm')}
+                onPress={onConfirmPress}
+                containerStyle={{
+                  width: '45%',
+                }}
+              />
+            </View>
+          </View>
         </View>
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, FC } from 'react'
 import { StackScreenProps } from '@react-navigation/stack'
-import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle } from 'react-native'
+import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle, Image } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { Header } from '@/Components'
 import { useTheme } from '@/Hooks'
@@ -17,13 +17,13 @@ import { colors, config } from '@/Utils/constants'
 import { AuthNavigatorParamList } from '@/Navigators/AuthNavigator'
 import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { startLoading } from '@/Store/UI/actions'
 import WhiteInput from '@/Components/Inputs/WhiteInput'
 import axios from 'axios'
 import { emailUsernameHash, triggerSnackbar } from '@/Utils/helpers'
-
+import successfullGif from '@/Assets/Images/Illustrations/successful.gif'
 const TEXT_INPUT = {
   height: 40,
   color: 'yellow',
@@ -66,6 +66,7 @@ const RegistrationCompletedScreen: FC<StackScreenProps<AuthNavigatorParamList, R
         <Header
           // onLeftPress={goBack}
           headerText={t('completed')}
+          withProfile={false}
         />
         <View
           style={[
@@ -78,22 +79,48 @@ const RegistrationCompletedScreen: FC<StackScreenProps<AuthNavigatorParamList, R
             Layout.fill,
           ]}
         >
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 60, alignItems: 'center' }]}>
-            <Text style={[{ color: colors.eucalyptus, fontFamily: 'Poppins-Bold', fontStyle: 'italic', fontSize: 30 }, Fonts.textLeft]}>
-              {t('congrats')}
-            </Text>
+          <View
+            style={{
+              flex: 1,
+            }}
+          >
+            <Image
+              source={successfullGif}
+              style={{
+                height: '100%',
+                resizeMode: 'contain',
+              }}
+            />
           </View>
 
-          <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }]}>
-            <Text style={{ color: colors.white }}>{t('registeredSuccess')}</Text>
+          <View
+            style={{
+              flex: 1,
+              width: '100%',
+              alignItems: 'center',
+            }}
+          >
+            <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 60, alignItems: 'center', justifyContent: 'center' }]}>
+              <Text
+                style={[
+                  { color: colors.darkBlueGray, textAlign: 'center', fontFamily: 'Poppins-Bold', fontStyle: 'italic', fontSize: 30 },
+                  Fonts.textLeft,
+                ]}
+              >
+                {t('congrats')}
+              </Text>
+            </View>
+
+            <View style={[CONTENT_ELEMENT_WRAPPER, { flexBasis: 60, alignItems: 'center', justifyContent: 'center' }]}>
+              <Text style={{ color: colors.darkBlueGray }}>{t('registrationCompleted')}</Text>
+            </View>
           </View>
         </View>
 
         <View style={[Layout.fullWidth, Layout.center, { flex: 1, justifyContent: 'flex-start' }]}>
-          <TurquoiseButton
+          <ActionButton
             text={t('done')}
             onPress={onDonePress}
-            isTransparentBackground
             containerStyle={{
               width: '45%',
             }}

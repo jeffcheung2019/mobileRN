@@ -28,7 +28,7 @@ import { colors, config } from '@/Utils/constants'
 import { AuthNavigatorParamList } from '@/Navigators/AuthNavigator'
 import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TabView, SceneMap } from 'react-native-tab-view'
@@ -126,7 +126,7 @@ const Screen1: FC<any> = ({ Layout, t, onEnterPress }) => {
             },
           ]}
         >
-          <TurquoiseButton
+          <ActionButton
             onPress={onEnterPress}
             text={t('getStarted')}
             containerStyle={{
@@ -220,7 +220,7 @@ const Screen2: FC<any> = ({ Layout, t, onEnterPress }) => {
             },
           ]}
         >
-          <TurquoiseButton
+          <ActionButton
             onPress={onEnterPress}
             text={t('getStarted')}
             containerStyle={{
@@ -314,7 +314,7 @@ const Screen3: FC<any> = ({ Layout, t, onEnterPress, slide, slideBg }) => {
             },
           ]}
         >
-          <TurquoiseButton
+          <ActionButton
             onPress={onEnterPress}
             text={t('getStarted')}
             containerStyle={{
@@ -408,7 +408,7 @@ const Screen4: FC<any> = ({ Layout, t, onEnterPress }) => {
             },
           ]}
         >
-          <TurquoiseButton
+          <ActionButton
             onPress={onEnterPress}
             text={t('getStarted')}
             containerStyle={{
@@ -499,7 +499,7 @@ const Screen: FC<any> = ({ Layout, t, onEnterPress, screenIdx, slide, slideBg })
           },
         ]}
       >
-        <TurquoiseButton
+        <ActionButton
           onPress={onEnterPress}
           text={t('getStarted')}
           containerStyle={{
@@ -618,7 +618,7 @@ const WelcomeGalleryScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
                     alignItems: 'center'
 
                 }]}>
-                    <TurquoiseButton
+                    <ActionButton
                         onPress={onEnterPress}
                         text={t("getStarted")}
                         containerStyle={{

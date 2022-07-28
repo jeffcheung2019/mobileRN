@@ -16,7 +16,7 @@ import { colors, config } from '@/Utils/constants'
 import { AuthNavigatorParamList } from '@/Navigators/AuthNavigator'
 import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { startLoading } from '@/Store/UI/actions'
 import WhiteInput from '@/Components/Inputs/WhiteInput'
@@ -108,7 +108,7 @@ const ProvideEmailScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStack
         action: 'registerEmail',
       })
     } catch (err: any) {
-      crashlytics().recordError(err)
+      //crashlytics().recordError(err)
       setErrMsg(err.message)
     }
   }
@@ -116,7 +116,7 @@ const ProvideEmailScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStack
   return (
     <ScreenBackgrounds screenName={RouteStacks.forgotPassword}>
       <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter]}>
-        <Header onLeftPress={goBack} headerText={t('enterEmail')} />
+        <Header onLeftPress={goBack} headerText={t('enterEmail')} withProfile={false} />
         <View
           style={[
             {
@@ -150,7 +150,7 @@ const ProvideEmailScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStack
         </View>
 
         <View style={[Layout.fullWidth, Layout.center, { flex: 1, justifyContent: 'flex-start' }]}>
-          <TurquoiseButton
+          <ActionButton
             text={t('confirm')}
             onPress={onConfirmPress}
             containerStyle={{

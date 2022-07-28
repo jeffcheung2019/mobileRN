@@ -136,7 +136,7 @@ const urlOpener = async (url: string, redirectUrl: string) => {
       }
     }
   } catch (err: any) {
-    crashlytics().recordError(err)
+    //crashlytics().recordError(err)
     await InAppBrowser.close()
     store.dispatch(startLoading(false))
   }

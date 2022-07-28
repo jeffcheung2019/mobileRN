@@ -27,7 +27,7 @@ import backBtn from '@/Assets/Images/buttons/back.png'
 import WhiteInput from '@/Components/Inputs/WhiteInput'
 import AppIcon from '@/Components/Icons/AppIcon'
 import { color } from 'react-native-reanimated'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import axios from 'axios'
 import { triggerSnackbar } from '@/Utils/helpers'
@@ -100,7 +100,7 @@ const EnterInvitaionCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, Rout
       )
       navigation.navigate(RouteStacks.signUpWithCode)
     } catch (err: any) {
-      crashlytics().recordError(err)
+      //crashlytics().recordError(err)
       setErrMsg(t('error.invalidReferralCode'))
     }
   }
@@ -120,7 +120,7 @@ const EnterInvitaionCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, Rout
   return (
     <ScreenBackgrounds screenName={RouteStacks.enterInvitationCode}>
       <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter, Layout.justifyContentStart]}>
-        <Header headerText={t('referralCode')} onLeftPress={goBack} />
+        <Header headerText={t('referralCode')} onLeftPress={goBack} withProfile={false} />
 
         <View
           style={[
@@ -186,7 +186,7 @@ const EnterInvitaionCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, Rout
             </View>
 
             <View style={[Layout.fullWidth, Layout.center, Gutters.largeVPadding, { flex: 1, justifyContent: 'space-between' }]}>
-              <TurquoiseButton
+              <ActionButton
                 onPress={onStartPress}
                 text={t('start')}
                 isLoading={isLoggingIn}

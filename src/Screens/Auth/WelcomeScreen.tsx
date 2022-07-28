@@ -28,7 +28,7 @@ import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import AppLogo from '@/Components/Icons/AppLogo'
 import AppIcon from '@/Components/Icons/AppIcon'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 // @ts-ignore
 import notifee from '@notifee/react-native'
@@ -51,6 +51,7 @@ import { Post } from '@/Realms/Schemas/PostSchema'
 
 import { StyleSheet } from 'react-native'
 import { Header } from '@/Components'
+import { SharedElement } from 'react-navigation-shared-element'
 
 const BUTTON_VIEW = {
   marginVertical: 20,
@@ -73,7 +74,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
           // navigation.replace(RouteStacks.welcomeGallery)
         }
       } catch (err: any) {
-        crashlytics().recordError(err)
+        //crashlytics().recordError(err)
       }
     }
     run()
@@ -97,7 +98,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
         },
       })
     } catch (err: any) {
-      crashlytics().recordError(err)
+      //crashlytics().recordError(err)
     }
   }
 
@@ -199,7 +200,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
           },
         ]}
       >
-        <Header headerText=' ' />
+        <Header withProfile={false} />
 
         <View
           style={{
@@ -209,25 +210,38 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
             justifyContent: 'flex-start',
           }}
         >
-          <AppLogo
-            style={{
-              height: 150,
-            }}
-            type='white'
-          />
+          <SharedElement id='app.icon'>
+            <AppLogo
+              style={{
+                height: 150,
+              }}
+              type='color'
+            />
+          </SharedElement>
 
           <View
             style={[
               {
-                flexGrow: 8,
-                justifyContent: 'flex-end',
+                flexGrow: 6,
+                justifyContent: 'center',
               },
               Layout.fullWidth,
               Layout.fill,
             ]}
           >
+            <View
+              style={[
+                Layout.fullWidth,
+                Layout.center,
+                {
+                  paddingVertical: 20,
+                },
+              ]}
+            >
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.darkBlueGray }}>{t('welcomeBack')}</Text>
+            </View>
             <View style={[Layout.fullWidth, Gutters.smallVPadding, Layout.center]}>
-              <TurquoiseButton text={t('signUp')} onPress={onSignUpPress} containerStyle={{ width: '80%' }} />
+              <ActionButton text={t('signUp')} onPress={onSignUpPress} containerStyle={{ width: '80%' }} />
             </View>
 
             <View
@@ -240,7 +254,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
                 },
               ]}
             >
-              <TurquoiseButton text={t('signIn')} containerStyle={{ width: '80%' }} onPress={onSignInPress} />
+              <ActionButton text={t('signIn')} containerStyle={{ width: '80%' }} onPress={onSignInPress} />
             </View>
           </View>
 
@@ -254,17 +268,48 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
               },
             ]}
           >
-            <Text
-              style={[
-                Fonts.textSM,
-                {
-                  color: colors.darkCharcoal,
-                },
-              ]}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: 40,
+              }}
             >
-              {t('orViaSocialMedia')}
-            </Text>
-
+              <View
+                style={{
+                  flex: 2,
+                  height: 1,
+                  backgroundColor: colors.darkBlueGray,
+                }}
+              />
+              <View
+                style={{
+                  flexBasis: 100,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Text
+                  style={[
+                    Fonts.textLG,
+                    {
+                      color: colors.darkBlueGray,
+                      textAlign: 'center',
+                    },
+                  ]}
+                >
+                  {t('or')}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flex: 2,
+                  height: 1,
+                  backgroundColor: colors.darkBlueGray,
+                }}
+              />
+            </View>
             <View
               style={[Layout.fullWidth, Layout.colCenter, Layout.rowCenter, { flexBasis: 40, flexDirection: 'row', marginVertical: 30 }]}
             >
@@ -276,6 +321,14 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
                   marginHorizontal: 8,
                 }}
               />
+              <SocialSignInButton
+                isLoading={isLoggingIn}
+                onPress={() => onLoginOptionPress('facebook')}
+                iconName='facebook'
+                containerStyle={{
+                  marginHorizontal: 8,
+                }}
+              />
             </View>
           </View>
 
@@ -283,7 +336,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
             style={[Layout.fullWidth, Layout.colCenter, Layout.rowCenter, { flexBasis: 60, flexDirection: 'column', marginVertical: 30 }]}
           >
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <Text style={[{ textAlign: 'center', color: colors.darkCharcoal }]}>{t('agreeTo')}</Text>
+              <Text style={[{ textAlign: 'center', color: colors.darkBlueGray }]}>{t('agreeTo')}</Text>
               <Pressable style={{}} onPress={onTAndCPress}>
                 <Text
                   style={{
@@ -298,7 +351,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
               </Pressable>
             </View>
 
-            <Text style={[Layout.fullWidth, { textAlign: 'center', color: colors.darkCharcoal }]}>{t('byRegisteringAc')}</Text>
+            <Text style={[Layout.fullWidth, { textAlign: 'center', color: colors.darkBlueGray }]}>{t('byRegisteringAc')}</Text>
           </View>
         </View>
       </KeyboardAwareScrollView>

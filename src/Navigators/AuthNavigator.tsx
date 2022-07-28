@@ -3,7 +3,6 @@ import React, { FC, useEffect, useState } from 'react'
 import {
   SignInScreen,
   SignUpScreen,
-  SignUpWithCodeScreen,
   VerificationCodeScreen,
   RegistrationCompletedScreen,
   WelcomeGalleryScreen,
@@ -22,6 +21,7 @@ import { CompositeScreenProps, LinkingOptions, NavigationContainerRefWithCurrent
 import ProvideEmailScreen from '@/Screens/Auth/ProvideEmailScreen'
 import { ApplicationNavigatorParamList } from './Application'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 
 type ValidationCodeParam = {
   email: string
@@ -42,9 +42,9 @@ export type AuthNavigatorParamList = {
   [RouteStacks.registrationCompleted]: undefined
   // 🔥 Your screens go here
 }
-const Stack = createStackNavigator<AuthNavigatorParamList>()
+const Stack = createSharedElementStackNavigator<AuthNavigatorParamList>()
 
-export type ApplicationScreenProps = StackScreenProps<ApplicationNavigatorParamList, RouteStacks.application>
+export type ApplicationScreenProps = StackScreenProps<ApplicationNavigatorParamList, RouteStacks.mainStack>
 
 const AuthNavigator: FC<ApplicationScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -53,18 +53,28 @@ const AuthNavigator: FC<ApplicationScreenProps> = ({ navigation }) => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        presentation: 'transparentModal',
       }}
       initialRouteName={RouteStacks.welcome}
     >
       <Stack.Screen name={RouteStacks.welcomeGallery} component={WelcomeGalleryScreen} />
-      <Stack.Screen name={RouteStacks.welcome} component={WelcomeScreen} />
-      {/* <Stack.Screen name={RouteStacks.signUpWithCode} component={SignUpWithCodeScreen} /> */}
+      <Stack.Screen
+        name={RouteStacks.welcome}
+        component={WelcomeScreen}
+        sharedElements={(route, otherRoute, showing) => {
+          return [
+            {
+              id: `app.icon`,
+              animation: 'fade',
+            },
+          ]
+        }}
+      />
       <Stack.Screen name={RouteStacks.logIn} component={SignInScreen} />
       <Stack.Screen name={RouteStacks.signUp} component={SignUpScreen} />
       <Stack.Screen name={RouteStacks.validationCode} component={VerificationCodeScreen} />
       <Stack.Screen name={RouteStacks.forgotPassword} component={ForgotPasswordScreen} />
       <Stack.Screen name={RouteStacks.createNewPassword} component={CreateNewPasswordScreen} />
-      {/* <Stack.Screen name={RouteStacks.provideEmail} component={ProvideEmailScreen} /> */}
       <Stack.Screen name={RouteStacks.registrationCompleted} component={RegistrationCompletedScreen} />
     </Stack.Navigator>
   )

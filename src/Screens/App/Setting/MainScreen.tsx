@@ -11,7 +11,7 @@ import { colors, config } from '@/Utils/constants'
 import { RouteStacks } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import { Header } from '@/Components'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -21,11 +21,11 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { MainStackNavigatorParamList, MainStackNavigtorProps } from '@/Navigators/MainStackNavigator'
 import { SettingScreenNavigationProps, SettingScreenNavigatorParamList } from '../SettingScreen'
+import { awsLogout } from '@/Utils/helpers'
+import { Icon } from '@rneui/base'
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
-
-let avatarUri = 'https://kodamo.org/img/no-profile-picture-icon-15.png'
 
 const SETTING_BUTTON_PRESSABLE_VIEW: ViewStyle = {
   paddingHorizontal: 10,
@@ -69,12 +69,19 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
   const onEditAccountDtlPress = () => {}
 
   const onBackPress = () => {
+    navigation.goBack()
     // navigation.navigate(RouteStacks.mainTab)
   }
 
+  const onLogoutPress = async () => {
+    await awsLogout()
+  }
+
+  const onSubscriptionPress = async () => {}
+
   return (
     <ScreenBackgrounds screenName={RouteStacks.setting}>
-      <Header leftIcon={() => <Ionicons size={22} name='list' />} onLeftPress={onBackPress} headerText={t('setting')} />
+      <Header leftIcon={() => <Ionicons size={22} name='list' />} onLeftPress={onBackPress} headerText={t('setting')} withProfile={false} />
       <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter]}>
         <View
           style={[
@@ -89,7 +96,7 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
         >
           <View style={{ flex: 1, alignItems: 'center' }}>
             <Image
-              source={{ uri: avatarUri }}
+              source={{ uri: config.defaultAvatarUrl }}
               style={{
                 height: 50,
                 width: 50,
@@ -124,7 +131,7 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
                       alignItems: 'center',
                     }}
                   >
-                    <MaterialCommunityIcons size={20} name='account-edit' color={colors.darkCharcoal} />
+                    <MaterialCommunityIcons size={20} name='account-edit' color={colors.darkBlueGray} />
                   </View>
                   <View style={SETTING_BUTTON_TEXT_VIEW}>
                     <Text style={SETTING_BUTTON_TEXT}>Edit Profile</Text>
@@ -133,7 +140,7 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
               </View>
 
               <View style={SETTING_BUTTON_PRESSABLE_VIEW}>
-                <Pressable onPress={onEditAccountDtlPress} style={SETTING_BUTTON_PRESSABLE}>
+                <Pressable onPress={onSubscriptionPress} style={SETTING_BUTTON_PRESSABLE}>
                   <View
                     style={{
                       backgroundColor: colors.white,
@@ -144,7 +151,7 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
                       alignItems: 'center',
                     }}
                   >
-                    <MaterialIcons size={20} name='payment' color={colors.darkCharcoal} />
+                    <MaterialIcons size={20} name='payment' color={colors.darkBlueGray} />
                   </View>
                   <View style={SETTING_BUTTON_TEXT_VIEW}>
                     <Text style={SETTING_BUTTON_TEXT}>Subscription</Text>
@@ -152,6 +159,24 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
                 </Pressable>
               </View>
             </View>
+
+            <Pressable onPress={onLogoutPress} style={SETTING_BUTTON_PRESSABLE}>
+              <View
+                style={{
+                  backgroundColor: colors.white,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Icon size={config.iconSize} type='materialicons' name='logout' color={colors.darkBlueGray} />
+              </View>
+              <View style={SETTING_BUTTON_TEXT_VIEW}>
+                <Text style={SETTING_BUTTON_TEXT}>Logout</Text>
+              </View>
+            </Pressable>
           </ScrollView>
         </View>
       </KeyboardAwareScrollView>

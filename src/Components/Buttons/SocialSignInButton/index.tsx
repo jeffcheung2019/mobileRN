@@ -2,8 +2,8 @@ import React, { FC } from 'react'
 import { View, Image, Text, ActivityIndicator, Pressable, PressableProps, ViewStyle, ImageSourcePropType } from 'react-native'
 import { useTheme } from '@/Hooks'
 import { colors } from '@/Utils/constants'
-import facebookIcon from '@/Assets/Images/buttons/facebook.png'
-import appleIcon from '@/Assets/Images/buttons/apple.png'
+import facebookIcon from '@/Assets/Images/icons/facebook.png'
+import appleIcon from '@/Assets/Images/icons/apple.png'
 import googleIcon from '@/Assets/Images/icons/google.png'
 
 type SocialSignInButtonProps = {
@@ -18,7 +18,7 @@ type SocialSignInButtonProps = {
 let size = 30
 
 const BUTTON_STYLE: ViewStyle = {
-  backgroundColor: colors.eucalyptus,
+  backgroundColor: colors.darkBlueGray,
   height: 30,
   width: 30,
   borderRadius: 99,
@@ -44,7 +44,7 @@ const SocialSignInButton = ({ containerStyle, style, textStyle, onPress, isLoadi
         {isLoading ? (
           <ActivityIndicator size='small' color={'#fff'} />
         ) : (
-          <View style={[Layout.rowCenter]}>
+          <View style={[Layout.rowCenter, { borderRadius: 10 }]}>
             <Image source={iconNameMap[iconName]} style={{ width: 30, height: 30 }} />
           </View>
         )}

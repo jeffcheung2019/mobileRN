@@ -47,22 +47,10 @@ const EarningMainScreen: FC<EarningMainScreenNavigationProps> = ({ navigation, r
 
   return (
     <ScreenBackgrounds screenName={RouteStacks.earningMain}>
-      <Animated.ScrollView style={Layout.fill} contentContainerStyle={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
-        <View
-          style={[
-            Layout.fullWidth,
-            {
-              borderWidth: 1,
-              borderRadius: 10,
-              borderColor: colors.brightGray,
-              paddingHorizontal: 10,
-              padding: 10,
-            },
-          ]}
-        >
-          <EarningTableCard tableHeaders={tableHeaders} tableData={tableData} />
-        </View>
-      </Animated.ScrollView>
+      <Animated.ScrollView
+        style={Layout.fill}
+        contentContainerStyle={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}
+      ></Animated.ScrollView>
     </ScreenBackgrounds>
   )
 }

@@ -33,7 +33,7 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
-import TurquoiseButton from '@/Components/Buttons/TurquoiseButton'
+import ActionButton from '@/Components/Buttons/ActionButton'
 import CircleButton from '@/Components/Buttons/CircleButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { awsLogout, triggerSnackbar } from '@/Utils/helpers'
@@ -58,7 +58,6 @@ import Animated, {
 import InAppBrowser from 'react-native-inappbrowser-reborn'
 //@ts-ignore
 import { Table, TableWrapper, Col, Cols, Cell, Row } from 'react-native-table-component'
-import Elevations from 'react-native-elevation'
 
 type EarningTableCardProps = {
   tableHeaders: string[]
@@ -71,17 +70,17 @@ const EarningTableCard: FC<EarningTableCardProps> = ({ tableHeaders, tableData }
 
   return (
     <Table borderStyle={{ backgroundColor: colors.brightGray }}>
-      <Row data={tableHeaders} style={{ color: colors.darkCharcoal }} />
+      <Row data={tableHeaders} style={{ color: colors.darkBlueGray }} />
       <TableWrapper style={{ flexDirection: 'row' }}>
         <TableWrapper style={{ width: 80 }}>
-          <Cell data={t('EPS')} style={{ color: colors.darkCharcoal }} />
-          <Cell data={t('Revenue')} style={{ color: colors.darkCharcoal }} />
+          <Cell data={t('EPS')} style={{ color: colors.darkBlueGray }} />
+          <Cell data={t('Revenue')} style={{ color: colors.darkBlueGray }} />
         </TableWrapper>
         <TableWrapper style={{ flex: 1 }}>
           {tableData.map((rowData, index) => (
             <TableWrapper key={index} style={{ height: 50, flexDirection: 'row' }}>
               {rowData.map((cellData, cellIndex) => (
-                <Cell key={cellIndex} data={cellData} style={{ textAlign: 'center', color: colors.spanishGray }} />
+                <Cell key={cellIndex} data={cellData} style={{ color: colors.spanishGray }} />
               ))}
             </TableWrapper>
           ))}

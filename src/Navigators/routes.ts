@@ -18,6 +18,7 @@ export enum RouteStacks {
   startUp = 'startUp',
   application = 'application',
   mainStack = 'mainStack',
+  splashScreen = 'splashScreen',
 
   search = 'search',
 
@@ -38,6 +39,9 @@ export enum RouteStacks {
   earningMain = 'earningMain',
   eventMain = 'eventMain',
   settingMain = 'settingMain',
+  notificationMain = 'notificationMain',
+  notification = 'notification',
+  notificationDetail = 'notificationDetail',
 
   searchMain = 'searchMain',
   tickerDetail = 'tickerDetail',
