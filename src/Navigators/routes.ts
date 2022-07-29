@@ -18,7 +18,8 @@ export enum RouteStacks {
   startUp = 'startUp',
   application = 'application',
   mainStack = 'mainStack',
-  splashScreen = 'splashScreen',
+  authSplashScreen = 'authSplashScreen',
+  appSplashScreen = 'appSplashScreen',
 
   search = 'search',
 

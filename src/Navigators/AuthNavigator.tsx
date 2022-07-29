@@ -22,6 +22,7 @@ import ProvideEmailScreen from '@/Screens/Auth/ProvideEmailScreen'
 import { ApplicationNavigatorParamList } from './Application'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
+import { ApplicationStartupContainer } from '@/Screens'
 
 type ValidationCodeParam = {
   email: string
@@ -30,6 +31,7 @@ type ValidationCodeParam = {
 }
 
 export type AuthNavigatorParamList = {
+  [RouteStacks.authSplashScreen]: undefined
   [RouteStacks.welcomeGallery]: undefined
   [RouteStacks.welcome]: undefined
   [RouteStacks.signUp]: { code?: string } | undefined
@@ -55,9 +57,22 @@ const AuthNavigator: FC<ApplicationScreenProps> = ({ navigation }) => {
         headerShown: false,
         presentation: 'transparentModal',
       }}
-      initialRouteName={RouteStacks.welcome}
+      initialRouteName={RouteStacks.authSplashScreen}
     >
       <Stack.Screen name={RouteStacks.welcomeGallery} component={WelcomeGalleryScreen} />
+      <Stack.Screen
+        name={RouteStacks.authSplashScreen}
+        component={ApplicationStartupContainer}
+        sharedElements={(route, otherRoute, showing) => {
+          const { news } = route.params
+          return [
+            {
+              id: `app.icon`,
+              animation: 'move',
+            },
+          ]
+        }}
+      />
       <Stack.Screen
         name={RouteStacks.welcome}
         component={WelcomeScreen}

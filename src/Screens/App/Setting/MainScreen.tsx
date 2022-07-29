@@ -23,6 +23,8 @@ import { MainStackNavigatorParamList, MainStackNavigtorProps } from '@/Navigator
 import { SettingScreenNavigationProps, SettingScreenNavigatorParamList } from '../SettingScreen'
 import { awsLogout } from '@/Utils/helpers'
 import { Icon } from '@rneui/base'
+import { RootState } from '@/Store'
+import SettingActionItem from './Containers/SettingActionItem'
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
@@ -64,9 +66,9 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
-  const params = route!.params || { username: null }
+  const { username } = useSelector((state: RootState) => state.user)
 
-  const onEditAccountDtlPress = () => {}
+  const params = route!.params || { username: null }
 
   const onBackPress = () => {
     navigation.goBack()
@@ -76,8 +78,13 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
   const onLogoutPress = async () => {
     await awsLogout()
   }
+  const onEditAccountDtlPress = () => {}
 
   const onSubscriptionPress = async () => {}
+
+  const onChangeLanguagePress = () => {}
+
+  const onFeedbackPress = () => {}
 
   return (
     <ScreenBackgrounds screenName={RouteStacks.setting}>
@@ -94,90 +101,80 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
             },
           ]}
         >
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <Image
-              source={{ uri: config.defaultAvatarUrl }}
-              style={{
-                height: 50,
-                width: 50,
-                resizeMode: 'contain',
-                borderRadius: 99,
-                backgroundColor: colors.white,
-              }}
-            />
+          <View
+            style={{
+              flexBasis: 140,
+              alignItems: 'center',
+              paddingHorizontal: 20,
+              paddingTop: 20,
+            }}
+          >
+            <View style={{ flexBasis: 80, height: '100%', alignItems: 'center' }}>
+              <Image
+                source={{ uri: config.defaultAvatarUrl }}
+                style={{
+                  height: 80,
+                  width: 80,
+                  resizeMode: 'contain',
+                  borderRadius: 99,
+                  backgroundColor: colors.white,
+                }}
+              />
+            </View>
+            <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  color: colors.darkBlueGray,
+                  paddingHorizontal: 20,
+                }}
+                numberOfLines={1}
+              >
+                {username}
+              </Text>
+            </View>
           </View>
 
           <ScrollView
             style={{
-              position: 'absolute',
-              bottom: 0,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              height: windowHeight - 240,
+              flex: 5,
+              paddingHorizontal: 20,
+              paddingVertical: 20,
               width: '100%',
-              backgroundColor: colors.white,
             }}
           >
-            <View style={{ flexDirection: 'row' }}>
-              <View style={SETTING_BUTTON_PRESSABLE_VIEW}>
-                <Pressable onPress={onEditAccountDtlPress} style={SETTING_BUTTON_PRESSABLE}>
-                  <View
-                    style={{
-                      backgroundColor: colors.white,
-                      width: 30,
-                      height: 30,
-                      borderRadius: 10,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <MaterialCommunityIcons size={20} name='account-edit' color={colors.darkBlueGray} />
-                  </View>
-                  <View style={SETTING_BUTTON_TEXT_VIEW}>
-                    <Text style={SETTING_BUTTON_TEXT}>Edit Profile</Text>
-                  </View>
-                </Pressable>
-              </View>
+            <SettingActionItem
+              actionIcon={() => <MaterialCommunityIcons size={30} name='account-edit' color={colors.darkBlueGray} />}
+              onActionItemPress={onEditAccountDtlPress}
+              title={t('editProfile')}
+              desc={t('editProfileDesc')}
+            />
 
-              <View style={SETTING_BUTTON_PRESSABLE_VIEW}>
-                <Pressable onPress={onSubscriptionPress} style={SETTING_BUTTON_PRESSABLE}>
-                  <View
-                    style={{
-                      backgroundColor: colors.white,
-                      width: 30,
-                      height: 30,
-                      borderRadius: 10,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <MaterialIcons size={20} name='payment' color={colors.darkBlueGray} />
-                  </View>
-                  <View style={SETTING_BUTTON_TEXT_VIEW}>
-                    <Text style={SETTING_BUTTON_TEXT}>Subscription</Text>
-                  </View>
-                </Pressable>
-              </View>
-            </View>
+            <SettingActionItem
+              actionIcon={() => <MaterialIcons size={30} name='language' color={colors.darkBlueGray} />}
+              onActionItemPress={onChangeLanguagePress}
+              title={t('changeLanguage')}
+              desc={t('updateLanguageDesc')}
+            />
 
-            <Pressable onPress={onLogoutPress} style={SETTING_BUTTON_PRESSABLE}>
-              <View
-                style={{
-                  backgroundColor: colors.white,
-                  width: 30,
-                  height: 30,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Icon size={config.iconSize} type='materialicons' name='logout' color={colors.darkBlueGray} />
-              </View>
-              <View style={SETTING_BUTTON_TEXT_VIEW}>
-                <Text style={SETTING_BUTTON_TEXT}>Logout</Text>
-              </View>
-            </Pressable>
+            <SettingActionItem
+              actionIcon={() => <MaterialIcons size={30} name='payment' color={colors.darkBlueGray} />}
+              onActionItemPress={onSubscriptionPress}
+              title={t('subscribe')}
+              desc={t('subscribeDesc')}
+            />
+            <SettingActionItem
+              actionIcon={() => <MaterialCommunityIcons size={30} name='comment-processing' color={colors.darkBlueGray} />}
+              onActionItemPress={onFeedbackPress}
+              title={t('feedback')}
+              desc={t('feedbackDesc')}
+            />
           </ScrollView>
+
+          <View style={{ flexBasis: 60, width: '100%', paddingHorizontal: 40 }}>
+            <ActionButton onPress={onLogoutPress} text={t('logout')} />
+          </View>
         </View>
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>

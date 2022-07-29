@@ -46,7 +46,6 @@ import { createSharedElementStackNavigator } from 'react-navigation-shared-eleme
 
 export type ApplicationNavigatorParamList = {
   [RouteStacks.mainStack]: undefined
-  [RouteStacks.splashScreen]: undefined
   // 🔥 Your screens go here
 }
 const Stack = createSharedElementStackNavigator<ApplicationNavigatorParamList>()
@@ -59,7 +58,6 @@ const ApplicationNavigator = () => {
   const { isScreenLoading, snackBarConfig } = useSelector((state: RootState) => state.ui)
   const dispatch = useDispatch()
   let { isLoggedIn } = useSelector((state: RootState) => state.user)
-  console.log('isloggedin', isLoggedIn)
   useEffect(() => {
     const retrieveLoggedInUser = async () => {
       try {
@@ -211,24 +209,10 @@ const ApplicationNavigator = () => {
             screenOptions={{
               headerShown: false,
               presentation: 'transparentModal',
+              gestureEnabled: false,
             }}
-            initialRouteName={RouteStacks.splashScreen}
+            initialRouteName={RouteStacks.mainStack}
           >
-            <Stack.Screen
-              name={RouteStacks.splashScreen}
-              component={ApplicationStartupContainer}
-              sharedElements={(route, otherRoute, showing) => {
-                const { news } = route.params
-                return !isLoggedIn
-                  ? [
-                      {
-                        id: `app.icon`,
-                        animation: 'move',
-                      },
-                    ]
-                  : []
-              }}
-            />
             <Stack.Screen name={RouteStacks.mainStack} component={isLoggedIn ? MainStackNavigator : AuthNavigator} />
           </Stack.Navigator>
         </NavigationContainer>

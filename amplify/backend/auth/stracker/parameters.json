@@ -4,6 +4,7 @@
   "serviceType": "imported",
   "region": "us-east-1",
   "authProvidersUserPool": [
+    "Facebook",
     "Google"
   ],
   "requiredAttributes": [],

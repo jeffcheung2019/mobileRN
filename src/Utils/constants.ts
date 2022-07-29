@@ -91,6 +91,7 @@ export const colors = {
 
   electricGreen: '#00ff00',
   fernGreen: '#3C7E40',
+  lotion: '#FAFAFA',
 }
 
 export const elevationStyle = {

@@ -11,6 +11,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Store'
 import Animated from 'react-native-reanimated'
+import { SharedElement } from 'react-navigation-shared-element'
 
 export const headerHeight = 60
 
@@ -40,10 +41,18 @@ const Header = (props: {
         flexDirection: 'row',
         height: headerHeight,
         width: windowWidth,
+        borderBottomColor: colors.brightGray,
+        borderBottomWidth: 1,
       }}
     >
       {onLeftPress ? (
-        <>
+        <View
+          style={{
+            paddingBottom: 4,
+            flex: 1,
+            flexDirection: 'row',
+          }}
+        >
           <View
             style={{
               flex: 1,
@@ -56,7 +65,7 @@ const Header = (props: {
                 paddingLeft: 20,
               }}
             >
-              <MaterialCommunityIcons name='chevron-left' size={config.iconSize} color={colors.darkBlueGray} />
+              <MaterialCommunityIcons name='arrow-left' size={config.iconSize} color={colors.darkBlueGray} />
             </Pressable>
           </View>
           <View
@@ -65,7 +74,7 @@ const Header = (props: {
               justifyContent: 'center',
             }}
           >
-            <Text style={[{ color: colors.darkBlueGray, fontSize: 14, fontWeight: 'bold', textAlign: 'center' }]}>{headerText}</Text>
+            <Text style={[{ color: colors.darkBlueGray, fontSize: 18, fontWeight: 'bold', textAlign: 'center' }]}>{headerText}</Text>
           </View>
 
           <View
@@ -73,15 +82,16 @@ const Header = (props: {
               flex: 1,
             }}
           ></View>
-        </>
+        </View>
       ) : !withProfile ? (
         <View
           style={{
             flex: 3,
             justifyContent: 'center',
+            paddingBottom: 4,
           }}
         >
-          <Text style={[{ color: colors.darkBlueGray, fontSize: 14, fontWeight: 'bold', textAlign: 'center' }]}>{headerText}</Text>
+          <Text style={[{ color: colors.darkBlueGray, fontSize: 18, fontWeight: 'bold', textAlign: 'center' }]}>{headerText}</Text>
         </View>
       ) : (
         <View
@@ -92,6 +102,7 @@ const Header = (props: {
             paddingLeft: 20,
             justifyContent: 'center',
             flexDirection: 'row',
+            paddingBottom: 4,
           }}
         >
           <Pressable
@@ -114,21 +125,13 @@ const Header = (props: {
           >
             <View
               style={{
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
                 flex: 1,
               }}
             >
-              <Text style={[{ color: colors.darkBlueGray, fontSize: 14, fontWeight: 'bold' }]}>
+              <Text style={[{ color: colors.darkBlueGray, fontSize: 18, fontWeight: 'bold' }]}>
                 {isSocialSignIn ? t('user') : username}
               </Text>
-            </View>
-
-            <View
-              style={{
-                flex: 1,
-              }}
-            >
-              <Text style={[{ color: colors.darkBlueGray, fontSize: 12 }]}></Text>
             </View>
           </View>
 

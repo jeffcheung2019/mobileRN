@@ -52,11 +52,13 @@ export const publicLinking: LinkingOptions<ApplicationNavigatorParamList> = {
   getInitialURL,
   subscribe,
   config: {
-    initialRouteName: RouteStacks.splashScreen,
+    initialRouteName: RouteStacks.mainStack,
     screens: {
-      [RouteStacks.splashScreen]: RouteStacks.splashScreen,
       [RouteStacks.mainStack]: {
         screens: {
+          [RouteStacks.authSplashScreen]: {
+            path: RouteStacks.authSplashScreen,
+          },
           [RouteStacks.welcomeGallery]: {
             path: RouteStacks.welcomeGallery,
           },
@@ -102,11 +104,13 @@ export const privateLinking: LinkingOptions<ApplicationNavigatorParamList> = {
   getInitialURL,
   subscribe,
   config: {
-    initialRouteName: RouteStacks.splashScreen,
+    initialRouteName: RouteStacks.mainStack,
     screens: {
-      [RouteStacks.splashScreen]: RouteStacks.splashScreen,
       [RouteStacks.mainStack]: {
         screens: {
+          [RouteStacks.appSplashScreen]: {
+            path: RouteStacks.appSplashScreen,
+          },
           [RouteStacks.mainTab]: {
             path: RouteStacks.mainTab,
             initialRouteName: RouteTabs.home,

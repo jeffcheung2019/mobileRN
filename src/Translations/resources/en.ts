@@ -108,15 +108,17 @@ export default {
     passwordPolicyErr: '8 characters, 1 lowercase, 1 uppercase, 1 number, and 1 special character are required in password!',
     passwordMismatch: "Passwords don't match, please check again",
   },
-  tabBarLabels: {
-    home: 'Home',
-  },
-  signInScreen: {
-    screenTitle: 'Sign In',
-  },
-  signUpScreen: {
-    screenTitle: 'Sign Up',
-  },
+
   priceTarget: 'Price Target',
   insider: 'Insider',
+
+  editProfile: 'Edit Profile',
+  editProfileDesc: 'Update your username, password, email',
+  changeLanguage: 'Change Lanugage',
+  updateLanguageDesc: "Update app's language",
+  subscribe: 'Subscribe',
+  subscribeDesc: 'Subscribe to our paid services',
+  feedback: 'Feedback',
+  feedbackDesc: 'Let us know your experience in our app',
+  logout: 'Logout',
 }

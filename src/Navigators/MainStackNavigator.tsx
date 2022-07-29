@@ -36,14 +36,17 @@ import { t } from 'i18next'
 import { startLoading } from '@/Store/UI/actions'
 import EventScreen, { EventScreenNavigatorParamList } from '@/Screens/App/EventScreen'
 import StockInfoScreen, { StockInfoTopTabNavigatorParamList } from '@/Screens/App/StockInfoScreen'
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
+import ApplicationStartupContainer from '@/Screens/ApplicationStartupContainer'
 
 const Tab = createBottomTabNavigator()
-const Stack = createStackNavigator()
+const Stack = createSharedElementStackNavigator()
 
 export type MainStackNavigtorProps = StackScreenProps<ApplicationNavigatorParamList, RouteStacks.mainStack>
 export type MainStackNavigatorParamList = {
   [RouteStacks.mainTab]: NavigatorScreenParams<MainTabNavigatorParamList>
   [RouteStacks.setting]: NavigatorScreenParams<SettingScreenNavigatorParamList>
+  [RouteStacks.appSplashScreen]: undefined
   [RouteStacks.notification]: NavigatorScreenParams<NotificationScreenNavigatorParamList>
   // [RouteStacks.mainTab]: undefined
   // [RouteStacks.setting]: undefined
@@ -119,10 +122,40 @@ const MainTabNavigator: FC<MainTabNavigatorProps> = ({ navigation }) => {
 
 const MainStackNavigator: FC<MainStackNavigtorProps> = ({ navigation }) => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={RouteStacks.mainTab}>
-      <Stack.Screen name={RouteStacks.mainTab} component={MainTabNavigator} />
-      <Stack.Screen name={RouteStacks.setting} component={SettingScreen} />
-      <Stack.Screen name={RouteStacks.notification} component={NotificationScreen} />
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      initialRouteName={RouteStacks.appSplashScreen}
+    >
+      <Stack.Screen
+        name={RouteStacks.appSplashScreen}
+        component={ApplicationStartupContainer}
+        options={{
+          presentation: 'transparentModal',
+        }}
+      />
+      <Stack.Screen
+        name={RouteStacks.mainTab}
+        options={{
+          presentation: 'transparentModal',
+        }}
+        component={MainTabNavigator}
+      />
+      <Stack.Screen
+        name={RouteStacks.setting}
+        options={{
+          presentation: 'modal',
+        }}
+        component={SettingScreen}
+      />
+      <Stack.Screen
+        name={RouteStacks.notification}
+        options={{
+          presentation: 'modal',
+        }}
+        component={NotificationScreen}
+      />
     </Stack.Navigator>
   )
 }

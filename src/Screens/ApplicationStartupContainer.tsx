@@ -19,17 +19,22 @@ import { LineChart } from 'react-native-gifted-charts' // this lib's typescript 
 import { SharedElement } from 'react-navigation-shared-element'
 import { colors } from '@/Utils/constants'
 import { times } from 'lodash'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/Store'
+import { MainStackNavigatorParamList } from '@/Navigators/MainStackNavigator'
 
 const appLogoHeight = 150
 let nodeJsTimeout: NodeJS.Timeout
 
-const ApplicationStartupContainer: FC<StackScreenProps<ApplicationNavigatorParamList, RouteStacks.splashScreen>> = ({ navigation }) => {
+const ApplicationStartupContainer: FC<StackScreenProps<AuthNavigatorParamList | MainStackNavigatorParamList>> = ({ navigation }) => {
   const { Layout, Gutters, Fonts } = useTheme()
   const windowHeight = Dimensions.get('window').height
   const windowWidth = Dimensions.get('window').width
   const { t } = useTranslation()
   const topAnimatedVal = new Animated.Value(200)
   const animation = useSharedValue({ top: windowHeight / 2 - appLogoHeight / 2 })
+
+  let { isLoggedIn } = useSelector((state: RootState) => state.user)
   const animationStyle = useAnimatedStyle(() => {
     return {
       top: withTiming(animation.value.top, {
@@ -39,15 +44,14 @@ const ApplicationStartupContainer: FC<StackScreenProps<ApplicationNavigatorParam
   })
 
   useEffect(() => {
-    // animation.value = { top: 80 }
     nodeJsTimeout = setTimeout(() => {
-      navigation.navigate(RouteStacks.mainStack)
+      navigation.navigate(isLoggedIn ? RouteStacks.mainTab : RouteStacks.welcome)
     }, 1000)
 
     return () => {
       clearTimeout(nodeJsTimeout)
     }
-  }, [])
+  }, [isLoggedIn])
 
   return (
     <View style={[Layout.fill, Layout.colCenter]}>

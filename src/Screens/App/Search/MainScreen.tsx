@@ -75,7 +75,7 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
         </Animated.View>
       </View>
       <KeyboardAwareScrollView style={[Layout.fullWidth]} contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-start' }}>
-        {tickers.length === 0 ? (
+        {tickers?.length === 0 ? (
           <View
             style={{
               flex: 1,
