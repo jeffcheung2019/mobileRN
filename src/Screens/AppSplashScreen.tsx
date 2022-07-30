@@ -8,7 +8,7 @@ import { setDefaultTheme } from '@/Store/Theme'
 import { navigateAndSimpleReset } from '@/Navigators/utils'
 import { useNavigation } from '@react-navigation/native'
 import AppLogo from '@/Components/Icons/AppLogo'
-import { RouteStacks } from '@/Navigators/routes'
+import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ApplicationNavigatorParamList } from '@/Navigators/Application'
 // @ts-nocheck
@@ -22,30 +22,49 @@ import { times } from 'lodash'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Store'
 import { MainStackNavigatorParamList } from '@/Navigators/MainStackNavigator'
+import RNBootSplash from 'react-native-bootsplash'
 
-const appLogoHeight = 150
 let nodeJsTimeout: NodeJS.Timeout
 
-const ApplicationStartupContainer: FC<StackScreenProps<AuthNavigatorParamList | MainStackNavigatorParamList>> = ({ navigation }) => {
+const AppSplashScreen: FC<StackScreenProps<MainStackNavigatorParamList, RouteStacks.appSplashScreen>> = ({ navigation }) => {
   const { Layout, Gutters, Fonts } = useTheme()
   const windowHeight = Dimensions.get('window').height
   const windowWidth = Dimensions.get('window').width
   const { t } = useTranslation()
-  const topAnimatedVal = new Animated.Value(200)
-  const animation = useSharedValue({ top: windowHeight / 2 - appLogoHeight / 2 })
-
-  let { isLoggedIn } = useSelector((state: RootState) => state.user)
-  const animationStyle = useAnimatedStyle(() => {
-    return {
-      top: withTiming(animation.value.top, {
-        duration: 1000,
-      }),
-    }
+  const animatedVal = useSharedValue({
+    opacity: 1,
+    scale: 1,
   })
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(animatedVal.value.opacity, {
+        duration: 600,
+      }),
+      transform: [
+        {
+          scale: withTiming(animatedVal.value.scale, {
+            duration: 600,
+          }),
+        },
+      ],
+    }
+  }, [animatedVal])
+  let { isLoggedIn } = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
     nodeJsTimeout = setTimeout(() => {
-      navigation.navigate(isLoggedIn ? RouteStacks.mainTab : RouteStacks.welcome)
+      animatedVal.value = {
+        opacity: 0,
+        scale: 1.4,
+      }
+
+      navigation.navigate(RouteStacks.mainTab, {
+        screen: RouteTabs.home,
+        params: {
+          screen: RouteStacks.homeMain,
+        },
+      })
     }, 1000)
 
     return () => {
@@ -55,35 +74,18 @@ const ApplicationStartupContainer: FC<StackScreenProps<AuthNavigatorParamList | 
 
   return (
     <View style={[Layout.fill, Layout.colCenter]}>
-      {/* <Video
-        style={{
-          height: Dimensions.get('window').height,
-          position: 'absolute',
-          top: -10,
-          left: 0,
-          alignItems: 'stretch',
-          bottom: 0,
-          right: 0,
-        }}
-        source={require('../Assets/Videos/b.mp4')}
-        resizeMode='cover'
-        rate={1.0}
-        muted={true}
-        repeat={true}
-        ignoreSilentSwitch='obey'
-      /> */}
-      {/* <Animated.View style={[{ position: 'absolute' }, animationStyle]}> */}
-      <SharedElement id='app.icon'>
+      <Animated.View style={[animatedStyle, {}]}>
         <AppLogo
-          style={{
-            height: appLogoHeight,
+          imageStyle={{
+            height: 128,
+            width: 128,
+            transform: [{ translateY: -10 }],
           }}
           type='color'
         />
-      </SharedElement>
-      {/* </Animated.View> */}
+      </Animated.View>
 
-      <View style={{ position: 'absolute', bottom: 0, left: -40, height: 300, opacity: 0.4 }}>
+      <View style={{ position: 'absolute', bottom: 0, left: -40, height: windowHeight / 2, opacity: 0.4 }}>
         <LineChart
           areaChart
           isAnimated={true}
@@ -97,15 +99,17 @@ const ApplicationStartupContainer: FC<StackScreenProps<AuthNavigatorParamList | 
           yAxisOffset={0}
           disableScroll
           hideDataPoints
+          hideRules={true}
+          curved
           hideOrigin
           initialSpacing={0}
           width={windowWidth + 60}
-          height={300}
+          height={windowHeight / 2}
           yAxisTextNumberOfLines={0}
           thickness={0}
           adjustToWidth
-          startFillColor={colors.electricGreen}
-          endFillColor={colors.green}
+          startFillColor={colors.darkBlueGray}
+          endFillColor={colors.white}
           data={
             times(10, e => {
               return {
@@ -119,4 +123,4 @@ const ApplicationStartupContainer: FC<StackScreenProps<AuthNavigatorParamList | 
   )
 }
 
-export default ApplicationStartupContainer
+export default AppSplashScreen

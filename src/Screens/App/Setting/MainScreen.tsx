@@ -25,6 +25,7 @@ import { awsLogout } from '@/Utils/helpers'
 import { Icon } from '@rneui/base'
 import { RootState } from '@/Store'
 import SettingActionItem from './Containers/SettingActionItem'
+import { startLoading } from '@/Store/UI/actions'
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
@@ -56,6 +57,10 @@ const SETTING_BUTTON_TEXT = {
   fontSize: 12,
 }
 
+const SETTING_ACTION_ITEM_VIEW: ViewStyle = {
+  marginVertical: 4,
+}
+
 export type SettingMainScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<SettingScreenNavigatorParamList, RouteStacks.settingMain>,
   SettingScreenNavigationProps
@@ -72,7 +77,6 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
 
   const onBackPress = () => {
     navigation.goBack()
-    // navigation.navigate(RouteStacks.mainTab)
   }
 
   const onLogoutPress = async () => {
@@ -144,32 +148,41 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
               width: '100%',
             }}
           >
-            <SettingActionItem
-              actionIcon={() => <MaterialCommunityIcons size={30} name='account-edit' color={colors.darkBlueGray} />}
-              onActionItemPress={onEditAccountDtlPress}
-              title={t('editProfile')}
-              desc={t('editProfileDesc')}
-            />
+            <View style={SETTING_ACTION_ITEM_VIEW}>
+              <SettingActionItem
+                actionIcon={() => <MaterialCommunityIcons size={30} name='account-edit' color={colors.darkBlueGray} />}
+                onActionItemPress={onEditAccountDtlPress}
+                title={t('editProfile')}
+                desc={t('editProfileDesc')}
+              />
+            </View>
 
-            <SettingActionItem
-              actionIcon={() => <MaterialIcons size={30} name='language' color={colors.darkBlueGray} />}
-              onActionItemPress={onChangeLanguagePress}
-              title={t('changeLanguage')}
-              desc={t('updateLanguageDesc')}
-            />
+            <View style={SETTING_ACTION_ITEM_VIEW}>
+              <SettingActionItem
+                actionIcon={() => <MaterialIcons size={30} name='language' color={colors.darkBlueGray} />}
+                onActionItemPress={onChangeLanguagePress}
+                title={t('changeLanguage')}
+                desc={t('updateLanguageDesc')}
+              />
+            </View>
 
-            <SettingActionItem
-              actionIcon={() => <MaterialIcons size={30} name='payment' color={colors.darkBlueGray} />}
-              onActionItemPress={onSubscriptionPress}
-              title={t('subscribe')}
-              desc={t('subscribeDesc')}
-            />
-            <SettingActionItem
-              actionIcon={() => <MaterialCommunityIcons size={30} name='comment-processing' color={colors.darkBlueGray} />}
-              onActionItemPress={onFeedbackPress}
-              title={t('feedback')}
-              desc={t('feedbackDesc')}
-            />
+            <View style={SETTING_ACTION_ITEM_VIEW}>
+              <SettingActionItem
+                actionIcon={() => <MaterialIcons size={30} name='payment' color={colors.darkBlueGray} />}
+                onActionItemPress={onSubscriptionPress}
+                title={t('subscribe')}
+                desc={t('subscribeDesc')}
+              />
+            </View>
+
+            <View style={SETTING_ACTION_ITEM_VIEW}>
+              <SettingActionItem
+                actionIcon={() => <MaterialCommunityIcons size={30} name='comment-processing' color={colors.darkBlueGray} />}
+                onActionItemPress={onFeedbackPress}
+                title={t('feedback')}
+                desc={t('feedbackDesc')}
+              />
+            </View>
           </ScrollView>
 
           <View style={{ flexBasis: 60, width: '100%', paddingHorizontal: 40 }}>

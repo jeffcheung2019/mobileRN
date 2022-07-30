@@ -37,7 +37,7 @@ import { startLoading } from '@/Store/UI/actions'
 import EventScreen, { EventScreenNavigatorParamList } from '@/Screens/App/EventScreen'
 import StockInfoScreen, { StockInfoTopTabNavigatorParamList } from '@/Screens/App/StockInfoScreen'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
-import ApplicationStartupContainer from '@/Screens/ApplicationStartupContainer'
+import AppSplashScreen from '@/Screens/AppSplashScreen'
 
 const Tab = createBottomTabNavigator()
 const Stack = createSharedElementStackNavigator()
@@ -104,19 +104,27 @@ const MainTabNavigator: FC<MainTabNavigatorProps> = ({ navigation }) => {
   }
 
   return (
-    <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
+    <View
+      style={{
+        backgroundColor: colors.white,
+        justifyContent: 'flex-end',
+        flex: 1,
       }}
-      initialRouteName={RouteTabs.stockInfo}
-      tabBar={(bottomTabBarProps: BottomTabBarProps) => <MainCustomTabBar {...bottomTabBarProps} tabBarIconsMap={tabBarIconsMap} />}
     >
-      <Tab.Screen name={RouteTabs.home} component={HomeScreen} />
-      <Tab.Screen name={RouteTabs.earning} component={EarningScreen} />
-      <Tab.Screen name={RouteTabs.search} component={SearchScreen} />
-      <Tab.Screen name={RouteTabs.stockInfo} component={StockInfoScreen} />
-      <Tab.Screen name={RouteTabs.event} component={EventScreen} />
-    </Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName={RouteTabs.stockInfo}
+        tabBar={(bottomTabBarProps: BottomTabBarProps) => <MainCustomTabBar {...bottomTabBarProps} tabBarIconsMap={tabBarIconsMap} />}
+      >
+        <Tab.Screen name={RouteTabs.home} component={HomeScreen} />
+        <Tab.Screen name={RouteTabs.earning} component={EarningScreen} />
+        <Tab.Screen name={RouteTabs.search} component={SearchScreen} />
+        <Tab.Screen name={RouteTabs.stockInfo} component={StockInfoScreen} />
+        <Tab.Screen name={RouteTabs.event} component={EventScreen} />
+      </Tab.Navigator>
+    </View>
   )
 }
 
@@ -130,7 +138,7 @@ const MainStackNavigator: FC<MainStackNavigtorProps> = ({ navigation }) => {
     >
       <Stack.Screen
         name={RouteStacks.appSplashScreen}
-        component={ApplicationStartupContainer}
+        component={AppSplashScreen}
         options={{
           presentation: 'transparentModal',
         }}

@@ -144,7 +144,7 @@ const WelcomeGalleryScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
 
   const onEnterPress = async () => {
     await AsyncStorage.setItem('firstVisit', 'false')
-    navigation.navigate(RouteStacks.welcome)
+    navigation.navigate(RouteStacks.welcomeBack)
   }
 
   return (

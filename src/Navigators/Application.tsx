@@ -8,7 +8,7 @@ import {
   NavigationContainerRefWithCurrent,
   useNavigation,
 } from '@react-navigation/native'
-import { ApplicationStartupContainer } from '@/Screens'
+import { AppSplashScreen } from '@/Screens'
 import { useTheme } from '@/Hooks'
 import MainStackNavigator from './MainStackNavigator'
 import { navigationRef } from './utils'
@@ -189,7 +189,7 @@ const ApplicationNavigator = () => {
             return <SnackbarMsgContainer textMessage={snackBarConfig.textMessage} />
           }}
           containerStyle={{
-            borderRadius: 99,
+            borderRadius: 10,
           }}
           top={10}
           left={10}

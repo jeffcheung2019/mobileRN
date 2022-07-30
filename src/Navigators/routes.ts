@@ -20,7 +20,7 @@ export enum RouteStacks {
   mainStack = 'mainStack',
   authSplashScreen = 'authSplashScreen',
   appSplashScreen = 'appSplashScreen',
-
+  welcomeBack = 'welcomeBack',
   search = 'search',
 
   // auth screens

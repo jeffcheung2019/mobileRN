@@ -237,7 +237,7 @@ const VerificationCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteS
         >
           <View
             style={{
-              flex: 1,
+              flex: 4,
             }}
           >
             <Image
@@ -251,7 +251,7 @@ const VerificationCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteS
 
           <View
             style={{
-              flex: 1,
+              flex: 5,
               width: '100%',
               alignItems: 'center',
             }}
@@ -327,13 +327,13 @@ const VerificationCodeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteS
           </View>
         </View>
 
-        <View style={[Layout.fullWidth, Layout.center, { flex: 1, justifyContent: 'flex-start' }]}>
+        <View style={[Layout.fullWidth, Layout.center, { paddingHorizontal: 30, flex: 1, justifyContent: 'flex-start' }]}>
           <ActionButton
             text={t('confirm')}
             isLoading={isVerifyingAccount}
             onPress={onVerifyAccountPress}
             containerStyle={{
-              width: '45%',
+              width: '105%',
             }}
           />
         </View>

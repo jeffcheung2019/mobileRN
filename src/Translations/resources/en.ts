@@ -33,6 +33,8 @@ export default {
   notifications: 'Notifications',
   user: 'User',
   value: 'Value',
+  loginWith: 'Login With',
+
   verificationCodeDesc: "Verification code sent to your email, don't forget to check the spam folder too!",
   resendVerificationCode: 'Resend Verification Code',
   registrationCompleted: 'Registration process is completed, you can login now.',
@@ -72,6 +74,7 @@ export default {
   emailVerificationCode: 'Email Verification',
   orViaSocialMedia: 'Or via social media',
   start: 'Start',
+  secFilings: 'SEC Filings',
   getReferralCode: 'Get Referral Code',
   getStarted: 'Get Started',
   forgotPasswordPrompt: 'No worries, enter your email below to reset your password!',
@@ -107,6 +110,7 @@ export default {
     emailEmpty: 'Email cannot be empty',
     passwordPolicyErr: '8 characters, 1 lowercase, 1 uppercase, 1 number, and 1 special character are required in password!',
     passwordMismatch: "Passwords don't match, please check again",
+    noCredentialAvailable: 'No credentials available',
   },
 
   priceTarget: 'Price Target',

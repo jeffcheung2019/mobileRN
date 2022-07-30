@@ -111,6 +111,12 @@ export const privateLinking: LinkingOptions<ApplicationNavigatorParamList> = {
           [RouteStacks.appSplashScreen]: {
             path: RouteStacks.appSplashScreen,
           },
+          [RouteStacks.setting]: {
+            path: RouteStacks.setting,
+          },
+          [RouteStacks.notification]: {
+            path: RouteStacks.notification,
+          },
           [RouteStacks.mainTab]: {
             path: RouteStacks.mainTab,
             initialRouteName: RouteTabs.home,

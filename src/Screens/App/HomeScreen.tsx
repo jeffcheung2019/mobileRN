@@ -38,7 +38,12 @@ const HomeScreen: FC<HomeScreenNavigationProps> = ({ navigation, route }) => {
   const dispatch = useDispatch()
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={RouteStacks.homeMain}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      initialRouteName={RouteStacks.homeMain}
+    >
       <Stack.Screen name={RouteStacks.homeMain} component={MainScreen} />
       <Stack.Screen
         name={RouteStacks.homeNewsDetail}
@@ -52,10 +57,6 @@ const HomeScreen: FC<HomeScreenNavigationProps> = ({ navigation, route }) => {
             },
             {
               id: `news.${news?.id}.title`,
-              animation: 'fade',
-            },
-            {
-              id: `news.${news?.id}.content`,
               animation: 'fade',
             },
           ]

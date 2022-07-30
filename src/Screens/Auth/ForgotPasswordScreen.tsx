@@ -44,8 +44,8 @@ const BUTTON_TEXT: TextStyle = {
 
 const CONTENT_ELEMENT_WRAPPER: ViewStyle = {
   justifyContent: 'center',
-  padding: 2,
-  width: '90%',
+  width: '100%',
+  paddingHorizontal: 30,
 }
 
 const CODE_FIELD_ROOT = {}
@@ -116,7 +116,7 @@ const ForgotPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
         >
           <View
             style={{
-              flex: 1,
+              flex: 4,
             }}
           >
             <Image
@@ -130,7 +130,7 @@ const ForgotPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
 
           <View
             style={{
-              flex: 1,
+              flex: 5,
               width: '100%',
               alignItems: 'center',
               justifyContent: 'flex-start',
@@ -148,12 +148,23 @@ const ForgotPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
                 <Text style={[{ color: colors.magicPotion, paddingHorizontal: 10 }, Fonts.textSM, Fonts.textLeft]}>{errMsg}</Text>
               )}
             </View>
-            <View style={[Layout.fullWidth, Layout.center, { flex: 2, justifyContent: 'center' }]}>
+            <View
+              style={[
+                Layout.fullWidth,
+                Layout.center,
+                {
+                  flex: 2,
+                  paddingHorizontal: 30,
+
+                  justifyContent: 'center',
+                },
+              ]}
+            >
               <ActionButton
                 text={t('confirm')}
                 onPress={onConfirmPress}
                 containerStyle={{
-                  width: '45%',
+                  width: '100%',
                 }}
               />
             </View>

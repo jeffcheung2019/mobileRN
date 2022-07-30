@@ -108,8 +108,9 @@ const NewsCard: FC<NewsCardProps> = ({ onPress, news }) => {
                 uri: news?.imgUrl === '' ? config.defaultNewsImgUrl : news?.imgUrl,
               }}
               style={{
-                resizeMode: 'center',
-                height: '100%',
+                resizeMode: 'cover',
+                height: 80,
+                width: '100%',
               }}
             />
           </SharedElement>
@@ -119,17 +120,13 @@ const NewsCard: FC<NewsCardProps> = ({ onPress, news }) => {
           style={{
             flex: 4,
             alignItems: 'flex-start',
+            justifyContent: 'flex-start',
             paddingHorizontal: 10,
           }}
         >
           <SharedElement id={`news.${news?.id}.title`}>
-            <Text numberOfLines={2} style={[{ color: colors.darkBlueGray, fontWeight: 'bold' }, Fonts.textSM]}>
+            <Text numberOfLines={4} style={[{ color: colors.darkBlueGray, fontWeight: 'bold', fontSize: 14 }]}>
               {news?.title}
-            </Text>
-          </SharedElement>
-          <SharedElement id={`news.${news?.id}.content`}>
-            <Text numberOfLines={3} style={[{ color: colors.darkBlueGray }, Fonts.textXS]}>
-              {news?.content}
             </Text>
           </SharedElement>
         </View>

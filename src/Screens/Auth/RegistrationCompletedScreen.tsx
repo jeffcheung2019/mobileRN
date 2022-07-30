@@ -81,7 +81,7 @@ const RegistrationCompletedScreen: FC<StackScreenProps<AuthNavigatorParamList, R
         >
           <View
             style={{
-              flex: 1,
+              flex: 4,
             }}
           >
             <Image
@@ -95,7 +95,7 @@ const RegistrationCompletedScreen: FC<StackScreenProps<AuthNavigatorParamList, R
 
           <View
             style={{
-              flex: 1,
+              flex: 5,
               width: '100%',
               alignItems: 'center',
             }}
@@ -117,12 +117,12 @@ const RegistrationCompletedScreen: FC<StackScreenProps<AuthNavigatorParamList, R
           </View>
         </View>
 
-        <View style={[Layout.fullWidth, Layout.center, { flex: 1, justifyContent: 'flex-start' }]}>
+        <View style={[Layout.fullWidth, Layout.center, { flex: 1, paddingHorizontal: 30, justifyContent: 'flex-start' }]}>
           <ActionButton
             text={t('done')}
             onPress={onDonePress}
             containerStyle={{
-              width: '45%',
+              width: '100%',
             }}
           />
         </View>

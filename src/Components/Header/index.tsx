@@ -41,7 +41,7 @@ const Header = (props: {
         flexDirection: 'row',
         height: headerHeight,
         width: windowWidth,
-        borderBottomColor: colors.brightGray,
+        borderBottomColor: !withProfile && headerText === undefined && onLeftPress === undefined ? colors.transparent : colors.brightGray,
         borderBottomWidth: 1,
       }}
     >
@@ -74,7 +74,9 @@ const Header = (props: {
               justifyContent: 'center',
             }}
           >
-            <Text style={[{ color: colors.darkBlueGray, fontSize: 18, fontWeight: 'bold', textAlign: 'center' }]}>{headerText}</Text>
+            <Text numberOfLines={2} style={[{ color: colors.darkBlueGray, fontSize: 18, fontWeight: 'bold', textAlign: 'center' }]}>
+              {headerText}
+            </Text>
           </View>
 
           <View

@@ -210,19 +210,24 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
             justifyContent: 'flex-start',
           }}
         >
-          <SharedElement id='app.icon'>
+          <View
+            style={{
+              flexBasis: 128,
+            }}
+          >
             <AppLogo
-              style={{
-                height: 150,
+              imageStyle={{
+                width: 128,
+                height: 128,
               }}
               type='color'
             />
-          </SharedElement>
+          </View>
 
           <View
             style={[
               {
-                flexGrow: 6,
+                flexGrow: 5,
                 justifyContent: 'center',
               },
               Layout.fullWidth,
@@ -234,12 +239,13 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
                 Layout.fullWidth,
                 Layout.center,
                 {
-                  paddingVertical: 20,
+                  paddingVertical: 40,
                 },
               ]}
             >
-              <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.darkBlueGray }}>{t('welcomeBack')}</Text>
+              <Text style={{ fontSize: 22, fontWeight: 'bold', color: colors.darkBlueGray }}>{t('welcomeBack')}</Text>
             </View>
+
             <View style={[Layout.fullWidth, Gutters.smallVPadding, Layout.center]}>
               <ActionButton text={t('signUp')} onPress={onSignUpPress} containerStyle={{ width: '80%' }} />
             </View>
@@ -249,8 +255,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
                 Layout.fullWidth,
                 Layout.center,
                 {
-                  paddingBottom: 0,
-                  paddingTop: 10,
+                  paddingVertical: 20,
                 },
               ]}
             >
@@ -261,80 +266,45 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
           <View
             style={[
               Layout.fullWidth,
-              Gutters.largeVMargin,
               {
-                flex: 2,
+                flex: 3,
                 alignItems: 'center',
+                justifyContent: 'center',
               },
             ]}
           >
             <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingHorizontal: 40,
-              }}
-            >
-              <View
-                style={{
-                  flex: 2,
-                  height: 1,
-                  backgroundColor: colors.darkBlueGray,
-                }}
-              />
-              <View
-                style={{
-                  flexBasis: 100,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Text
-                  style={[
-                    Fonts.textLG,
-                    {
-                      color: colors.darkBlueGray,
-                      textAlign: 'center',
-                    },
-                  ]}
-                >
-                  {t('or')}
-                </Text>
-              </View>
-              <View
-                style={{
-                  flex: 2,
-                  height: 1,
-                  backgroundColor: colors.darkBlueGray,
-                }}
-              />
-            </View>
-            <View
-              style={[Layout.fullWidth, Layout.colCenter, Layout.rowCenter, { flexBasis: 40, flexDirection: 'row', marginVertical: 30 }]}
+              style={[
+                Layout.fullWidth,
+                Layout.colCenter,
+                Layout.rowCenter,
+                {
+                  flexBasis: 80,
+                  paddingHorizontal: 40,
+                },
+              ]}
             >
               <SocialSignInButton
                 isLoading={isLoggingIn}
                 onPress={() => onLoginOptionPress('google')}
                 iconName='google'
                 containerStyle={{
-                  marginHorizontal: 8,
+                  paddingHorizontal: 14,
                 }}
               />
+
               <SocialSignInButton
                 isLoading={isLoggingIn}
                 onPress={() => onLoginOptionPress('facebook')}
                 iconName='facebook'
                 containerStyle={{
-                  marginHorizontal: 8,
+                  paddingHorizontal: 14,
                 }}
               />
             </View>
           </View>
 
-          <View
-            style={[Layout.fullWidth, Layout.colCenter, Layout.rowCenter, { flexBasis: 60, flexDirection: 'column', marginVertical: 30 }]}
-          >
+          <View style={[Layout.fullWidth, Layout.colCenter, Layout.rowCenter, { flex: 1, flexDirection: 'column', paddingBottom: 40 }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Text style={[{ textAlign: 'center', color: colors.darkBlueGray }]}>{t('agreeTo')}</Text>
               <Pressable style={{}} onPress={onTAndCPress}>
@@ -342,7 +312,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
                   style={{
                     color: colors.crimson,
                     lineHeight: 14,
-                    marginTop: 3,
+                    marginTop: 1,
                     textDecorationLine: 'underline',
                   }}
                 >

@@ -123,7 +123,7 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
           ]}
         >
           <SharedElement id={`news.${news.id}.title`}>
-            <Text style={[Fonts.textSM, { color: colors.darkBlueGray, fontWeight: 'bold' }]}>{news.title}</Text>
+            <Text style={[{ fontSize: 14, color: colors.darkBlueGray, fontWeight: 'bold' }]}>{news.title}</Text>
           </SharedElement>
         </View>
 
@@ -135,9 +135,7 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
             },
           ]}
         >
-          <SharedElement id={`news.${news.id}.content`}>
-            <Text style={[Fonts.textXS, { color: colors.darkBlueGray }]}>{news.content}</Text>
-          </SharedElement>
+          <Text style={[{ fontSize: 10, color: colors.darkBlueGray }]}>{news.content}</Text>
         </View>
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>

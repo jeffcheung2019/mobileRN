@@ -6,33 +6,24 @@ import whiteAppLogo from '@/Assets/Images/logos/whitelogo.png'
 import logo from '@/Assets/Images/logos/logo.png'
 
 type AppLogoProps = {
-  style?: object
   imageStyle?: object
   type: string
 }
 
-const AppLogo = ({ style, imageStyle, type }: AppLogoProps) => {
+const AppLogo = ({ imageStyle, type }: AppLogoProps) => {
   const { Layout, Images } = useTheme()
 
   let appLogoSource = type === 'color' ? logo : whiteAppLogo
 
   return (
-    <View
+    <Image
+      source={appLogoSource}
       style={{
-        width: '100%',
-        alignItems: 'center',
-        ...style,
+        height: '100%',
+        resizeMode: 'contain',
+        ...imageStyle,
       }}
-    >
-      <Image
-        source={appLogoSource}
-        style={{
-          height: '100%',
-          resizeMode: 'contain',
-          ...imageStyle,
-        }}
-      />
-    </View>
+    />
   )
 }
 

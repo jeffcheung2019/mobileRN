@@ -5,7 +5,7 @@ import { colors } from '@/Utils/constants'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { FadeInDown, FadeOut, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 
-type TurquoiseButtonProps = {
+type ActionButtonProps = {
   text: string
   containerStyle?: object
   style?: object
@@ -14,22 +14,32 @@ type TurquoiseButtonProps = {
   isLoading?: boolean
   leftIcon?: () => React.ReactNode
   rightIcon?: () => React.ReactNode
+  isTransparentBg?: boolean
 }
 
 const DEFAULT_TEXT_STYLE: TextStyle = {
   fontSize: 16,
   fontWeight: 'bold',
-  color: colors.darkBlueGray,
 }
 
 const BUTTON_STYLE: ViewStyle = {
   // backgroundColor: colors.eucalyptus,
   width: '100%',
-  height: 34,
+  height: 42,
   justifyContent: 'center',
 }
 
-const TurquoiseButton = ({ text, containerStyle, style, textStyle, onPress, isLoading, leftIcon, rightIcon }: TurquoiseButtonProps) => {
+const ActionButton = ({
+  text,
+  containerStyle,
+  style,
+  isTransparentBg,
+  textStyle,
+  onPress,
+  isLoading,
+  leftIcon,
+  rightIcon,
+}: ActionButtonProps) => {
   const { Layout, Images } = useTheme()
 
   const styleSharedVal = useSharedValue({
@@ -54,9 +64,9 @@ const TurquoiseButton = ({ text, containerStyle, style, textStyle, onPress, isLo
       style={[
         {
           ...containerStyle,
-          backgroundColor: colors.white,
-          borderColor: colors.darkBlueGray,
-          borderWidth: 1,
+          backgroundColor: isTransparentBg ? colors.white : colors.darkBlueGray,
+          borderColor: isTransparentBg ? colors.darkBlueGray : colors.transparent,
+          borderWidth: isTransparentBg ? 1 : 0,
           borderRadius: 20,
         },
         containerAnimatedStyle,
@@ -96,6 +106,7 @@ const TurquoiseButton = ({ text, containerStyle, style, textStyle, onPress, isLo
                 textStyle,
                 {
                   textAlign: 'center',
+                  color: isTransparentBg ? colors.darkBlueGray : colors.white,
                 },
               ]}
             >
@@ -109,6 +120,6 @@ const TurquoiseButton = ({ text, containerStyle, style, textStyle, onPress, isLo
   )
 }
 
-TurquoiseButton.defaultProps = {}
+ActionButton.defaultProps = {}
 
-export default TurquoiseButton
+export default ActionButton

@@ -43,8 +43,8 @@ const BUTTON_TEXT: TextStyle = {
 
 const CONTENT_ELEMENT_WRAPPER: ViewStyle = {
   justifyContent: 'center',
-  padding: 2,
-  width: '90%',
+  paddingHorizontal: 30,
+  width: '100%',
 }
 
 const CODE_FIELD_ROOT = {}
@@ -125,7 +125,7 @@ const CreateNewPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, Route
         >
           <View
             style={{
-              flex: 1,
+              flex: 4,
             }}
           >
             <Image
@@ -138,7 +138,7 @@ const CreateNewPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, Route
           </View>
           <View
             style={{
-              flex: 1,
+              flex: 5,
               width: '100%',
               alignItems: 'center',
             }}
@@ -166,13 +166,12 @@ const CreateNewPasswordScreen: FC<StackScreenProps<AuthNavigatorParamList, Route
               )}
             </View>
 
-            <View style={[Layout.fullWidth, Layout.center, { paddingHorizontal: 20, flex: 1, justifyContent: 'center' }]}>
+            <View style={[Layout.fullWidth, Layout.center, { paddingHorizontal: 30, flex: 1, justifyContent: 'center' }]}>
               <ActionButton
                 text={t('confirm')}
                 onPress={onConfirmPress}
                 containerStyle={{
                   width: '100%',
-                  paddingHorizontal: 20,
                 }}
               />
             </View>

@@ -228,7 +228,12 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
     <ScreenBackgrounds screenName={RouteStacks.eventMain}>
       <Header headerText={`${name}`} onLeftPress={() => navigation.navigate(RouteStacks.searchMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={Layout.fill}
+        style={
+          (Layout.fill,
+          {
+            paddingTop: 20,
+          })
+        }
         stickyHeaderIndices={[1, 3, 5, 7, 9]}
         contentContainerStyle={[Layout.colCenter, Gutters.smallHPadding, { flexGrow: 1, justifyContent: 'flex-start' }]}
       >

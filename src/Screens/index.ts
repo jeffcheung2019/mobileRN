@@ -1,1 +1,1 @@
-export { default as ApplicationStartupContainer } from './ApplicationStartupContainer'
+export { default as AppSplashScreen } from './AppSplashScreen'

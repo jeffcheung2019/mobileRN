@@ -9,20 +9,19 @@ import {
   ForgotPasswordScreen,
   WelcomeScreen,
   CreateNewPasswordScreen,
+  AuthSplashScreen,
 } from '@/Screens/Auth'
 import { RouteStacks } from '@/Navigators/routes'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '@/Store/Users/actions'
-import EnterInvitaionCodeScreen from '@/Screens/Auth/EnterInvitaionCodeScreen'
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { navigationRef } from './utils'
 import { CompositeScreenProps, LinkingOptions, NavigationContainerRefWithCurrent, Route } from '@react-navigation/native'
-import ProvideEmailScreen from '@/Screens/Auth/ProvideEmailScreen'
 import { ApplicationNavigatorParamList } from './Application'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
-import { ApplicationStartupContainer } from '@/Screens'
+import { AppSplashScreen } from '@/Screens'
 
 type ValidationCodeParam = {
   email: string
@@ -33,7 +32,7 @@ type ValidationCodeParam = {
 export type AuthNavigatorParamList = {
   [RouteStacks.authSplashScreen]: undefined
   [RouteStacks.welcomeGallery]: undefined
-  [RouteStacks.welcome]: undefined
+  [RouteStacks.welcomeBack]: undefined
   [RouteStacks.signUp]: { code?: string } | undefined
   [RouteStacks.logIn]: undefined
   [RouteStacks.validationCode]: ValidationCodeParam | undefined
@@ -62,7 +61,7 @@ const AuthNavigator: FC<ApplicationScreenProps> = ({ navigation }) => {
       <Stack.Screen name={RouteStacks.welcomeGallery} component={WelcomeGalleryScreen} />
       <Stack.Screen
         name={RouteStacks.authSplashScreen}
-        component={ApplicationStartupContainer}
+        component={AuthSplashScreen}
         sharedElements={(route, otherRoute, showing) => {
           const { news } = route.params
           return [
@@ -73,18 +72,7 @@ const AuthNavigator: FC<ApplicationScreenProps> = ({ navigation }) => {
           ]
         }}
       />
-      <Stack.Screen
-        name={RouteStacks.welcome}
-        component={WelcomeScreen}
-        sharedElements={(route, otherRoute, showing) => {
-          return [
-            {
-              id: `app.icon`,
-              animation: 'fade',
-            },
-          ]
-        }}
-      />
+      <Stack.Screen name={RouteStacks.welcomeBack} component={WelcomeScreen} />
       <Stack.Screen name={RouteStacks.logIn} component={SignInScreen} />
       <Stack.Screen name={RouteStacks.signUp} component={SignUpScreen} />
       <Stack.Screen name={RouteStacks.validationCode} component={VerificationCodeScreen} />

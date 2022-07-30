@@ -169,6 +169,7 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
         }
       } else {
         // TBD: snackbar remind user to enable fingerprint
+        triggerSnackbar(t('error.noCredentialAvailable'))
       }
     } catch (err: any) {
       loginErrHandler(err)
@@ -264,7 +265,7 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
   }
 
   const goBack = () => {
-    navigation.navigate(RouteStacks.welcome)
+    navigation.navigate(RouteStacks.welcomeBack)
   }
 
   return (
@@ -275,7 +276,7 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
         <View
           style={[
             {
-              flex: 1,
+              flex: 4,
               justifyContent: 'center',
               alignItems: 'center',
             },
@@ -293,7 +294,7 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
 
         <View
           style={{
-            flex: 1,
+            flex: 5,
             width: '100%',
           }}
         >
@@ -350,28 +351,27 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
             <View>{errMsg.password !== '' && <Text style={ERR_MSG_TEXT}>{errMsg.password}</Text>}</View>
           </View>
 
-          <View style={[Layout.fullWidth, Layout.center, Gutters.regularVPadding, { flex: 1, justifyContent: 'center' }]}>
+          <View style={[Layout.fullWidth, Layout.center, { flex: 1, justifyContent: 'space-evenly' }]}>
             <View
               style={{
                 width: '100%',
                 paddingHorizontal: 30,
-                paddingTop: 30,
               }}
             >
               <ActionButton onPress={() => onLoginOptionPress('normal')} text={t('signIn')} />
             </View>
 
-            <Pressable style={[Layout.fullWidth, Layout.center, { marginBottom: 30, marginTop: 10 }]} onPress={onForgotPasswordPress}>
+            <Pressable style={[Layout.fullWidth, Layout.center, {}]} onPress={onForgotPasswordPress}>
               <Animated.Text entering={FadeInDown.duration(1000)} style={{ color: colors.darkBlueGray, textDecorationLine: 'underline' }}>
                 {t('forgotPassword')}
               </Animated.Text>
             </Pressable>
           </View>
 
-          <View style={[Gutters.largeVPadding, { flex: 1, justifyContent: 'center', alignItems: 'center' }]}>
+          <View style={[{ flexBasis: 80, justifyContent: 'center', alignItems: 'center' }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Text style={{ color: colors.darkBlueGray }}>{t('dontHaveAnAccount')}</Text>
-              <Pressable style={{ paddingLeft: 6 }} onPress={() => navigation.navigate(RouteStacks.signUp)}>
+              <Pressable style={{ paddingLeft: 6 }} onPress={() => navigation.replace(RouteStacks.signUp)}>
                 <Text style={{ color: colors.darkBlueGray, fontWeight: 'bold' }}>{t('signUp')}</Text>
               </Pressable>
             </View>

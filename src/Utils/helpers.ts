@@ -1,5 +1,5 @@
 import { RootState, store } from '@/Store'
-import { showSnackbar } from '@/Store/UI/actions'
+import { showSnackbar, startLoading } from '@/Store/UI/actions'
 import { logout } from '@/Store/Users/actions'
 // @ts-ignore
 import { Auth } from 'aws-amplify'
@@ -43,11 +43,13 @@ export const triggerSnackbar = (textMsg: string, autoHidingTime = 1500) => {
 
 export const awsLogout = async () => {
   try {
+    store.dispatch(startLoading(true))
     await Auth.signOut()
   } catch (err: any) {
     //crashlytics().recordError(err)
   } finally {
     store.dispatch(logout())
+    store.dispatch(startLoading(false))
     await InAppBrowser.closeAuth()
   }
 }

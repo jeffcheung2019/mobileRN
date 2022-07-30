@@ -122,8 +122,9 @@ const SignUpScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.sign
     }
   }, [credential, errMsg])
 
-  const goBack = () => navigation.navigate(RouteStacks.welcome)
-
+  const goBack = () => {
+    navigation.navigate(RouteStacks.welcomeBack)
+  }
   const onPasswordEyePress = () => setShowPassword(prev => !prev)
 
   return (
@@ -134,7 +135,7 @@ const SignUpScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.sign
         <View
           style={[
             {
-              flex: 1,
+              flex: 4,
               justifyContent: 'center',
               alignItems: 'center',
             },
@@ -152,7 +153,7 @@ const SignUpScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.sign
 
         <View
           style={{
-            flex: 1,
+            flex: 5,
             width: '100%',
           }}
         >
@@ -180,15 +181,8 @@ const SignUpScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.sign
             {errMsg.password !== '' && <Text style={[ERR_MSG_TEXT, Gutters.smallHPadding]}>{errMsg.password}</Text>}
           </View>
 
-          <View
-            style={[
-              Layout.fullWidth,
-              Layout.center,
-              Gutters.largeVPadding,
-              { flex: 1, justifyContent: 'space-between', paddingHorizontal: 30 },
-            ]}
-          >
-            <Animated.View entering={FadeInDown} style={{ width: '100%' }}>
+          <View style={[Layout.fullWidth, Layout.center, Gutters.largeVPadding, { flex: 1, paddingHorizontal: 30 }]}>
+            <Animated.View entering={FadeInDown} style={{ width: '100%', paddingBottom: 20 }}>
               <ActionButton
                 onPress={onCreateAccountPress}
                 text={t('create')}
@@ -197,9 +191,9 @@ const SignUpScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.sign
                 }}
               />
             </Animated.View>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', height: 50, alignItems: 'center' }}>
               <Text style={{ color: colors.darkBlueGray }}>{t('alreadyHaveAnAccount')}</Text>
-              <Pressable style={{ paddingLeft: 6 }} onPress={() => navigation.navigate(RouteStacks.logIn)}>
+              <Pressable style={{ paddingLeft: 6 }} onPress={() => navigation.replace(RouteStacks.logIn)}>
                 <Text style={{ color: colors.darkBlueGray, fontWeight: 'bold' }}>{t('logIn')}</Text>
               </Pressable>
             </View>

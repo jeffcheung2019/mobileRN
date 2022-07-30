@@ -129,6 +129,7 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
         shadowOpacity: 0.26,
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 10,
+        backgroundColor: colors.brightGray,
       }}
     >
       <View
