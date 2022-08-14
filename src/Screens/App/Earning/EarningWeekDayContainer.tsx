@@ -139,6 +139,7 @@ const EarningWeekDayContainer: FC<EarningWeekDayContainerProps> = props => {
             placeholder: t('searchTicker'),
             autoCapitalize: 'characters',
           }}
+          disableDefaultAnimation={true}
         />
       </View>
       <Animated.ScrollView style={Layout.fill} contentContainerStyle={[Gutters.smallHPadding, {}]}>
@@ -180,9 +181,6 @@ const EarningWeekDayContainer: FC<EarningWeekDayContainerProps> = props => {
                     viewBox='0 0 18 18'
                     width={40}
                     height={40}
-                    onLoad={() => {
-                      console.log('LOADED')
-                    }}
                   />
                 )}
               </View>

@@ -63,7 +63,6 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
             autoCapitalize: 'characters',
             placeholder: t('searchTickerPrompt'),
           }}
-          disableDefaultAnimation
         />
       </View>
       <KeyboardAwareScrollView

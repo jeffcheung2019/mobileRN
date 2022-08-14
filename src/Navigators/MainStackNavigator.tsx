@@ -98,7 +98,7 @@ const MainTabNavigator: FC<MainTabNavigatorProps> = ({ navigation }) => {
     ),
     event: () => (
       <View style={TABBAR_ICON_VIEW}>
-        <MaterialIcons name='announcement' size={config.iconSize} color={colors.darkBlueGray} />
+        <MaterialCommunityIcons name='chart-areaspline' size={config.iconSize} color={colors.darkBlueGray} />
       </View>
     ),
   }

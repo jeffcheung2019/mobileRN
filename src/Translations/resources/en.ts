@@ -128,4 +128,5 @@ export default {
   feedback: 'Feedback',
   feedbackDesc: 'Let us know your experience in our app',
   logout: 'Logout',
+  priceTargetChange: 'Target Change',
 }

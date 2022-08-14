@@ -27,6 +27,8 @@ import Animated, { FadeInDown } from 'react-native-reanimated'
 import { useFinanceGraph } from '@/Hooks/useFinanceGraph'
 import { GraphPoint } from '@/Types/Graph'
 import { moneyConvertToKMB } from '@/Utils/helpers'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 type TickerDetailScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.tickerDetail>,
@@ -99,6 +101,7 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
   const dispatch = useDispatch()
 
   const { id: companyId, ticker, name } = route?.params
+  const [isSubscribed, setIsSubscribed] = useState(false)
 
   const companyPage = getCompanyPage(ticker)
 
@@ -225,23 +228,51 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
           ]}
         >
           <View style={{ justifyContent: 'center' }}>
-            <SharedElement id={`ticker.${ticker}`}>
-              <Text
-                numberOfLines={1}
+            <View
+              style={{
+                flexDirection: 'row',
+              }}
+            >
+              <View
                 style={{
-                  textAlign: 'center',
-                  fontSize: 14,
-                  fontWeight: 'bold',
-                  paddingHorizontal: 6,
-                  width: 80,
-                  paddingVertical: 6,
-                  backgroundColor: colors.darkBlueGray,
-                  color: colors.white,
+                  flexBasis: 100,
                 }}
               >
-                ${ticker}
-              </Text>
-            </SharedElement>
+                <SharedElement id={`ticker.${ticker}`}>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      textAlign: 'center',
+                      fontSize: 14,
+                      fontWeight: 'bold',
+                      paddingHorizontal: 6,
+                      width: 80,
+                      paddingVertical: 6,
+                      backgroundColor: colors.darkBlueGray,
+                      color: colors.white,
+                    }}
+                  >
+                    ${ticker}
+                  </Text>
+                </SharedElement>
+              </View>
+              <Pressable
+                style={{
+                  flex: 1,
+                  alignItems: 'flex-end',
+                  paddingHorizontal: 10,
+                }}
+                onPress={() => setIsSubscribed(!isSubscribed)}
+              >
+                <Animated.View>
+                  <MaterialIcons
+                    name={isSubscribed ? 'notifications' : 'notifications-none'}
+                    size={config.iconSize}
+                    color={colors.darkBlueGray}
+                  />
+                </Animated.View>
+              </Pressable>
+            </View>
             <Animated.View entering={FadeInDown.duration(500)}>
               <Text style={[{ color: colors.darkBlueGray, fontSize: 24, fontWeight: 'bold', textAlign: 'left' }]}>{`$${
                 companyPage?.quote?.cents / 100
@@ -277,19 +308,7 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
           <Text style={SECTION_TITLE_TEXT}>{t('priceTarget')}</Text>
         </Animated.View>
 
-        <Animated.ScrollView
-          stickyHeaderIndices={[0]}
-          entering={FadeInDown.delay(1000).duration(500)}
-          style={[SECTION_VIEW, { maxHeight: 300 }]}
-        >
-          <View style={{ backgroundColor: colors.white, width: '100%' }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={[TABLE_HEADER_TEXT, { flex: 1 }]}>{t('date')}</Text>
-              <Text style={[TABLE_HEADER_TEXT, { flex: 1 }]}>{t('analyst')}</Text>
-              <Text style={[TABLE_HEADER_TEXT, { flex: 1 }]}>{t('priceTarget')}</Text>
-              <Text style={[TABLE_HEADER_TEXT, { flex: 1 }]}>{t('rating')}</Text>
-            </View>
-          </View>
+        <Animated.ScrollView entering={FadeInDown.delay(1000).duration(500)} style={[SECTION_VIEW, { maxHeight: 300 }]}>
           {map(priceTargets, (priceTarget: PriceTarget, idx: number) => {
             let ptPrior = priceTarget.ptPrior ? priceTarget.ptPrior / 100 : null
             let pt = priceTarget.pt ? priceTarget.pt / 100 : null
@@ -300,11 +319,8 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
                 style={{
                   height: 50,
                   width: '100%',
-                  // borderColor: colors.brightGray,
-                  // borderWidth: 1,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  // backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
                 }}
                 onPress={() => {
                   // InAppBrowser.open(pt.link)
@@ -316,22 +332,35 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
                     flex: 1,
                   }}
                 >
-                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>{moment(date).format('DD-MM-YYYY')}</Text>
-                  </View>
-                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>{analyst}</Text>
-                  </View>
-                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                  <View style={{ flex: 4, alignItems: 'flex-start', justifyContent: 'center' }}>
                     <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
-                      {ptPrior} {ptPrior ? '->' : ''} {pt}
+                      <Text style={{ fontWeight: 'bold' }}>{t('date')}:</Text>
+                      {`  ${moment(date).format('DD-MM-YYYY')}`}
+                    </Text>
+                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                      <Text style={{ fontWeight: 'bold' }}>{t('analyst')}:</Text> {` ${analyst}`}
+                    </Text>
+                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                      <Text style={{ fontWeight: 'bold' }}>{t('priceTargetChange')}:</Text> {ptPrior !== null ? `$${ptPrior}` : ''}{' '}
+                      {ptPrior ? '->' : ''} {`$${pt}`}
                     </Text>
                   </View>
-                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
-                      {ratingPrior} {ratingPrior ? '->' : ''} {rating}
-                    </Text>
+                  <View style={{ flex: 4, alignItems: 'flex-start', justifyContent: 'center' }}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <View style={{ backgroundColor: colors.darkBlueGray, paddingVertical: 4, paddingHorizontal: 6 }}>
+                        <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{ratingPrior}</Text>
+                      </View>
+                      <View style={{ justifyContent: 'center', paddingHorizontal: 8 }}>
+                        {ratingPrior && <Text style={{ color: colors.darkBlueGray, fontSize: 9 }}>{'->'}</Text>}
+                      </View>
+                      <View style={{ backgroundColor: colors.darkBlueGray, paddingVertical: 4, paddingHorizontal: 6 }}>
+                        <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{rating}</Text>
+                      </View>
+                    </View>
                   </View>
+                  {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    
+                  </View> */}
                 </View>
               </Pressable>
             )
