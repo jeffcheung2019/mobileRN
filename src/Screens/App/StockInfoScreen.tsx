@@ -17,7 +17,9 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { TabView, SceneMap, Route } from 'react-native-tab-view'
+import { TabView, SceneMap, Route, TabBar } from 'react-native-tab-view'
+import StockInfoMainScreen from './StockInfo/MainScreen'
+
 const MaterialTopTab = createMaterialTopTabNavigator()
 
 export type StockInfoTopTabNavigatorParamList = {
@@ -37,30 +39,26 @@ const TAB_BAR_TEXT_STYLE = {
 
 type ScreenProps = {}
 
-const Screen: FC<ScreenProps> = () => {
-  return <View></View>
-}
-
 const StockInfoScreen: FC<StockInfoTopTabNavigationProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
   const [screenIdx, setScreenIdx] = useState(0)
-
   const layout = useWindowDimensions()
   const [screens] = useState([{ key: 'Price Target' }, { key: 'Insider' }])
 
   const renderScene = ({ route }: { route: Route }) => {
     switch (route.key) {
       case 'Price Target':
-        return MainScreen
+        return StockInfoMainScreen
       case 'Insider':
         return InsiderScreen
       default:
         return null
     }
   }
+
 
   return (
     <TabView
@@ -70,63 +68,29 @@ const StockInfoScreen: FC<StockInfoTopTabNavigationProps> = ({ navigation, route
       }}
       lazy
       lazyPreloadDistance={10}
-      renderTabBar={() => null}
+      renderTabBar={props => (
+        <TabBar
+          {...props}
+          scrollEnabled
+          renderLabel={props => {
+            const { focused, route } = props
+            return (
+              <View>
+                <Text style={{ color: colors.darkBlueGray }}>{route?.key}</Text>
+              </View>
+            )
+          }}
+          indicatorStyle={{ backgroundColor: colors.darkBlueGray }}
+          style={{ backgroundColor: colors.white }}
+        />
+      )}
       navigationState={{ index: screenIdx, routes: screens }}
       renderScene={renderScene}
       onIndexChange={setScreenIdx}
+      sceneContainerStyle={{}}
       initialLayout={{ width: layout.width }}
     />
   )
-
-  // return (
-  //   <MaterialTopTab.Navigator
-  //     overScrollMode='always'
-  //     screenOptions={{
-  //       tabBarItemStyle: {
-  //         padding: 0,
-  //         flexDirection: 'row',
-  //         width: 200,
-  //       },
-  //       tabBarScrollEnabled: true,
-  //       tabBarStyle: { paddingTop: 20, height: 210 },
-  //       tabBarContentContainerStyle: { flex: 1 },
-  //       tabBarIndicator: () => null,
-  //     }}
-  //   >
-  //     <MaterialTopTab.Screen
-  //       name={RouteTopTabs.stockInfoMain}
-  //       component={MainScreen}
-  //       options={{
-  //         tabBarIcon: ({ focused }) => {
-  //           return <MaterialCommunityIcons name='target' color={focused ? colors.stockInfoTheme : colors.darkBlueGray} size={22} />
-  //         },
-  //         tabBarLabel: ({ focused }) => {
-  //           return (
-  //             <Text style={[TAB_BAR_TEXT_STYLE, { paddingLeft: 6, color: focused ? colors.stockInfoTheme : colors.darkBlueGray }]}>
-  //               {t('priceTarget')}
-  //             </Text>
-  //           )
-  //         },
-  //       }}
-  //     />
-  //     <MaterialTopTab.Screen
-  //       name={RouteTopTabs.insider}
-  //       component={InsiderScreen}
-  //       options={{
-  //         tabBarIcon: ({ focused }) => {
-  //           return <MaterialIcons name='supervised-user-circle' color={focused ? colors.stockInfoTheme : colors.darkBlueGray} size={22} />
-  //         },
-  //         tabBarLabel: ({ focused }) => {
-  //           return (
-  //             <Text style={[TAB_BAR_TEXT_STYLE, { paddingLeft: 6, color: focused ? colors.stockInfoTheme : colors.darkBlueGray }]}>
-  //               {t('insider')}
-  //             </Text>
-  //           )
-  //         },
-  //       }}
-  //     />
-  //   </MaterialTopTab.Navigator>
-  // )
 }
 
 export default StockInfoScreen

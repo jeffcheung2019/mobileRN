@@ -38,7 +38,7 @@ const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigatio
   return (
     <ScreenBackgrounds screenName={RouteTopTabs.stockInfoMain}>
       <KeyboardAwareScrollView style={Layout.fill} contentContainerStyle={[Layout.fullSize, Layout.colCenter, Gutters.smallHPadding]}>
-        <DraggableCards />
+        {/* <DraggableCards /> */}
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )

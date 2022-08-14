@@ -13,7 +13,7 @@ import { Header } from '@/Components'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack'
 import { MainStackNavigatorParamList, MainStackNavigtorProps } from '@/Navigators/MainStackNavigator'
-import { MainScreen } from './Setting'
+import { MainScreen, SettingEditProfileScreen } from './Setting'
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
@@ -38,6 +38,7 @@ const SettingScreen: FC<SettingScreenNavigationProps> = ({ navigation, route }) 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name={RouteStacks.settingMain} component={MainScreen} />
+      <Stack.Screen name={RouteStacks.settingEditProfile} component={SettingEditProfileScreen} />
     </Stack.Navigator>
   )
 }

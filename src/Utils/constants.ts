@@ -1,5 +1,7 @@
+import { GoogleRSSFeed, GoogleRSSFeedQuery } from '@/Types/API'
+
 export const config = {
-  iconSize: 22,
+  iconSize: 28,
   urlScheme: `com.fitnessevo://`,
   dynamicLink: `https://fitevo.page.link/xEYL`,
   userAuthInfo: `https://api-dev.dragonevolution.gg/users/auth`,
@@ -23,16 +25,25 @@ export const config = {
 }
 
 export const api = {
-  djiUri:
-    'https://query1.finance.yahoo.com/v7/finance/spark?symbols=%5EDJI&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance',
-  sandpUri:
-    'https://query1.finance.yahoo.com/v7/finance/spark?symbols=^GSPC&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance',
-  nasdaqUri:
-    'https://query1.finance.yahoo.com/v7/finance/spark?symbols=^IXIC&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance',
-  russellUri:
-    'https://query1.finance.yahoo.com/v7/finance/spark?symbols=^RUT&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance',
-  crudeOilUri:
-    'https://query1.finance.yahoo.com/v7/finance/spark?symbols=CL=F&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance',
+  tickerUri: (ticker: string) => {
+    return `https://query1.finance.yahoo.com/v7/finance/spark?symbols=${ticker}&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance`
+  },
+  tiprankTickerUri: (ticker: string) => {
+    return `https://www.tipranks.com/api/stocks/getNews/?ticker=${ticker}`
+  },
+  earning: `https://scanner.tradingview.com/america/scan`,
+  rssFeedGoogleNews: (queries: GoogleRSSFeed) => {
+    let queryStrs = ''
+    let queriesObjKeys = Object.keys(queries)
+    queriesObjKeys.forEach((query, idx: number) => {
+      queryStrs += `${query}=${queries[query as GoogleRSSFeedQuery]}`
+      if (idx < queriesObjKeys.length - 1) {
+        queryStrs += '&'
+      }
+    })
+
+    return `https://news.google.com/rss/search${queryStrs === '' ? '' : '?' + queryStrs + '&ceid=US:en&hl=en-US&gl=US'}`
+  },
 }
 
 // Color naming https://www.color-name.com/hex/749597
@@ -64,12 +75,10 @@ export const colors = {
 
   green: '#14D13E', //green
   orange: '#D6AE14', //yellow
-  red: '#FF0000', //red
 
   arsenic: '#3D4248',
   charlestonGreen: '#322E29',
   brinkPink: '#FF637D',
-  crimson: '#E21134',
   amaranthRed: 'rgba(213, 31, 55, 0.1)',
 
   tealDeer: '#87F4B5',
@@ -87,11 +96,14 @@ export const colors = {
   vividSkyBlue: '#00d4ff',
   darkCharcoal: '#333333',
   brightGray: '#efefef',
-  lawnGreen: '#7CFC00',
 
-  electricGreen: '#00ff00',
-  fernGreen: '#3C7E40',
   lotion: '#FAFAFA',
+
+  // stock colors
+  lawnGreen: '#7CFC00', // line color
+  electricGreen: '#00ff00', // area color
+  red: '#FF0000', // line color
+  crimson: '#E21134', // area color
 }
 
 export const elevationStyle = {

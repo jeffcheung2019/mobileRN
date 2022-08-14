@@ -54,7 +54,6 @@ const DraggableCards = ({}: DraggableCardProps) => {
       [elementPositions],
     )
   }
-
   return (
     <>
       <PanGestureHandler onGestureEvent={onGestureEvents(0)}>

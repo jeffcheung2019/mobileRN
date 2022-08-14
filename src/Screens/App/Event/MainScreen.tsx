@@ -30,9 +30,10 @@ const EventMainScreen: FC<EventMainScreenNavigationProps> = ({ navigation, route
 
   return (
     <ScreenBackgrounds screenName={RouteStacks.eventMain}>
-      <KeyboardAwareScrollView style={Layout.fill} contentContainerStyle={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
-        <Text style={{ color: colors.black }}>Event</Text>
-      </KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        style={Layout.fill}
+        contentContainerStyle={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}
+      ></KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )
 }

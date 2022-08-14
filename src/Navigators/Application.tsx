@@ -1,5 +1,5 @@
 import React, { useEffect, Ref } from 'react'
-import { Dimensions, Image, ImageBackground, Linking, Pressable, SafeAreaView, StatusBar, Text, View } from 'react-native'
+import { Dimensions, Image, ImageBackground, Linking, Pressable, StatusBar, Text, View } from 'react-native'
 import { createStackNavigator, TransitionSpecs } from '@react-navigation/stack'
 import {
   LinkingOptions,
@@ -43,7 +43,7 @@ import { WelcomeScreen } from '@/Screens/Auth'
 import RNBootSplash from 'react-native-bootsplash'
 import times from 'lodash/times'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
-
+import { SafeAreaView } from 'react-native-safe-area-context'
 export type ApplicationNavigatorParamList = {
   [RouteStacks.mainStack]: undefined
   // 🔥 Your screens go here
@@ -181,7 +181,7 @@ const ApplicationNavigator = () => {
   }, [])
 
   return (
-    <SafeAreaView style={[Layout.fullSize, { opacity: 1 }]}>
+    <SafeAreaView edges={['right', 'top', 'left']} style={[Layout.fullSize, { opacity: 1 }]}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SnackBar
           {...snackBarConfig}

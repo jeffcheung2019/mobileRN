@@ -33,6 +33,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import axios from 'axios'
 import Header from '@/Components/Header'
 import { SharedElement } from 'react-navigation-shared-element'
+import join from 'lodash/join'
+import map from 'lodash/map'
 
 type HomeNewsDetailScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<HomeScreenNavigatorParamList, RouteStacks.homeNewsDetail>,
@@ -44,6 +46,7 @@ export type NewsDetail = {
   title: string
   content: string
   imgUrl: string
+  tickers: string[]
 }
 
 let nodeJsTimeout: NodeJS.Timeout
@@ -55,6 +58,7 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
     title: '',
     content: '',
     imgUrl: '',
+    tickers: [],
   }
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
@@ -74,11 +78,7 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
     }
   }, [])
 
-  // useEffect(() => {
-  //   if (!!news) {
-  //     navigation.navigate(RouteStacks.homeMain)
-  //   }
-  // }, [news])
+  let hasImage = news?.imgUrl !== ''
 
   return (
     <ScreenBackgrounds screenName={RouteStacks.homeMain}>
@@ -90,27 +90,57 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
           Gutters.regularHPadding,
           {
             alignItems: 'flex-start',
+            paddingTop: 8,
           },
         ]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} progressViewOffset={50} tintColor={colors.eucalyptus} />
         }
       >
-        <View
-          style={[
-            Layout.fullWidth,
-            {
-              alignItems: 'center',
-              height: 200,
-              justifyContent: 'center',
-            },
-          ]}
-        >
-          <SharedElement style={{ width: '100%', height: '100%' }} id={`news.${news?.id}.image`}>
-            <Image
-              source={{ uri: news?.imgUrl === '' ? config.defaultNewsImgUrl : news?.imgUrl }}
-              style={{ resizeMode: 'contain', backgroundColor: colors.brightGray, width: '100%', height: '100%' }}
-            />
+        {
+          <View
+            style={[
+              Layout.fullWidth,
+              {
+                alignItems: 'center',
+                height: 200,
+                justifyContent: 'center',
+              },
+            ]}
+          >
+            <SharedElement style={{ width: '100%', height: '100%' }} id={`news.${news?.id}.image`}>
+              <Image
+                source={{ uri: hasImage ? news?.imgUrl : config.defaultNewsImgUrl }}
+                style={{ resizeMode: 'contain', backgroundColor: colors.brightGray, width: '100%', height: '100%' }}
+              />
+            </SharedElement>
+          </View>
+        }
+
+        <View style={{ flexBasis: 40, width: '100%', justifyContent: 'center', alignItems: 'flex-start' }}>
+          <SharedElement id={`news.${news?.id}.tickers.${join(news?.tickers, '-')}`}>
+            <View
+              style={{
+                flexDirection: 'row',
+              }}
+            >
+              {map(news?.tickers, (ticker: string, idx: number) => {
+                return (
+                  <View
+                    key={`ticker-${idx}`}
+                    style={{
+                      backgroundColor: colors.darkBlueGray,
+                      marginHorizontal: 4,
+                      height: 30,
+                      justifyContent: 'center',
+                      paddingHorizontal: 8,
+                    }}
+                  >
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: colors.white }}>${ticker}</Text>
+                  </View>
+                )
+              })}
+            </View>
           </SharedElement>
         </View>
 
@@ -118,12 +148,12 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
           style={[
             Layout.fullWidth,
             {
-              flex: 1,
+              paddingHorizontal: 4,
             },
           ]}
         >
           <SharedElement id={`news.${news.id}.title`}>
-            <Text style={[{ fontSize: 14, color: colors.darkBlueGray, fontWeight: 'bold' }]}>{news.title}</Text>
+            <Text style={[{ fontSize: 18, color: colors.darkBlueGray, fontWeight: 'bold' }]}>{news.title}</Text>
           </SharedElement>
         </View>
 
@@ -132,10 +162,13 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
             Layout.fullWidth,
             {
               flex: 5,
+              paddingTop: 10,
+              justifyContent: 'flex-start',
+              paddingHorizontal: 4,
             },
           ]}
         >
-          <Text style={[{ fontSize: 10, color: colors.darkBlueGray }]}>{news.content}</Text>
+          <Text style={[{ fontSize: 16, color: colors.darkBlueGray }]}>{news.content}</Text>
         </View>
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>

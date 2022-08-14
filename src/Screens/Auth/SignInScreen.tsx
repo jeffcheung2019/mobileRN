@@ -264,7 +264,7 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
     navigation.navigate(RouteStacks.forgotPassword)
   }
 
-  const goBack = () => {
+  const goBack = async () => {
     navigation.navigate(RouteStacks.welcomeBack)
   }
 

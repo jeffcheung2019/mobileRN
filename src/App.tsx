@@ -10,7 +10,7 @@ import { LogBox, Linking, Alert, Platform } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 // @ts-ignore
 import Amplify, { Auth } from 'aws-amplify'
-import { credentials } from './Utils/firebase'
+import { credentials, getFcmToken } from './Utils/firebase'
 import awsconfig from '@/aws-exports'
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 import messaging from '@react-native-firebase/messaging'
@@ -19,13 +19,14 @@ import appsFlyer from 'react-native-appsflyer'
 import { config } from './Utils/constants'
 import { RouteStacks } from './Navigators/routes'
 import { startLoading } from './Store/UI/actions'
-import { storeReferralCode } from './Store/Referral/actions'
 import RNBootSplash from 'react-native-bootsplash'
 import crashlytics from '@react-native-firebase/crashlytics'
 import RealmProvider from './Realms/RealmProvider'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+import { SWRConfig } from 'swr'
+import { fetchers } from './Utils/swrUtils'
 
 // Initialize Apollo Client
 const client = new ApolloClient({
@@ -54,7 +55,6 @@ const onInstallConversionDataCanceller = appsFlyer.onInstallConversionData(res =
   }
   const DLValue = res?.data?.deep_link_value
   if (DLValue) {
-    store.dispatch(storeReferralCode(DLValue))
   }
 })
 
@@ -67,7 +67,6 @@ const onAppOpenAttributionCanceller = appsFlyer.onAppOpenAttribution(res => {
   console.log(`media source: ${res.data.media_source}`)
   const DLValue = res?.data.deep_link_value
   if (DLValue) {
-    store.dispatch(storeReferralCode(DLValue))
   }
 })
 
@@ -82,7 +81,6 @@ const onDeepLinkCanceller = appsFlyer.onDeepLink(res => {
     }
 
     if (DLValue) {
-      store.dispatch(storeReferralCode(DLValue))
     }
   }
 })
@@ -151,15 +149,6 @@ Amplify.configure({
 })
 
 const App = () => {
-  const getFcmToken = async () => {
-    const fcmToken = await messaging().getToken()
-    if (fcmToken) {
-      console.log('Firebase Token:', fcmToken)
-    } else {
-      console.log('Failed', 'No token received')
-    }
-  }
-
   const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission()
     const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL
@@ -173,7 +162,7 @@ const App = () => {
     requestUserPermission()
 
     let messageHandler = async (remoteMessage: any) => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage))
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage, null, 2))
     }
 
     let onNotiPress = async (remoteMessage: any) => {

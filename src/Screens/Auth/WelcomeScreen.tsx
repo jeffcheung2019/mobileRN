@@ -57,7 +57,7 @@ const BUTTON_VIEW = {
   marginVertical: 20,
 }
 
-const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.welcome>> = ({ navigation, route }) => {
+const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.welcomeBack>> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
@@ -227,7 +227,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
           <View
             style={[
               {
-                flexGrow: 5,
+                flexGrow: 4,
                 justifyContent: 'center',
               },
               Layout.fullWidth,
@@ -239,7 +239,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
                 Layout.fullWidth,
                 Layout.center,
                 {
-                  paddingVertical: 40,
+                  paddingVertical: 60,
                 },
               ]}
             >
@@ -247,7 +247,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
             </View>
 
             <View style={[Layout.fullWidth, Gutters.smallVPadding, Layout.center]}>
-              <ActionButton text={t('signUp')} onPress={onSignUpPress} containerStyle={{ width: '80%' }} />
+              <ActionButton text={t('signUp')} onPress={onSignUpPress} containerStyle={{ width: '80%' }} isTransparentBg />
             </View>
 
             <View
@@ -267,7 +267,7 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
             style={[
               Layout.fullWidth,
               {
-                flex: 3,
+                flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
               },
@@ -306,13 +306,14 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
 
           <View style={[Layout.fullWidth, Layout.colCenter, Layout.rowCenter, { flex: 1, flexDirection: 'column', paddingBottom: 40 }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <Text style={[{ textAlign: 'center', color: colors.darkBlueGray }]}>{t('agreeTo')}</Text>
+              <Text style={[{ textAlign: 'center', color: colors.darkBlueGray, fontSize: 14 }]}>{t('agreeTo')}</Text>
               <Pressable style={{}} onPress={onTAndCPress}>
                 <Text
                   style={{
                     color: colors.crimson,
                     lineHeight: 14,
-                    marginTop: 1,
+                    marginTop: 2,
+                    fontSize: 13,
                     textDecorationLine: 'underline',
                   }}
                 >
@@ -321,7 +322,19 @@ const WelcomeScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.wel
               </Pressable>
             </View>
 
-            <Text style={[Layout.fullWidth, { textAlign: 'center', color: colors.darkBlueGray }]}>{t('byRegisteringAc')}</Text>
+            <Text
+              style={[
+                Layout.fullWidth,
+                {
+                  textAlign: 'center',
+                  color: colors.darkBlueGray,
+
+                  fontSize: 14,
+                },
+              ]}
+            >
+              {t('byRegisteringAc')}
+            </Text>
           </View>
         </View>
       </KeyboardAwareScrollView>

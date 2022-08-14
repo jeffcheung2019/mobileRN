@@ -108,9 +108,9 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
 
   useEffect(() => {
     routeIdxSharedValue.value = state.index
-    highlightDimensionScale.value = 0.8
+    highlightDimensionScale.value = 1.2
     dimensionRatioTimeout = setTimeout(() => {
-      highlightDimensionScale.value = 1.5
+      highlightDimensionScale.value = 1.6
     }, 500)
 
     return () => {

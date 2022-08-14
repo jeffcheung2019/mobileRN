@@ -1,13 +1,13 @@
 import { PayloadAction, createReducer } from '@reduxjs/toolkit'
-import { login, LoginPayload, logout, storeInvitationCode, StoreInvitationCodePayload } from './actions'
+import { FCMTokenPayload, login, LoginPayload, logout, storeInvitationCode, StoreInvitationCodePayload, updateFCMToken } from './actions'
 
 export type UserState = {
   isLoggedIn: boolean
   username: string
   email: string
   cognitoUser: any
-  invitationCode: string
   uuid: string
+  fcmToken: string
 }
 
 const initialState: UserState = {
@@ -15,18 +15,12 @@ const initialState: UserState = {
   username: '',
   email: '',
   cognitoUser: null,
-  invitationCode: '',
   uuid: '',
+  fcmToken: '',
 }
 
 export default createReducer<UserState>(initialState, builder => {
   builder
-    .addCase(storeInvitationCode, (state, action: PayloadAction<StoreInvitationCodePayload>) => {
-      return {
-        ...state,
-        ...action.payload,
-      }
-    })
     .addCase(login, (state, action: PayloadAction<LoginPayload>) => {
       return {
         ...state,
@@ -34,7 +28,7 @@ export default createReducer<UserState>(initialState, builder => {
         ...action.payload,
       }
     })
-    .addCase(logout, (state, action: PayloadAction<null>) => {
+    .addCase(logout, state => {
       return {
         ...state,
         isLoggedIn: false,
@@ -42,6 +36,12 @@ export default createReducer<UserState>(initialState, builder => {
         email: '',
         cognitoUser: null,
         uuid: '',
+      }
+    })
+    .addCase(updateFCMToken, (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        fcmToken: action.payload,
       }
     })
 })

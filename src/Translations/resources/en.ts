@@ -34,7 +34,9 @@ export default {
   user: 'User',
   value: 'Value',
   loginWith: 'Login With',
-
+  updateProfile: 'Update Profile',
+  oldPassword: 'Old Password',
+  updatePassword: 'Update Password',
   verificationCodeDesc: "Verification code sent to your email, don't forget to check the spam folder too!",
   resendVerificationCode: 'Resend Verification Code',
   registrationCompleted: 'Registration process is completed, you can login now.',
@@ -93,6 +95,7 @@ export default {
   alreadyHaveAnAccount: 'I already have an account.',
   logIn: 'Log In',
   congrats: 'Congrats!',
+  noTickerFound: 'Oops !! No ticker found',
   registeredSuccess: 'You have successfully registered. You can log in to your account and have fun!',
   done: 'Done',
   home: 'Home',

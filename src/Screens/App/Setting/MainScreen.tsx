@@ -24,7 +24,7 @@ import { SettingScreenNavigationProps, SettingScreenNavigatorParamList } from '.
 import { awsLogout } from '@/Utils/helpers'
 import { Icon } from '@rneui/base'
 import { RootState } from '@/Store'
-import SettingActionItem from './Containers/SettingActionItem'
+import SettingActionItem from '@/Screens/App/Setting/Components/SettingActionItem'
 import { startLoading } from '@/Store/UI/actions'
 
 const windowHeight = Dimensions.get('window').height
@@ -82,7 +82,9 @@ const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, r
   const onLogoutPress = async () => {
     await awsLogout()
   }
-  const onEditAccountDtlPress = () => {}
+  const onEditAccountDtlPress = () => {
+    navigation.navigate(RouteStacks.settingEditProfile)
+  }
 
   const onSubscriptionPress = async () => {}
 

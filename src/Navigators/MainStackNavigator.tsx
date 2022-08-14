@@ -115,7 +115,7 @@ const MainTabNavigator: FC<MainTabNavigatorProps> = ({ navigation }) => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={RouteTabs.stockInfo}
+        initialRouteName={RouteTabs.event}
         tabBar={(bottomTabBarProps: BottomTabBarProps) => <MainCustomTabBar {...bottomTabBarProps} tabBarIconsMap={tabBarIconsMap} />}
       >
         <Tab.Screen name={RouteTabs.home} component={HomeScreen} />
@@ -133,6 +133,7 @@ const MainStackNavigator: FC<MainStackNavigtorProps> = ({ navigation }) => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        gestureEnabled: false,
       }}
       initialRouteName={RouteStacks.appSplashScreen}
     >

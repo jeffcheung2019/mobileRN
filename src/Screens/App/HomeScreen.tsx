@@ -17,6 +17,7 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 import { NewsDetail } from './Home/NewsDetailScreen'
+import join from 'lodash/join'
 
 const Stack = createSharedElementStackNavigator()
 
@@ -50,13 +51,22 @@ const HomeScreen: FC<HomeScreenNavigationProps> = ({ navigation, route }) => {
         component={NewsDetailScreen}
         sharedElements={(route, otherRoute, showing) => {
           const { news } = route.params
+
+          const { tickers, id } = news
+
+          let tickerStr = join(tickers, '-')
+
           return [
             {
-              id: `news.${news?.id}.image`,
+              id: `news.${id}.image`,
               animation: 'fade',
             },
             {
-              id: `news.${news?.id}.title`,
+              id: `news.${id}.title`,
+              animation: 'fade',
+            },
+            {
+              id: `news.${id}.tickers.${tickerStr}`,
               animation: 'fade',
             },
           ]

@@ -35,7 +35,6 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import ActionButton from '@/Components/Buttons/ActionButton'
-import CircleButton from '@/Components/Buttons/CircleButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { awsLogout, triggerSnackbar } from '@/Utils/helpers'
 import times from 'lodash/times'
@@ -47,7 +46,7 @@ import CircularProgress from 'react-native-circular-progress-indicator'
 import { startLoading } from '@/Store/UI/actions'
 
 import { Results } from 'realm'
-import { forEach, map } from 'lodash'
+import { forEach, join, map } from 'lodash'
 import Animated, {
   FadeInDown,
   measure,
@@ -59,10 +58,11 @@ import Animated, {
 } from 'react-native-reanimated'
 import InAppBrowser from 'react-native-inappbrowser-reborn'
 import { Header } from '@/Components'
-import { Avatar, Button, ListItem } from '@rneui/themed'
+import { Avatar, Button, ListItem, Skeleton } from '@rneui/themed'
 import InfoCard from '@/Components/InfoCard'
 import { headerHeight } from '@/Components/Header'
 import { SharedElement } from 'react-navigation-shared-element'
+import FastImage from 'react-native-fast-image'
 
 type NewsCardProps = {
   onPress: (newsId: string) => void
@@ -71,61 +71,110 @@ type NewsCardProps = {
     imgUrl: string
     title: string
     content: string
+    tickers: string[]
   }
 }
 
 const NewsCard: FC<NewsCardProps> = ({ onPress, news }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
+  const [isLoading, setIsLoading] = useState(true)
+
+  let hasImage = news?.imgUrl !== ''
 
   return (
     <Animated.View
       style={{
         width: '100%',
         height: '100%',
+        justifyContent: 'center',
+        marginVertical: 4,
       }}
       entering={FadeInDown}
     >
       <Pressable
         style={{
-          borderWidth: 1,
-          borderColor: colors.brightGray,
           flexDirection: 'row',
-          padding: 10,
+          paddingHorizontal: 10,
         }}
         onPress={() => onPress(news?.id)}
       >
-        <View
-          style={{
-            height: 100,
-            width: '30%',
-            backgroundColor: colors.white,
-          }}
-        >
-          <SharedElement id={`news.${news?.id}.image`}>
-            <Image
-              source={{
-                uri: news?.imgUrl === '' ? config.defaultNewsImgUrl : news?.imgUrl,
-              }}
-              style={{
-                resizeMode: 'cover',
-                height: 80,
-                width: '100%',
-              }}
-            />
-          </SharedElement>
-        </View>
+        {hasImage && (
+          <View
+            style={{
+              width: '40%',
+              backgroundColor: colors.white,
+              paddingRight: 10,
+            }}
+          >
+            <SharedElement id={`news.${news?.id}.image`}>
+              <FastImage
+                source={{
+                  uri: news?.imgUrl,
+                  priority: FastImage.priority.normal,
+                }}
+                style={{
+                  height: '100%',
+                  width: '100%',
+                }}
+                resizeMode={FastImage.resizeMode.cover}
+                onLoadEnd={() => setIsLoading(false)}
+              />
+
+              {isLoading && <Skeleton style={{ zIndex: 22, position: 'absolute', top: 0, left: 0, height: '100%' }} animation='pulse' />}
+            </SharedElement>
+          </View>
+        )}
 
         <View
           style={{
             flex: 4,
             alignItems: 'flex-start',
             justifyContent: 'flex-start',
-            paddingHorizontal: 10,
           }}
         >
+          <ScrollView
+            horizontal
+            style={{
+              width: '100%',
+              height: 40,
+            }}
+            contentContainerStyle={{
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              width: '100%',
+            }}
+          >
+            <SharedElement
+              id={`news.${news?.id}.tickers.${join(
+                news?.tickers.map(ticker => ticker),
+                '-',
+              )}`}
+              style={{
+                flexDirection: 'row',
+              }}
+            >
+              {map(news?.tickers, (ticker, idx) => {
+                return (
+                  <View
+                    key={`liveFeedCompanies-${news?.id}-${idx}`}
+                    style={{
+                      backgroundColor: colors.darkBlueGray,
+                      marginRight: 8,
+                      height: 30,
+                      justifyContent: 'center',
+                      paddingHorizontal: 8,
+                    }}
+                  >
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: colors.white }}>${ticker}</Text>
+                  </View>
+                )
+              })}
+            </SharedElement>
+          </ScrollView>
+
           <SharedElement id={`news.${news?.id}.title`}>
-            <Text numberOfLines={4} style={[{ color: colors.darkBlueGray, fontWeight: 'bold', fontSize: 14 }]}>
+            <Text numberOfLines={3} style={[{ color: colors.darkBlueGray, fontWeight: 'bold', fontSize: 14 }]}>
               {news?.title}
             </Text>
           </SharedElement>

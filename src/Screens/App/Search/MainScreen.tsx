@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, FC, useMemo } from 'react'
-import { View, ActivityIndicator, Text, TextInput, ScrollView, TextStyle, Alert, ViewStyle, Pressable } from 'react-native'
+import { View, ActivityIndicator, Text, TextInput, ScrollView, TextStyle, Alert, ViewStyle, Pressable, Image } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/Hooks'
 import { changeTheme, ThemeState } from '@/Store/Theme'
@@ -23,6 +23,8 @@ import { SearchScreenNavigationProps, SearchScreenNavigatorParamList } from '../
 import { getTickers } from '@/Queries/SearchTab'
 import { SharedElement } from 'react-navigation-shared-element'
 import Animated, { FadeInDown } from 'react-native-reanimated'
+import noDataGif from '@/Assets/Images/Illustrations/noData.gif'
+import BrightGrayInput from '@/Components/Inputs/BrightGrayInput'
 
 export type SearchMainScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.searchMain>,
@@ -50,31 +52,24 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
         style={{
           width: '100%',
           paddingHorizontal: 20,
+          paddingTop: 20,
         }}
       >
-        <Animated.View
-          entering={FadeInDown}
-          style={{
-            alignItems: 'center',
-            flexBasis: 50,
-            alignContent: 'center',
-            flexDirection: 'row',
-            backgroundColor: colors.brightGray,
-            paddingHorizontal: 20,
-            borderRadius: 10,
+        <BrightGrayInput
+          value={searchText}
+          onChangeText={onSearchTextChange}
+          icon={() => <MaterialIcons name='search' size={20} color={colors.darkBlueGray} />}
+          textInputProps={{
+            autoCapitalize: 'characters',
+            placeholder: t('searchTickerPrompt'),
           }}
-        >
-          <MaterialIcons name='search' size={20} color={colors.darkBlueGray} />
-          <TextInput
-            style={[{ paddingLeft: 20, flex: 6, height: 50 }]}
-            value={searchText}
-            autoCapitalize={'characters'}
-            onChangeText={onSearchTextChange}
-            placeholder={t('searchTickerPrompt')}
-          />
-        </Animated.View>
+          disableDefaultAnimation
+        />
       </View>
-      <KeyboardAwareScrollView style={[Layout.fullWidth]} contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-start' }}>
+      <KeyboardAwareScrollView
+        style={[Layout.fullWidth]}
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-start', paddingVertical: 10 }}
+      >
         {tickers?.length === 0 ? (
           <View
             style={{
@@ -83,19 +78,26 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
               alignItems: 'center',
             }}
           >
+            <Image
+              source={noDataGif}
+              style={{
+                height: '40%',
+                resizeMode: 'contain',
+              }}
+            />
             <Text
               style={{
                 color: colors.darkBlueGray,
-                fontSize: 12,
+                fontSize: 14,
               }}
             >
-              {t('No Result')}
+              {t('noTickerFound')}
             </Text>
           </View>
         ) : (
           map(tickers, (elem, idx: number) => {
             return (
-              <Animated.View entering={FadeInDown.delay(100 * idx).duration(300)}>
+              <Animated.View entering={FadeInDown.delay(100 * idx).duration(300)} key={`TickerView-${idx}`}>
                 <Pressable
                   key={`ticker-${elem.name}`}
                   onPress={() => {

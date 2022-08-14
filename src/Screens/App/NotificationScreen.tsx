@@ -46,7 +46,11 @@ const NotificationScreen: FC<NotificationScreenNavigationProps> = ({ navigation,
           const { noti } = route.params
           return [
             {
-              id: `noti.${noti?.id}`,
+              id: `noti.${noti?.id}.title`,
+              animation: 'fade',
+            },
+            {
+              id: `noti.${noti?.id}.desc`,
               animation: 'fade',
             },
           ]

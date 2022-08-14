@@ -20,10 +20,13 @@ import { getCompanyPage, getMetricsChart, getNewsItemPanel, getRatingsPanel, New
 import moment from 'moment'
 import LineStockChart from '@/Components/Graph/LineStockChart'
 import { queryConstants } from '@/Queries/Constants'
-import { map } from 'lodash'
+import { map, times } from 'lodash'
 import InAppBrowser from 'react-native-inappbrowser-reborn'
 import { SharedElement } from 'react-navigation-shared-element'
 import Animated, { FadeInDown } from 'react-native-reanimated'
+import { useFinanceGraph } from '@/Hooks/useFinanceGraph'
+import { GraphPoint } from '@/Types/Graph'
+import { moneyConvertToKMB } from '@/Utils/helpers'
 
 type TickerDetailScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.tickerDetail>,
@@ -73,7 +76,7 @@ type InsiderTransaction = NewsItem & {
   action: string
   unitsSold: RegExpMatchArray | null
   unitsBought: RegExpMatchArray | null
-  unitsWorth: RegExpMatchArray | null
+  unitsWorth: string
   unitsOptionsCoverted: RegExpMatchArray | null
 }
 
@@ -99,7 +102,7 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
 
   const companyPage = getCompanyPage(ticker)
 
-  const chartData = getMetricsChart([companyId])
+  let { chartData, prevClose, currClose, lowest, highest } = useFinanceGraph(ticker)
 
   const rawEarningResult: NewsItem[] | undefined = getNewsItemPanel(
     [companyId],
@@ -166,7 +169,7 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
       let isBuy = title?.match(/bought [$0-9,.]+ worth of shares/g)
       let isSell = title?.match(/sold [$0-9,.]+ worth of shares/g)
       let shareUnits = title?.match(/[0-9.,]+(?= units at)/g)
-      let unitsWorth = title?.match(/[0-9,]+(?= worth of shares)/g)
+      let unitsWorth = title?.match(/[0-9,]+(?= worth of shares)/g) ?? []
       let isOptionExercised = title?.match(/exercised/g)
       let unitsOptionsCoverted = title?.match(/[0-9,]+ (?=shares)/g)
 
@@ -186,7 +189,7 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
           action,
           unitsSold: isSell ? shareUnits : null,
           unitsBought: isBuy ? shareUnits : null,
-          unitsWorth,
+          unitsWorth: unitsWorth[0] ?? '0',
           unitsOptionsCoverted,
         })
       }
@@ -204,44 +207,20 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
     5,
   )
 
-  let priceChangePercent: number = useMemo(() => {
-    let values: number[] = chartData?.series[0].values ?? []
-    let lst1 = 0,
-      lst2 = 0
-    for (let i = values.length - 1; i > 0; i--) {
-      if (values[i] !== null) {
-        if (lst1 === 0) {
-          lst1 = values[i]
-        } else if (lst2 === 0) {
-          lst2 = values[i]
-        }
-      }
-      if (lst2 !== 0 && lst1 !== 0) {
-        break
-      }
-    }
-
-    return (lst1 / lst2) * 100 - 100
-  }, [chartData])
-
+  let priceChangePercent: number = ((currClose - prevClose) / prevClose) * 100
   return (
     <ScreenBackgrounds screenName={RouteStacks.eventMain}>
       <Header headerText={`${name}`} onLeftPress={() => navigation.navigate(RouteStacks.searchMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={
-          (Layout.fill,
-          {
-            paddingTop: 20,
-          })
-        }
+        style={[Layout.fill]}
         stickyHeaderIndices={[1, 3, 5, 7, 9]}
-        contentContainerStyle={[Layout.colCenter, Gutters.smallHPadding, { flexGrow: 1, justifyContent: 'flex-start' }]}
+        contentContainerStyle={[Layout.colCenter, { flexGrow: 1, paddingTop: 20, justifyContent: 'flex-start' }]}
       >
         <View
           style={[
             SECTION_VIEW,
             {
-              height: 200,
+              height: 300,
             },
           ]}
         >
@@ -277,7 +256,7 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
               <Text
                 style={{
                   fontSize: 10,
-                  color: priceChangePercent > 0 ? colors.fernGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
+                  color: priceChangePercent > 0 ? colors.electricGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
                 }}
               >
                 {priceChangePercent === 0 ? '-' : priceChangePercent > 0 ? '▲' : '▼'} {priceChangePercent?.toFixed(2)}%
@@ -286,14 +265,11 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
           </View>
           <View
             style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingTop: 20,
               width: '100%',
               height: '100%',
             }}
           >
-            <LineStockChart chartData={chartData} />
+            <LineStockChart chartData={chartData} height={250} priceChangePercent={priceChangePercent} lowest={lowest} highest={highest} />
           </View>
         </View>
 
@@ -324,11 +300,11 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
                 style={{
                   height: 50,
                   width: '100%',
-                  borderColor: colors.brightGray,
-                  borderWidth: 1,
+                  // borderColor: colors.brightGray,
+                  // borderWidth: 1,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
+                  // backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
                 }}
                 onPress={() => {
                   // InAppBrowser.open(pt.link)
@@ -394,11 +370,11 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
                 style={{
                   height: 50,
                   width: '100%',
-                  borderColor: colors.brightGray,
-                  borderWidth: 1,
+                  // borderColor: colors.brightGray,
+                  // borderWidth: 1,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
+                  // backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
                 }}
               >
                 <View style={{ width: 120 }}>
@@ -452,11 +428,11 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
                 style={{
                   height: 50,
                   width: '100%',
-                  borderColor: colors.brightGray,
-                  borderWidth: 1,
+                  // borderColor: colors.brightGray,
+                  // borderWidth: 1,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
+                  // backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
                 }}
                 key={`InsiderTransaction-${idx}`}
                 onPress={() => InAppBrowser.open(link)}
@@ -487,7 +463,7 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
                       </Text>
                     </View>
                     <View style={{ width: 80, alignItems: 'center' }}>
-                      <Text style={[INSIDER_TRANSACTION_CELL_TEXT]}>{unitsWorth}</Text>
+                      <Text style={[INSIDER_TRANSACTION_CELL_TEXT]}>{moneyConvertToKMB(Number(unitsWorth.replace(/,/g, '')))}</Text>
                     </View>
                   </>
                 }
@@ -506,23 +482,23 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
               <Pressable
                 style={{
                   height: 60,
-                  paddingHorizontal: 10,
+                  // paddingHorizontal: 10,
                   width: '100%',
-                  borderColor: colors.brightGray,
-                  borderWidth: 1,
+                  // borderColor: colors.brightGray,
+                  // borderWidth: 1,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
+                  // backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
                 }}
                 key={`SecFiling-${idx}`}
                 onPress={() => InAppBrowser.open(sec.link)}
               >
                 {
                   <View style={{ flexDirection: 'row' }}>
-                    <View style={{ flex: 1 }}>
+                    {/* <View style={{ flex: 1 }}>
                       <Image source={{ uri: config.defaultSECImg }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
-                    </View>
-                    <View style={{ flex: 4, justifyContent: 'center', paddingHorizontal: 10 }}>
+                    </View> */}
+                    <View style={{ flex: 4, justifyContent: 'center' }}>
                       <View style={{}}>
                         <Text numberOfLines={1} style={{ color: colors.darkBlueGray, fontSize: 12, fontWeight: 'bold' }}>
                           {sec.title}

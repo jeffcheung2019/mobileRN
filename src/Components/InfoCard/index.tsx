@@ -3,14 +3,23 @@ import { View, Image, Text, ActivityIndicator, Pressable, PressableProps, ViewSt
 import { useTheme } from '@/Hooks'
 import { colors } from '@/Utils/constants'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, { measure, SharedValue, TransformStyleTypes, useAnimatedRef, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, {
+  measure,
+  SharedValue,
+  TransformStyleTypes,
+  useAnimatedRef,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated'
 import { getMetricsChart } from '@/Queries/SearchTab'
-
-// import { LineGraph } from 'react-native-graph'
-// import { GraphPoint } from 'react-native-graph/lib/typescript/LineGraphProps'
+import { LineChart } from 'react-native-gifted-charts'
+import times from 'lodash/times'
+import { GraphPoint } from '@/Types/Graph'
+import { VictoryArea, VictoryAxis, VictoryChart, VictoryTheme } from 'victory-native'
 
 type InfoCardProps = {
-  // points: GraphPoint
+  points: GraphPoint[]
   ticker: string
   tickerName: string
   containerStyle?: object
@@ -25,7 +34,7 @@ const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
 
 const InfoCard = ({
-  // points,
+  points,
   ticker,
   tickerName,
   cardIdx,
@@ -46,13 +55,13 @@ const InfoCard = ({
     let transforms: TransformStyleTypes[] = []
     if (measuredVal.pageX < windowWidth && measuredVal.pageX >= (windowWidth * 9) / 10) {
       let interpolatedVal = (windowWidth - measuredVal.pageX) / (windowWidth / 10)
-      transforms.push({ scale: interpolatedVal })
+      transforms.push({ scale: withSpring(interpolatedVal) })
       animatedStyleRes.opacity = interpolatedVal
     } else if (measuredVal.pageX > windowWidth) {
-      transforms.push({ scale: 0.85 })
+      transforms.push({ scale: withSpring(0.85) })
       animatedStyleRes.opacity = 1
     } else if (measuredVal.pageX < (windowWidth * 9) / 10) {
-      transforms.push({ scale: 1 })
+      transforms.push({ scale: withSpring(1) })
       animatedStyleRes.opacity = 1
     }
 
@@ -63,6 +72,17 @@ const InfoCard = ({
 
   let priceChangePercent = (close / prevClose) * 100 - 100
   let closeDiff = close - prevClose
+  let lowest = 9999999,
+    highest = -9999999
+  points.forEach((point: GraphPoint) => {
+    if (point.value < lowest) {
+      lowest = point.value
+    }
+    if (point.value > highest) {
+      highest = point.value
+    }
+  })
+  let diff = highest - lowest
 
   return (
     <Animated.View
@@ -70,12 +90,11 @@ const InfoCard = ({
       style={[
         {
           borderRadius: 10,
-          borderWidth: 0,
-          minWidth: 200,
-          backgroundColor: colors.white,
-          paddingVertical: 10,
-          paddingHorizontal: 10,
+          width: 200,
+          height: 130,
+          borderWidth: 1,
           borderColor: colors.brightGray,
+          padding: 14,
           ...containerStyle,
         },
         containerAnimatedStyle,
@@ -83,30 +102,18 @@ const InfoCard = ({
     >
       <View
         style={{
+          height: 50,
+          width: '100%',
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
           flexDirection: 'row',
-          flex: 1,
-          paddingHorizontal: 10,
         }}
       >
         <View
           style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
           }}
         >
-          <Text
-            style={[
-              {
-                width: '100%',
-                color: colors.darkBlueGray,
-                textAlign: 'left',
-              },
-              Fonts.textSM,
-            ]}
-          >
-            {ticker}
-          </Text>
           <Text
             style={[
               {
@@ -114,17 +121,29 @@ const InfoCard = ({
                 color: colors.darkBlueGray,
                 fontSize: 14,
                 fontWeight: 'bold',
+                height: 14,
               },
             ]}
           >
             {tickerName}
+          </Text>
+          <Text
+            style={{
+              fontSize: 10,
+              paddingTop: 10,
+              textAlign: 'left',
+              color: priceChangePercent > 0 ? colors.electricGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
+            }}
+          >
+            {priceChangePercent === 0 ? '' : priceChangePercent > 0 ? '▲' : '▼'} {priceChangePercent?.toFixed(2)}%
           </Text>
         </View>
       </View>
 
       <View
         style={{
-          flex: 3,
+          width: 50,
+          height: 70,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
@@ -132,41 +151,45 @@ const InfoCard = ({
       >
         <View
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingHorizontal: 10,
+            width: 150,
+            height: '100%',
           }}
         >
-          <Text style={[Layout.fullWidth, { fontSize: 12, fontWeight: 'bold', color: colors.darkBlueGray, textAlign: 'left' }]}>
-            {close}
-          </Text>
-          <Text
+          <View
             style={{
-              fontSize: 10,
-              textAlign: 'left',
-              color: priceChangePercent > 0 ? colors.lawnGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
+              position: 'absolute',
+              top: -50,
+              left: 0,
             }}
           >
-            {priceChangePercent === 0 ? '' : priceChangePercent > 0 ? '▲' : '▼'} {priceChangePercent?.toFixed(2)}%
-          </Text>
-          <Text
-            style={{
-              fontSize: 10,
-              textAlign: 'left',
-              color: closeDiff > 0 ? colors.lawnGreen : closeDiff === 0 ? colors.darkBlueGray : colors.crimson,
-            }}
-          >
-            {closeDiff === 0 ? '' : closeDiff > 0 ? '+' : '-'} {Math.abs(closeDiff)?.toFixed(2)}
-          </Text>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignContent: 'center',
-          }}
-        >
-          {/* <LineGraph points={points} style={{ width: '100%', height: '100%' }} color={colors.darkBlueGray} animated /> */}
+            <VictoryChart theme={VictoryTheme.material} width={270} height={150}>
+              <VictoryArea
+                animate={{
+                  duration: 2000,
+                  onLoad: { duration: 1000 },
+                }}
+                style={{
+                  data: {
+                    fill: priceChangePercent > 0 ? colors.electricGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
+                    fillOpacity: 0.3,
+                  },
+                }}
+                data={points}
+                domain={{ y: [lowest, highest] }}
+                x='date'
+                y='value'
+              />
+
+              <VictoryAxis
+                style={{
+                  axis: { stroke: 'transparent' },
+                  ticks: { stroke: 'transparent' },
+                  tickLabels: { fill: 'transparent' },
+                  grid: { stroke: 'transparent' },
+                }}
+              />
+            </VictoryChart>
+          </View>
         </View>
       </View>
     </Animated.View>
