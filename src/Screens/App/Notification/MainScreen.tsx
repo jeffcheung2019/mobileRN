@@ -22,6 +22,9 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { MainStackNavigatorParamList, MainStackNavigtorProps } from '@/Navigators/MainStackNavigator'
 import { SettingScreenNavigationProps, SettingScreenNavigatorParamList } from '../SettingScreen'
 import { NotificationScreenNavigationProps, NotificationScreenNavigatorParamList } from '../NotificationScreen'
+import { useRealm } from '@/Realms/RealmContext'
+import { TickerDetailDisplay, tickerDetailSectionsStrMap, TickerDetailSectionsType } from '@/Realms/Schemas/TickerDetailDisplaySchema'
+import { SectionSubscriptionState } from '../Search/TickerNotiSubscriptionScreen'
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
@@ -31,38 +34,112 @@ export type NotificationMainScreenNavigationProps = CompositeScreenProps<
   NotificationScreenNavigationProps
 >
 
+type SubscribedTickers = {
+  [key: string]: TickerDetailSectionsType
+}
+
+const initTickerDetail = {
+  priceTargets: false,
+  insiderTransactions: false,
+  earnings: false,
+  secFilings: false,
+}
+
 const NotificationMainScreen: FC<NotificationMainScreenNavigationProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
+  const realm = useRealm()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
-
-  const params = route!.params || { username: null }
+  const [subscribedTickers, setSubscribedTickers] = useState<SubscribedTickers>({})
 
   const onBackPress = () => {
     navigation.goBack()
   }
 
+  useEffect(() => {
+    let realmNotiSubscribedState = realm?.objects<TickerDetailDisplay>('TickerDetailDisplay') ?? []
+    let newNotiSubscribedState: SectionSubscriptionState = {
+      priceTargets: false,
+      earnings: false,
+      insiderTransactions: false,
+      secFilings: false,
+    }
+    let newSubscribedTickers: SubscribedTickers = {}
+    for (let i = 0; i < realmNotiSubscribedState.length; i++) {
+      let sectionStr = tickerDetailSectionsStrMap[realmNotiSubscribedState[i].section]
+      let currTicker = realmNotiSubscribedState[i].ticker
+      if (realmNotiSubscribedState[i].subscribed) {
+        if (newSubscribedTickers[currTicker]) {
+          newSubscribedTickers[currTicker] = {
+            ...newSubscribedTickers[currTicker],
+            [sectionStr]: true,
+          }
+        } else {
+          // first encountered ticker
+          newSubscribedTickers[currTicker] = {
+            ...initTickerDetail,
+            [sectionStr]: true,
+          }
+        }
+      }
+    }
+    setSubscribedTickers(newSubscribedTickers)
+  }, [])
+
+  console.log('subscribedTickers ', JSON.stringify(subscribedTickers, null, 2))
+
   return (
     <ScreenBackgrounds screenName={RouteStacks.notificationMain}>
       <Header onLeftPress={onBackPress} headerText={t('notifications')} withProfile={false} />
-      <KeyboardAwareScrollView contentContainerStyle={[Layout.fill, Layout.colCenter]}>
-        <View
-          style={{
-            flexDirection: 'row',
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-            }}
-          ></View>
+      <KeyboardAwareScrollView
+        contentContainerStyle={[
+          Layout.fill,
+          Layout.colCenter,
+          {
+            justifyContent: 'flex-start',
+          },
+        ]}
+      >
+        {Object.keys(subscribedTickers).map((ticker, idx) => {
+          return (
+            <Pressable
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: 50,
+                paddingHorizontal: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: colors.brightGray,
+                paddingVertical: 4,
+              }}
+              key={`SubscribedTicker-${ticker}`}
+              // onPress={() => }
+            >
+              <View style={{}}>
+                <Text
+                  style={{
+                    color: colors.white,
+                    paddingHorizontal: 8,
+                    paddingVertical: 4,
+                    fontWeight: 'bold',
+                    backgroundColor: colors.darkBlueGray,
+                  }}
+                >
+                  ${ticker}
+                </Text>
+              </View>
 
-          <View
-            style={{
-              flex: 4,
-            }}
-          ></View>
-        </View>
+              <View
+                style={{
+                  flex: 4,
+                  paddingHorizontal: 8,
+                }}
+              >
+                <Text>{JSON.stringify(subscribedTickers[ticker])}</Text>
+              </View>
+            </Pressable>
+          )
+        })}
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )

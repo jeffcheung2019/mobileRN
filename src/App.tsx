@@ -27,6 +27,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import { SWRConfig } from 'swr'
 import { fetchers } from './Utils/swrUtils'
+import { initRealm } from './Realms/Realm'
 
 // Initialize Apollo Client
 const client = new ApolloClient({
@@ -182,7 +183,15 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const run = async () => {}
+    const run = async () => {
+      console.log('=> Initialize realm')
+      try {
+        await initRealm()
+        console.log('=> Sucessfully initialized realm')
+      } catch (err) {
+        console.log('=> Realm initialization error', err)
+      }
+    }
 
     run()
   }, [])

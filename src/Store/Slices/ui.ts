@@ -1,4 +1,4 @@
-import { createReducer, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export type ShowSnackbarPayload = {
   visible: boolean

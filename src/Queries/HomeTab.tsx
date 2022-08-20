@@ -8,6 +8,25 @@ export type LiveFeedProp = {
   sourceIds: number[]
 }
 
+export const getNewsItemData = (newsItemId: number) => {
+  const { loading, error, data } = useQuery(
+    gql`
+      query GetNewsItemData($newsitemId: int64!) {
+        newsItemData(newsitemId: $newsitemId) {
+          html
+        }
+      }
+    `,
+    {
+      variables: {
+        newsitemId: 3290908,
+      },
+    },
+  )
+
+  return data?.newsItemData
+}
+
 export const getLiveFeed = (props: LiveFeedProp) => {
   const { limit, companyIds, categoryIds, sourceIds } = props
   const { loading, error, data } = useQuery(

@@ -8,7 +8,8 @@ import { api } from '@/Services/api'
 import * as modules from '@/Services/modules'
 import theme from './Theme'
 import userReducer from '@/Store/Users/reducer'
-import uiReducer from '@/Store/UI/reducer'
+import uiSlice from './Slices/ui'
+import stockInfoDisplayReducer from '@/Store/StockInfoDisplay/reducer'
 
 const reducers = combineReducers({
   theme,
@@ -20,15 +21,15 @@ const reducers = combineReducers({
     {},
   ),
   user: userReducer,
-  ui: uiReducer,
-
+  ui: uiSlice,
+  stockInfoDisplay: stockInfoDisplayReducer,
   // new reducers to be added here
 })
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['theme', 'user', 'ui'],
+  whitelist: ['theme', 'user', 'ui', 'stockInfoDisplay'],
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)

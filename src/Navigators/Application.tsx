@@ -58,6 +58,7 @@ const ApplicationNavigator = () => {
   const { isScreenLoading, snackBarConfig } = useSelector((state: RootState) => state.ui)
   const dispatch = useDispatch()
   let { isLoggedIn } = useSelector((state: RootState) => state.user)
+
   useEffect(() => {
     const retrieveLoggedInUser = async () => {
       try {

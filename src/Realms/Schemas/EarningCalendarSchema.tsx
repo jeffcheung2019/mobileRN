@@ -16,20 +16,20 @@ export type EarningCalendar = {
 }
 
 export const EarningCalendarSchema: Schema = {
-  name: 'Earning',
+  name: 'EarningCalendar',
   properties: {
     _id: 'objectId',
-    earningDate: 'number[]', // need to add extra 3 0 behind
+    earningDate: 'int[]', // need to add extra 3 right padded 0
 
     tickerIcon: 'string', //0
     ticker: 'string', // 1
     tickerName: 'string',
-    epsEst: 'number',
-    epsReported: 'number',
+    epsEst: 'float',
+    epsReported: 'float',
     revEst: 'string', // in billion / million
     revReported: 'string', // in billion / million
     earningResultTime: 'string', // D | N
-    marketCap: 'number', // in billion / million
+    marketCap: 'float', // in billion / million
   },
   primaryKey: '_id',
 }

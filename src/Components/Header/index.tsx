@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { View, ViewStyle, TextStyle, Pressable, Text, Image, TextInput, Dimensions } from 'react-native'
+import { View, ViewStyle, TextStyle, Pressable, Text, TextInput, Dimensions } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { Spacing } from '@/Theme/Variables'
 import backBtn from '@/Assets/Images/buttons/back.png'
@@ -10,8 +10,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Store'
-import Animated from 'react-native-reanimated'
+import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated'
 import { SharedElement } from 'react-navigation-shared-element'
+import FastImage from 'react-native-fast-image'
 
 export const headerHeight = 60
 
@@ -53,7 +54,8 @@ const Header = (props: {
             flexDirection: 'row',
           }}
         >
-          <View
+          <Animated.View
+            entering={FadeInRight.duration(1000)}
             style={{
               flex: 1,
               justifyContent: 'center',
@@ -67,7 +69,7 @@ const Header = (props: {
             >
               <MaterialCommunityIcons name='arrow-left' size={config.iconSize} color={colors.darkBlueGray} />
             </Pressable>
-          </View>
+          </Animated.View>
           <View
             style={{
               flex: 3,
@@ -116,7 +118,11 @@ const Header = (props: {
               flex: 1,
             }}
           >
-            <Image source={{ uri: config.defaultAvatarUrl }} resizeMode='contain' style={{ width: 36, height: 36, borderRadius: 99 }} />
+            <FastImage
+              source={{ uri: config.defaultAvatarUrl, priority: FastImage.priority.high }}
+              resizeMode='contain'
+              style={{ width: 36, height: 36, borderRadius: 99 }}
+            />
           </Pressable>
 
           <View

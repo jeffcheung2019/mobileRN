@@ -16,10 +16,15 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import TickerDetailScreen from './Search/TickerDetailScreen'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
+import TickerNotiSubscriptionScreen from './Search/TickerNotiSubscriptionScreen'
 const Stack = createSharedElementStackNavigator()
 
 export type SearchScreenNavigatorParamList = {
   [RouteStacks.searchMain]: undefined
+  [RouteStacks.tickerNotiSubscription]: {
+    ticker: string
+    name: string
+  }
   [RouteStacks.tickerDetail]: {
     ticker: string
     id: number
@@ -41,6 +46,13 @@ const SearchScreen: FC<SearchScreenNavigationProps> = ({ navigation, route }) =>
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name={RouteStacks.searchMain} component={MainScreen} />
       <Stack.Screen
+        name={RouteStacks.tickerNotiSubscription}
+        options={{
+          presentation: 'modal',
+        }}
+        component={TickerNotiSubscriptionScreen}
+      />
+      <Stack.Screen
         name={RouteStacks.tickerDetail}
         component={TickerDetailScreen}
         sharedElements={(route, otherRoute, showing) => {
@@ -48,7 +60,7 @@ const SearchScreen: FC<SearchScreenNavigationProps> = ({ navigation, route }) =>
           return [
             {
               id: `ticker.${ticker}`,
-              animation: 'move',
+              animation: 'fade',
             },
           ]
         }}

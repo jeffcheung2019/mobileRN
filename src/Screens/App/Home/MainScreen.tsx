@@ -13,7 +13,6 @@ import {
   Alert,
   ViewStyle,
   RefreshControl,
-  Image,
   Dimensions,
   Linking,
 } from 'react-native'
@@ -76,6 +75,9 @@ import useSWR from 'swr'
 import { fetchers } from '@/Utils/swrUtils'
 import Parser from 'rss-parser'
 import moment from 'moment'
+import HomeTopNewsPlaceholder from './Components/HomeTopNewsPlaceholder'
+import HomeNewsPlaceholder from './Components/HomeNewsPlaceholder'
+import FastImage from 'react-native-fast-image'
 
 const PURPLE_COLOR = {
   color: colors.magicPotion,
@@ -211,6 +213,8 @@ const HomeMainScreen: FC<HomeMainScreenNavigationProps> = ({ navigation, route }
   //   }
   // }, [scrollPosition, cardsContainerARef])
 
+  // console.log('liveFeedResult ', JSON.stringify(liveFeedResult[0], null, 2))
+
   useEffect(() => {
     setTimeout(() => {
       setNeedFetchDtl(false)
@@ -296,76 +300,81 @@ const HomeMainScreen: FC<HomeMainScreenNavigationProps> = ({ navigation, route }
         }
 
         <ScrollView style={[{ width: '100%' }]} contentContainerStyle={{ flex: 1, width: '100%' }} showsVerticalScrollIndicator={false}>
-          {
-            // false ? (
-            liveFeedResult && liveFeedResult[0] ? (
-              <Pressable
-                onPress={() =>
-                  navigation.navigate(RouteStacks.homeNewsDetail, {
-                    news: {
-                      id: liveFeedResult[0]?.newsItem?.link,
-                      title: liveFeedResult[0]?.newsItem?.title,
-                      content: liveFeedResult[0]?.newsItem?.summary,
-                      imgUrl: liveFeedResult[0]?.newsItem?.imgUrl,
-                      tickers: liveFeedResult[0]?.companies.map((company: TickerCompanyDetail) => {
-                        return company.ticker
-                      }),
-                    },
-                  })
-                }
+          {liveFeedResult && liveFeedResult[0] ? (
+            <Pressable
+              onPress={() =>
+                navigation.navigate(RouteStacks.homeNewsDetail, {
+                  news: {
+                    id: liveFeedResult[0]?.newsItem?.link,
+                    newsItemId: liveFeedResult[0]?.newsItem?.id,
+                    title: liveFeedResult[0]?.newsItem?.title,
+                    content: liveFeedResult[0]?.newsItem?.summary,
+                    imgUrl: liveFeedResult[0]?.newsItem?.imgUrl,
+                    tickers: liveFeedResult[0]?.companies.map((company: TickerCompanyDetail) => {
+                      return company.ticker
+                    }),
+                  },
+                })
+              }
+              style={{
+                height: 280,
+                width: '100%',
+                paddingHorizontal: 10,
+                paddingBottom: 10,
+              }}
+            >
+              <View
                 style={{
-                  height: 280,
+                  height: 170,
                   width: '100%',
-                  paddingHorizontal: 10,
-                  paddingBottom: 10,
                 }}
               >
-                <View
-                  style={{
-                    height: 170,
-                    width: '100%',
-                  }}
-                >
-                  <SharedElement id={`news.${liveFeedResult[0]?.newsItem?.link}.image`}>
-                    <Image
-                      source={{
-                        uri: liveFeedResult[0]?.newsItem?.imgUrl === '' ? config.defaultNewsImgUrl : liveFeedResult[0]?.newsItem?.imgUrl,
-                      }}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        resizeMode: 'cover',
-                      }}
-                    />
-                  </SharedElement>
-                </View>
+                <SharedElement id={`news.${liveFeedResult[0]?.newsItem?.link}.image`}>
+                  <FastImage
+                    source={{
+                      uri: liveFeedResult[0]?.newsItem?.imgUrl === '' ? config.defaultNewsImgUrl : liveFeedResult[0]?.newsItem?.imgUrl,
+                      priority: FastImage.priority.high,
+                    }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    resizeMode={'cover'}
+                  />
+                </SharedElement>
+              </View>
 
-                <ScrollView
-                  horizontal
-                  style={{
-                    width: '100%',
-                    height: 50,
-                  }}
-                  contentContainerStyle={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
+              <ScrollView
+                horizontal
+                style={{
+                  width: '100%',
+                  height: 50,
+                }}
+                contentContainerStyle={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <SharedElement
+                  id={`news.${liveFeedResult[0]?.newsItem?.link}.tickers.${join(
+                    liveFeedResult[0]?.companies.map((company: TickerCompanyDetail) => {
+                      return company.ticker
+                    }),
+                    '-',
+                  )}`}
                 >
-                  <SharedElement
-                    id={`news.${liveFeedResult[0]?.newsItem?.link}.tickers.${join(
-                      liveFeedResult[0]?.companies.map((company: TickerCompanyDetail) => {
-                        return company.ticker
-                      }),
-                      '-',
-                    )}`}
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                    }}
                   >
                     {map(liveFeedResult[0]?.companies, (company, idx) => {
                       return (
                         <View
-                          key={`liveFeedCompanies-${idx}`}
+                          key={`ticker-${idx}`}
                           style={{
                             backgroundColor: colors.darkBlueGray,
-                            marginHorizontal: 4,
+                            marginRight: 4,
                             height: 30,
                             justifyContent: 'center',
                             paddingHorizontal: 8,
@@ -375,72 +384,54 @@ const HomeMainScreen: FC<HomeMainScreenNavigationProps> = ({ navigation, route }
                         </View>
                       )
                     })}
-                  </SharedElement>
-                </ScrollView>
+                  </View>
+                </SharedElement>
+              </ScrollView>
 
-                <View style={{ height: 60, justifyContent: 'center' }}>
-                  <SharedElement id={`news.${liveFeedResult[0]?.newsItem?.link}.title`}>
-                    <Text style={{ color: colors.darkBlueGray, fontSize: 14, fontWeight: 'bold' }} numberOfLines={3}>
-                      {liveFeedResult[0]?.newsItem.title}
-                    </Text>
-                  </SharedElement>
-                </View>
-              </Pressable>
-            ) : (
-              <View
-                style={{
-                  height: 300,
-                  width: '100%',
-                  paddingHorizontal: 10,
-                }}
-              >
-                <View
-                  style={{
-                    height: 200,
-                    width: '100%',
-                  }}
-                >
-                  <Skeleton style={{ width: '100%' }} animation='pulse' height={200} />
-                </View>
-
-                <View
-                  style={{
-                    height: 40,
-                    paddingVertical: 10,
-                  }}
-                >
-                  <Skeleton style={{ marginVertical: 2 }} animation='pulse' width={50} height={16} />
-                  <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={10} />
-                  <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={10} />
-                  <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={10} />
-                  <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={10} />
-                </View>
+              <View style={{ height: 60, justifyContent: 'center' }}>
+                <SharedElement id={`news.${liveFeedResult[0]?.newsItem?.link}.title`}>
+                  <Text style={{ color: colors.darkBlueGray, fontSize: 14, fontWeight: 'bold' }} numberOfLines={3}>
+                    {liveFeedResult[0]?.newsItem.title}
+                  </Text>
+                </SharedElement>
               </View>
-            )
-          }
+            </Pressable>
+          ) : (
+            <HomeTopNewsPlaceholder />
+          )}
 
-          {map(liveFeedResult, (elem: any, idx: number) => {
-            if (idx === 0) return null
-            let newsDtl = {
-              id: elem.newsItem.link,
-              title: elem.newsItem.title,
-              content: elem.newsItem.summary,
-              imgUrl: elem.newsItem.imgUrl,
-              tickers: elem.companies.map((company: TickerCompanyDetail) => company.ticker),
-            }
-            return (
-              <View style={{ width: '100%', height: 90 }} key={`NewsCard-${idx}`}>
-                <NewsCard
-                  news={newsDtl}
-                  onPress={() =>
-                    navigation.navigate(RouteStacks.homeNewsDetail, {
-                      news: newsDtl,
-                    })
-                  }
-                />
-              </View>
-            )
-          })}
+          {liveFeedResult === undefined || liveFeedResult.length === 0 ? (
+            <View>
+              <HomeNewsPlaceholder />
+              <HomeNewsPlaceholder />
+              <HomeNewsPlaceholder />
+              <HomeNewsPlaceholder />
+            </View>
+          ) : (
+            map(liveFeedResult, (elem: any, idx: number) => {
+              if (idx === 0) return null
+              let newsDtl = {
+                id: elem?.newsItem?.link,
+                title: elem?.newsItem?.title,
+                content: elem?.newsItem?.summary,
+                imgUrl: elem?.newsItem?.imgUrl,
+                newsItemId: elem?.newsItem?.id,
+                tickers: elem?.companies.map((company: TickerCompanyDetail) => company.ticker),
+              }
+              return (
+                <View style={{ width: '100%', height: 90 }} key={`NewsCard-${idx}`}>
+                  <NewsCard
+                    news={newsDtl}
+                    onPress={() => {
+                      navigation.navigate(RouteStacks.homeNewsDetail, {
+                        news: newsDtl,
+                      })
+                    }}
+                  />
+                </View>
+              )
+            })
+          )}
         </ScrollView>
       </Animated.ScrollView>
     </ScreenBackgrounds>

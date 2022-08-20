@@ -46,7 +46,7 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
   }
 
   return (
-    <ScreenBackgrounds screenName={RouteStacks.setting}>
+    <ScreenBackgrounds screenName={RouteStacks.searchMain}>
       <Header headerText={t('searchTicker')} withProfile={false} />
       <View
         style={{

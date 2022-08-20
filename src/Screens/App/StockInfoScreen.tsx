@@ -10,8 +10,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
 import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
-import { RouteTopTabs, RouteTabs } from '@/Navigators/routes'
-import { InsiderScreen, MainScreen } from './StockInfo'
+import { RouteTopTabs, RouteTabs, RouteStacks } from '@/Navigators/routes'
+import { AddWatchListScreen, InsiderTransactionListScreen, MainScreen, PriceTargetListScreen, SecFilingListScreen } from './StockInfo'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
@@ -19,18 +19,29 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { TabView, SceneMap, Route, TabBar } from 'react-native-tab-view'
 import StockInfoMainScreen from './StockInfo/MainScreen'
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
+import EventListScreen from './StockInfo/EventListScreen'
 
-const MaterialTopTab = createMaterialTopTabNavigator()
-
-export type StockInfoTopTabNavigatorParamList = {
-  [RouteTopTabs.stockInfoMain]: undefined
-  [RouteTopTabs.insider]: undefined
+export type StockInfoStackNavigatorParamList = {
+  [RouteStacks.stockInfoMain]: undefined
+  [RouteStacks.insiderTransactionList]: undefined
+  [RouteStacks.priceTargetList]: undefined
+  [RouteStacks.secFilingList]: undefined
+  [RouteStacks.eventList]: undefined
+  [RouteStacks.addWatchList]: undefined
+  [RouteStacks.investorHoldingList]: undefined
+  [RouteStacks.shortInterests]: undefined
+  [RouteStacks.usEconomicData]: undefined
+  [RouteStacks.euEconomicData]: undefined
+  [RouteStacks.asianEconomicData]: undefined
 }
 
-export type StockInfoTopTabNavigationProps = CompositeScreenProps<
-  BottomTabScreenProps<MainTabNavigatorParamList, RouteTabs.stockInfo>,
+export type StockInfoStackNavigationProps = CompositeScreenProps<
+  StackScreenProps<MainTabNavigatorParamList, RouteTabs.stockInfo>,
   MainTabNavigatorProps
 >
+
+const Stack = createSharedElementStackNavigator()
 
 const TAB_BAR_TEXT_STYLE = {
   fontSize: 14,
@@ -39,57 +50,31 @@ const TAB_BAR_TEXT_STYLE = {
 
 type ScreenProps = {}
 
-const StockInfoScreen: FC<StockInfoTopTabNavigationProps> = ({ navigation, route }) => {
+// allow customizeable
+// priceTarget, insidertransaction,
+const StockInfoScreen: FC<StockInfoStackNavigationProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
   const [screenIdx, setScreenIdx] = useState(0)
   const layout = useWindowDimensions()
-  const [screens] = useState([{ key: 'Price Target' }, { key: 'Insider' }])
-
-  const renderScene = ({ route }: { route: Route }) => {
-    switch (route.key) {
-      case 'Price Target':
-        return StockInfoMainScreen
-      case 'Insider':
-        return InsiderScreen
-      default:
-        return null
-    }
-  }
-
 
   return (
-    <TabView
-      style={{
-        width: '100%',
-        height: '100%',
-      }}
-      lazy
-      lazyPreloadDistance={10}
-      renderTabBar={props => (
-        <TabBar
-          {...props}
-          scrollEnabled
-          renderLabel={props => {
-            const { focused, route } = props
-            return (
-              <View>
-                <Text style={{ color: colors.darkBlueGray }}>{route?.key}</Text>
-              </View>
-            )
-          }}
-          indicatorStyle={{ backgroundColor: colors.darkBlueGray }}
-          style={{ backgroundColor: colors.white }}
-        />
-      )}
-      navigationState={{ index: screenIdx, routes: screens }}
-      renderScene={renderScene}
-      onIndexChange={setScreenIdx}
-      sceneContainerStyle={{}}
-      initialLayout={{ width: layout.width }}
-    />
+    <Stack.Navigator screenOptions={{ headerShown: false, presentation: 'transparentModal' }} initialRouteName={RouteStacks.stockInfoMain}>
+      <Stack.Screen name={RouteStacks.stockInfoMain} component={MainScreen} />
+      <Stack.Screen name={RouteStacks.insiderTransactionList} component={InsiderTransactionListScreen} />
+      <Stack.Screen name={RouteStacks.priceTargetList} component={PriceTargetListScreen} />
+      <Stack.Screen name={RouteStacks.secFilingList} component={SecFilingListScreen} />
+      <Stack.Screen name={RouteStacks.eventList} component={EventListScreen} />
+      <Stack.Screen
+        name={RouteStacks.addWatchList}
+        component={AddWatchListScreen}
+        options={{
+          presentation: 'modal',
+        }}
+      />
+    </Stack.Navigator>
   )
 }
 

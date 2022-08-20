@@ -33,6 +33,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { times } from 'lodash'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/Store'
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -70,6 +72,7 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
   const routeIdxSharedValue = useSharedValue<number>(0)
   const highlightDimensionScale = useSharedValue<number>(1)
   const iconScales = useSharedValue<number[]>([1, 1, 1, 1, 1])
+  const { tabBarVisible } = useSelector((state: RootState) => state.ui)
 
   const highlightRef = useRef(null)
 
@@ -118,7 +121,7 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
     }
   }, [routeIdxSharedValue, state.index])
 
-  return (
+  return !tabBarVisible ? null : (
     <View
       style={{
         borderTopLeftRadius: 20,

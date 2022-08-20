@@ -22,20 +22,22 @@ import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, 
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoTopTabNavigationProps, StockInfoTopTabNavigatorParamList } from '../StockInfoScreen'
+import { StockInfoStackNavigatorParamList, StockInfoStackNavigationProps } from '@/Screens/App/StockInfoScreen'
+import Header from '@/Components/Header'
 
-export type InsiderScreenNavigationProps = CompositeScreenProps<
-  MaterialTopTabScreenProps<StockInfoTopTabNavigatorParamList, RouteTopTabs.insider>,
-  StockInfoTopTabNavigationProps
+export type EventListScreenNavigationProps = CompositeScreenProps<
+  MaterialTopTabScreenProps<StockInfoStackNavigatorParamList, RouteStacks.eventList>,
+  StockInfoStackNavigationProps
 >
 
-const InsiderScreen: FC<InsiderScreenNavigationProps> = ({ navigation, route }) => {
+const EventListScreen: FC<EventListScreenNavigationProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
   return (
-    <ScreenBackgrounds screenName={RouteTopTabs.insider}>
+    <ScreenBackgrounds screenName={RouteStacks.eventList}>
+      <Header headerText={t('events')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
         style={Layout.fill}
         contentContainerStyle={[Layout.fullSize, Layout.colCenter, Gutters.smallHPadding]}
@@ -44,4 +46,4 @@ const InsiderScreen: FC<InsiderScreenNavigationProps> = ({ navigation, route }) 
   )
 }
 
-export default InsiderScreen
+export default EventListScreen

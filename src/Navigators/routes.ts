@@ -46,12 +46,26 @@ export enum RouteStacks {
 
   searchMain = 'searchMain',
   tickerDetail = 'tickerDetail',
+  tickerNotiSubscription = 'tickerNotiSubscription',
 
   settingEditProfile = 'settingEditProfile',
 
   // logged in app screens
   homeMain = 'homeMain',
   homeNewsDetail = 'homeNewsDetail',
+
+  stockInfoMain = 'stockInfoMain',
+  insiderTransactionList = 'insiderTransactionList',
+  priceTargetList = 'priceTargetList',
+  secFilingList = 'secFilingList',
+  eventList = 'eventList',
+  addWatchList = 'addWatchList',
+  investorHoldingList = 'investorHoldingList',
+  shortInterests = 'shortInterests',
+  cpiIndex = 'cpiIndex',
+  usEconomicData = 'usEconomicData',
+  euEconomicData = 'euEconomicData',
+  asianEconomicData = 'asianEconomicData',
 
   setting = 'setting',
   mainTab = 'mainTab',

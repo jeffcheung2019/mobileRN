@@ -13,6 +13,7 @@ import {
   ViewStyle,
   RefreshControl,
   Image,
+  Dimensions,
 } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/Hooks'
@@ -35,6 +36,14 @@ import Header from '@/Components/Header'
 import { SharedElement } from 'react-navigation-shared-element'
 import join from 'lodash/join'
 import map from 'lodash/map'
+import RenderHtml from 'react-native-render-html'
+import { getNewsItemData } from '@/Queries/HomeTab'
+import { Skeleton } from '@rneui/base'
+import FastImage from 'react-native-fast-image'
+
+const SKELETON_NEWS_CONTENT: ViewStyle = {
+  marginVertical: 4,
+}
 
 type HomeNewsDetailScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<HomeScreenNavigatorParamList, RouteStacks.homeNewsDetail>,
@@ -43,6 +52,7 @@ type HomeNewsDetailScreenNavigationProps = CompositeScreenProps<
 
 export type NewsDetail = {
   id: string
+  newsItemId: number
   title: string
   content: string
   imgUrl: string
@@ -50,6 +60,8 @@ export type NewsDetail = {
 }
 
 let nodeJsTimeout: NodeJS.Timeout
+
+const windowWidth = Dimensions.get('window').width
 
 const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
@@ -59,10 +71,14 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
     content: '',
     imgUrl: '',
     tickers: [],
+    newsItemId: -1,
   }
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
   const [refreshing, setRefreshing] = useState(false)
+
+  const newsItemDataResult = getNewsItemData(news.newsItemId)
+  console.log('newsItemDataResult', newsItemDataResult)
 
   const onRefresh = async () => {
     setRefreshing(true)
@@ -81,7 +97,7 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
   let hasImage = news?.imgUrl !== ''
 
   return (
-    <ScreenBackgrounds screenName={RouteStacks.homeMain}>
+    <ScreenBackgrounds screenName={RouteStacks.homeNewsDetail}>
       <Header onLeftPress={() => navigation.goBack()} withProfile={false} />
       <KeyboardAwareScrollView
         contentContainerStyle={[
@@ -93,6 +109,7 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
             paddingTop: 8,
           },
         ]}
+        style={{ flex: 1 }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} progressViewOffset={50} tintColor={colors.eucalyptus} />
         }
@@ -103,22 +120,23 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
               Layout.fullWidth,
               {
                 alignItems: 'center',
-                height: 200,
+                height: 100,
                 justifyContent: 'center',
               },
             ]}
           >
             <SharedElement style={{ width: '100%', height: '100%' }} id={`news.${news?.id}.image`}>
-              <Image
-                source={{ uri: hasImage ? news?.imgUrl : config.defaultNewsImgUrl }}
-                style={{ resizeMode: 'contain', backgroundColor: colors.brightGray, width: '100%', height: '100%' }}
+              <FastImage
+                source={{ uri: hasImage ? news?.imgUrl : config.defaultNewsImgUrl, priority: FastImage.priority.high }}
+                resizeMode={hasImage ? 'contain' : 'cover'}
+                style={{ backgroundColor: colors.white, width: '100%', height: '100%' }}
               />
             </SharedElement>
           </View>
         }
 
         <View style={{ flexBasis: 40, width: '100%', justifyContent: 'center', alignItems: 'flex-start' }}>
-          <SharedElement id={`news.${news?.id}.tickers.${join(news?.tickers, '-')}`}>
+          <SharedElement id={`news.${news?.id}.tickers.${join(news?.tickers, '-')}`} style={{ flexDirection: 'row' }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -157,19 +175,49 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
           </SharedElement>
         </View>
 
-        <View
+        <ScrollView
           style={[
             Layout.fullWidth,
             {
               flex: 5,
               paddingTop: 10,
-              justifyContent: 'flex-start',
-              paddingHorizontal: 4,
+              paddingRight: 10,
+              paddingLeft: 4,
             },
           ]}
         >
-          <Text style={[{ fontSize: 16, color: colors.darkBlueGray }]}>{news.content}</Text>
-        </View>
+          {newsItemDataResult?.html ? (
+            <RenderHtml
+              contentWidth={windowWidth}
+              source={{ html: newsItemDataResult?.html }}
+              tagsStyles={{
+                p: {
+                  fontSize: 12,
+                  color: colors.darkBlueGray,
+                },
+              }}
+            />
+          ) : (
+            <>
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' width={(windowWidth * 2) / 3} height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' width={(windowWidth * 2) / 3} height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' width={windowWidth / 2} height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+            </>
+          )}
+        </ScrollView>
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )

@@ -1,8 +1,8 @@
-import React, { FC, ReactChildren, useEffect } from 'react'
+import React, { FC, ReactChildren, useCallback, useEffect } from 'react'
 import { View, Image, Text, ActivityIndicator, Pressable, ImageBackground, ImageSourcePropType, Dimensions } from 'react-native'
 import { useTheme } from '@/Hooks'
 import { colors } from '@/Utils/constants'
-import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { RouteStacks, RouteTabs, RouteTopTabs } from '@/Navigators/routes'
 // @ts-ignore
 import Video from 'react-native-video'
 import LinearGradient from 'react-native-linear-gradient'
@@ -11,13 +11,15 @@ import bg1 from '@/Assets/Images/backgrounds/bg_01.png'
 import bg2 from '@/Assets/Images/backgrounds/bg_02.png'
 import bg3 from '@/Assets/Images/backgrounds/bg_03.png'
 import Animated, { interpolate, interpolateSharableColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import { useRoute } from '@react-navigation/native'
+import { useRoute, useNavigationState, useFocusEffect } from '@react-navigation/native'
+import { useDispatch } from 'react-redux'
+import { showTabBar } from '@/Store/Slices/ui'
 
 type ScreenBackgroundsProps = {
   // source: ImageSourcePropType
   children: React.ReactNode
   uri?: string
-  screenName: RouteStacks | RouteTopTabs
+  screenName: RouteStacks | RouteTabs
 }
 
 // Refers to RouteStacks
@@ -37,7 +39,7 @@ const ScreenImageMap: any = {
 
   [RouteStacks.earningMain]: bg2,
   [RouteStacks.eventMain]: bg2,
-  [RouteTopTabs.stockInfoMain]: bg2,
+  [RouteStacks.stockInfoMain]: bg2,
 
   [RouteStacks.setting]: bg2,
   [RouteStacks.provideEmail]: bg2,
@@ -52,12 +54,21 @@ const nameColorMap: {
   [RouteStacks.homeMain]: colors.homeTheme,
   [RouteStacks.earningMain]: colors.earningTheme,
   [RouteStacks.searchMain]: colors.searchTheme,
-  [RouteTopTabs.stockInfoMain]: colors.stockInfoTheme,
+  [RouteStacks.stockInfoMain]: colors.stockInfoTheme,
   [RouteStacks.eventMain]: colors.eventTheme,
 }
 
+const showTabBarScreens: (RouteStacks | RouteTabs)[] = [
+  RouteStacks.homeMain,
+  RouteStacks.earningMain,
+  RouteStacks.searchMain,
+  RouteStacks.stockInfoMain,
+  RouteStacks.eventMain,
+]
+
 const ScreenBackgrounds = ({ uri, screenName, children }: ScreenBackgroundsProps) => {
   const route = useRoute()
+  const dispatch = useDispatch()
 
   // if uri exists, then use uri
   let source: ImageSourcePropType = uri
@@ -68,55 +79,34 @@ const ScreenBackgrounds = ({ uri, screenName, children }: ScreenBackgroundsProps
     ? ScreenImageMap[screenName]
     : {}
 
+  useFocusEffect(
+    useCallback(() => {
+      if (showTabBarScreens.includes(screenName)) {
+        dispatch(showTabBar(true))
+      } else {
+        dispatch(showTabBar(false))
+      }
+    }, [screenName]),
+  )
+
   return ScreenImageMap[screenName] === 'video' ? (
-    <>
-      {/* <Video
-        style={{
-          height: Dimensions.get('window').height,
-          position: 'absolute',
-          top: -10,
-          left: 0,
-          alignItems: 'stretch',
-          bottom: 0,
-          right: 0,
-        }}
-        source={require('../../Assets/Videos/b.mp4')}
-        resizeMode='cover'
-        rate={1.0}
-        muted={true}
-        repeat={true}
-        ignoreSilentSwitch='obey'
-      /> */}
-      {/* <LinearGradient
-        start={{ x: 0.0, y: 0.0 }}
-        end={{ x: 1.0, y: 1.0 }}
-        style={{
-          flex: 1,
-        }}
-        colors={['#8e9eab', '#eef2f3']}
-      >
-        {children}
-      </LinearGradient> */}
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}
-      >
-        {children}
-      </View>
-    </>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.white,
+      }}
+    >
+      {children}
+    </View>
   ) : (
-    <>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}
-      >
-        {children}
-      </View>
-    </>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.white,
+      }}
+    >
+      {children}
+    </View>
   )
 }
 

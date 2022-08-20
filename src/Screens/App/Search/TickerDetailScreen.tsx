@@ -23,12 +23,18 @@ import { queryConstants } from '@/Queries/Constants'
 import { map, times } from 'lodash'
 import InAppBrowser from 'react-native-inappbrowser-reborn'
 import { SharedElement } from 'react-navigation-shared-element'
-import Animated, { FadeInDown } from 'react-native-reanimated'
+import Animated, { FadeInDown, Keyframe, useAnimatedStyle, useSharedValue, ZoomIn } from 'react-native-reanimated'
 import { useFinanceGraph } from '@/Hooks/useFinanceGraph'
 import { GraphPoint } from '@/Types/Graph'
 import { moneyConvertToKMB } from '@/Utils/helpers'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import PriceTargetSection from './Components/PriceTargetSection'
+import InsiderTransactionSection from './Components/InsiderTransactionSection'
+import EarningSection from './Components/EarningSection'
+import { useRealm } from '@/Realms/RealmContext'
+import SecFilingSection from './Components/SecFilingSection'
+import NotiSubscribeButton from './Components/NotiSubscribeButton'
 
 type TickerDetailScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.tickerDetail>,
@@ -50,12 +56,6 @@ const SECTION_TITLE_TEXT: TextStyle = {
   textDecorationLine: 'underline',
 }
 
-const INSIDER_TRANSACTION_CELL_TEXT: TextStyle = {
-  color: colors.darkBlueGray,
-  textAlign: 'left',
-  fontSize: 10,
-}
-
 const TABLE_HEADER_TEXT: TextStyle = {
   color: colors.darkBlueGray,
   fontWeight: 'bold',
@@ -74,145 +74,23 @@ const SECTION_TITLE_VIEW: ViewStyle = {
   paddingVertical: 10,
 }
 
-type InsiderTransaction = NewsItem & {
-  action: string
-  unitsSold: RegExpMatchArray | null
-  unitsBought: RegExpMatchArray | null
-  unitsWorth: string
-  unitsOptionsCoverted: RegExpMatchArray | null
-}
-
-type EarningResult = {
-  earningDate: string
-  quarterYearDate: string
-  pmAm: string
-}
-
-let quarterNumMap: { [key: string]: number } = {
-  First: 1,
-  Second: 2,
-  Third: 3,
-  Fourth: 4,
-}
-
 const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
   const { id: companyId, ticker, name } = route?.params
-  const [isSubscribed, setIsSubscribed] = useState(false)
 
   const companyPage = getCompanyPage(ticker)
 
   let { chartData, prevClose, currClose, lowest, highest } = useFinanceGraph(ticker)
 
-  const rawEarningResult: NewsItem[] | undefined = getNewsItemPanel(
-    [companyId],
-    queryConstants.getNewsItemPanel.earningResult.sourceIds,
-    queryConstants.getNewsItemPanel.earningResult.categoryIds,
-    20,
-  )
-
-  const earningResult: EarningResult[] = useMemo(() => {
-    let res: EarningResult[] = []
-    if (rawEarningResult) {
-      for (let i = rawEarningResult.length - 1; i >= 0; i--) {
-        let elem = rawEarningResult[i]
-        let elemTitle = elem?.title
-        let elemSummary = elem?.summary
-        let isEarningDateAnnouncement = elemTitle?.match(/to Report/g)
-        let isPerliminaryRes = elemTitle?.match(/Preliminary Unaudited/g)
-        let eanringYear = elemTitle?.match(/[0-9]+ (?=Earnings on)/g)
-        let earningDate = elemTitle?.match(/[a-zA-Z]+ [0-9]+, [0-9]+/g)
-        let earningQuarter = elemTitle?.match(/First|Second|Third|Fourth/g)
-        let earningReleaseMarketTime = elemSummary?.match(/before|after the market open|close/g)
-        let earnignPTET = elemSummary?.match(/[0-9]+:[0-9]+ a.m.|p.m. PT \/ [0-9]+:[0-9]+ a.m|p.m. ET/g)
-
-        if (isPerliminaryRes && earningReleaseMarketTime) {
-          let pmAm = earningReleaseMarketTime[0] === 'before the market open' ? 'PM' : 'AM'
-          let quarter = elemTitle?.match(/Q[0-4]/g)
-          eanringYear = elemTitle?.match(/[0-4]+ (?=Financial Results)/g)
-          earningDate = elemSummary?.match(/[a-zA-Z]+ [0-9]+, [0-9]+/g)
-
-          if (quarter && earningDate && eanringYear) {
-            res.push({
-              earningDate: `${earningDate[0]}`,
-              pmAm,
-              quarterYearDate: `${quarter[0]} 20${eanringYear[0]}`,
-            })
-          }
-        } else if (isEarningDateAnnouncement && eanringYear && earningDate && earningReleaseMarketTime) {
-          let pmAm = earningReleaseMarketTime[0] === 'before the market open' ? 'PM' : 'AM'
-          if (earningQuarter && ['First', 'Second', 'Third', 'Fourth'].includes(earningQuarter[0])) {
-            res.push({
-              earningDate: `${earningDate[0]}`,
-              pmAm,
-              quarterYearDate: `Q${quarterNumMap[earningQuarter[0]]} ${eanringYear[0]}`,
-            })
-          }
-        }
-      }
-    }
-    return res
-  }, [rawEarningResult])
-
-  const rawInsiderTransactions: NewsItem[] | undefined = getNewsItemPanel(
-    [companyId],
-    queryConstants.getNewsItemPanel.insiderTransactions.sourceIds,
-    queryConstants.getNewsItemPanel.insiderTransactions.categoryIds,
-    40,
-  )
-
-  const insiderTransactions: InsiderTransaction[] | [] = useMemo(() => {
-    let res: InsiderTransaction[] | undefined = []
-    if (rawInsiderTransactions === undefined) return res
-    for (let i = 0; i < rawInsiderTransactions.length; i++) {
-      let title = rawInsiderTransactions[i]?.title
-      let isBuy = title?.match(/bought [$0-9,.]+ worth of shares/g)
-      let isSell = title?.match(/sold [$0-9,.]+ worth of shares/g)
-      let shareUnits = title?.match(/[0-9.,]+(?= units at)/g)
-      let unitsWorth = title?.match(/[0-9,]+(?= worth of shares)/g) ?? []
-      let isOptionExercised = title?.match(/exercised/g)
-      let unitsOptionsCoverted = title?.match(/[0-9,]+ (?=shares)/g)
-
-      let action: string = ''
-      if (isSell) {
-        action = 'Sale'
-      } else if (isBuy) {
-        action = 'Buy'
-      } else if (isOptionExercised) {
-        action = 'Option'
-      } else {
-        action = ''
-      }
-      if (['Sale', 'Buy', 'Option'].includes(action)) {
-        res.push({
-          ...rawInsiderTransactions[i],
-          action,
-          unitsSold: isSell ? shareUnits : null,
-          unitsBought: isBuy ? shareUnits : null,
-          unitsWorth: unitsWorth[0] ?? '0',
-          unitsOptionsCoverted,
-        })
-      }
-    }
-
-    return res
-  }, [rawInsiderTransactions])
-
   const priceTargets: PriceTarget[] | undefined = getRatingsPanel([companyId], 10)
 
-  const secFilings: NewsItem[] | undefined = getNewsItemPanel(
-    [companyId],
-    queryConstants.getNewsItemPanel.secFiling.sourceIds,
-    queryConstants.getNewsItemPanel.secFiling.categoryIds,
-    5,
-  )
-
   let priceChangePercent: number = ((currClose - prevClose) / prevClose) * 100
+
   return (
-    <ScreenBackgrounds screenName={RouteStacks.eventMain}>
+    <ScreenBackgrounds screenName={RouteStacks.tickerDetail}>
       <Header headerText={`${name}`} onLeftPress={() => navigation.navigate(RouteStacks.searchMain)} withProfile={false} />
       <KeyboardAwareScrollView
         style={[Layout.fill]}
@@ -235,7 +113,7 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
             >
               <View
                 style={{
-                  flexBasis: 100,
+                  flex: 1,
                 }}
               >
                 <SharedElement id={`ticker.${ticker}`}>
@@ -256,22 +134,21 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
                   </Text>
                 </SharedElement>
               </View>
-              <Pressable
+              <Animated.View
                 style={{
-                  flex: 1,
                   alignItems: 'flex-end',
-                  paddingHorizontal: 10,
                 }}
-                onPress={() => setIsSubscribed(!isSubscribed)}
+                entering={ZoomIn.duration(1000)}
               >
-                <Animated.View>
-                  <MaterialIcons
-                    name={isSubscribed ? 'notifications' : 'notifications-none'}
-                    size={config.iconSize}
-                    color={colors.darkBlueGray}
-                  />
-                </Animated.View>
-              </Pressable>
+                <NotiSubscribeButton
+                  onPress={() =>
+                    navigation.navigate(RouteStacks.tickerNotiSubscription, {
+                      ticker,
+                      name,
+                    })
+                  }
+                />
+              </Animated.View>
             </View>
             <Animated.View entering={FadeInDown.duration(500)}>
               <Text style={[{ color: colors.darkBlueGray, fontSize: 24, fontWeight: 'bold', textAlign: 'left' }]}>{`$${
@@ -305,246 +182,46 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
         </View>
 
         <Animated.View entering={FadeInDown.delay(500).duration(500)} style={SECTION_TITLE_VIEW}>
-          <Text style={SECTION_TITLE_TEXT}>{t('priceTarget')}</Text>
+          <Text style={SECTION_TITLE_TEXT}>{t('priceTargets')}</Text>
         </Animated.View>
 
         <Animated.ScrollView entering={FadeInDown.delay(1000).duration(500)} style={[SECTION_VIEW, { maxHeight: 300 }]}>
-          {map(priceTargets, (priceTarget: PriceTarget, idx: number) => {
-            let ptPrior = priceTarget.ptPrior ? priceTarget.ptPrior / 100 : null
-            let pt = priceTarget.pt ? priceTarget.pt / 100 : null
-            let { rating, date, analyst, ratingPrior } = priceTarget
-            return (
-              <Pressable
-                key={`PriceTarget-${idx}`}
-                style={{
-                  height: 50,
-                  width: '100%',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  // InAppBrowser.open(pt.link)
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    flex: 1,
-                  }}
-                >
-                  <View style={{ flex: 4, alignItems: 'flex-start', justifyContent: 'center' }}>
-                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
-                      <Text style={{ fontWeight: 'bold' }}>{t('date')}:</Text>
-                      {`  ${moment(date).format('DD-MM-YYYY')}`}
-                    </Text>
-                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
-                      <Text style={{ fontWeight: 'bold' }}>{t('analyst')}:</Text> {` ${analyst}`}
-                    </Text>
-                    <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
-                      <Text style={{ fontWeight: 'bold' }}>{t('priceTargetChange')}:</Text> {ptPrior !== null ? `$${ptPrior}` : ''}{' '}
-                      {ptPrior ? '->' : ''} {`$${pt}`}
-                    </Text>
-                  </View>
-                  <View style={{ flex: 4, alignItems: 'flex-start', justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <View style={{ backgroundColor: colors.darkBlueGray, paddingVertical: 4, paddingHorizontal: 6 }}>
-                        <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{ratingPrior}</Text>
-                      </View>
-                      <View style={{ justifyContent: 'center', paddingHorizontal: 8 }}>
-                        {ratingPrior && <Text style={{ color: colors.darkBlueGray, fontSize: 9 }}>{'->'}</Text>}
-                      </View>
-                      <View style={{ backgroundColor: colors.darkBlueGray, paddingVertical: 4, paddingHorizontal: 6 }}>
-                        <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{rating}</Text>
-                      </View>
-                    </View>
-                  </View>
-                  {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    
-                  </View> */}
-                </View>
-              </Pressable>
-            )
-          })}
+          <PriceTargetSection priceTargets={priceTargets} />
         </Animated.ScrollView>
 
         <Animated.View entering={FadeInDown.delay(1500).duration(500)} style={SECTION_TITLE_VIEW}>
-          <Text style={SECTION_TITLE_TEXT}>{t('earning')}</Text>
+          <Text style={SECTION_TITLE_TEXT}>{t('earnings')}</Text>
+        </Animated.View>
+
+        <Animated.ScrollView entering={FadeInDown.delay(2000).duration(500)} style={[SECTION_VIEW, { maxHeight: 300 }]}>
+          <EarningSection companyId={companyId} />
+        </Animated.ScrollView>
+
+        <Animated.View entering={FadeInDown.delay(2500).duration(500)} style={SECTION_TITLE_VIEW}>
+          <Text style={SECTION_TITLE_TEXT}>{t('insiderTransactions')}</Text>
         </Animated.View>
 
         <Animated.ScrollView
-          entering={FadeInDown.delay(2000).duration(500)}
-          stickyHeaderIndices={[0]}
-          style={[SECTION_VIEW, { maxHeight: 300 }]}
-        >
-          <View style={{ backgroundColor: colors.white, width: '100%' }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={[TABLE_HEADER_TEXT, { width: 120 }]}>{t('earningQuarter')}</Text>
-
-              <Text
-                style={[
-                  TABLE_HEADER_TEXT,
-                  {
-                    flex: 1,
-                  },
-                ]}
-              >
-                {t('date')}
-              </Text>
-            </View>
-          </View>
-          {map(earningResult, (earning, idx) => {
-            return (
-              <View
-                key={`EarningResult-${idx}`}
-                style={{
-                  height: 50,
-                  width: '100%',
-                  // borderColor: colors.brightGray,
-                  // borderWidth: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  // backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
-                }}
-              >
-                <View style={{ width: 120 }}>
-                  <Text style={{ color: colors.darkBlueGray, fontSize: 10, textAlign: 'center' }}>{earning.quarterYearDate}</Text>
-                </View>
-                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={{ color: colors.darkBlueGray, fontSize: 10, marginHorizontal: 20 }}>
-                    {moment(earning.earningDate, 'MMMM DD, YYYY').format('DD-MM-YYYY')}
-                  </Text>
-                  <Text
-                    style={{
-                      color: colors.white,
-                      backgroundColor: colors.darkBlueGray,
-                      width: 36,
-                      textAlign: 'center',
-                      fontWeight: 'bold',
-                      fontSize: 12,
-                    }}
-                  >
-                    {earning.pmAm}
-                  </Text>
-                </View>
-              </View>
-            )
-          })}
-        </Animated.ScrollView>
-
-        <View style={SECTION_TITLE_VIEW}>
-          <Text style={SECTION_TITLE_TEXT}>{t('insiderTransactions')}</Text>
-        </View>
-
-        <ScrollView
+          entering={FadeInDown.delay(3000).duration(500)}
           style={{ maxHeight: 300 }}
           contentContainerStyle={[SECTION_VIEW, {}]}
-          stickyHeaderIndices={[0]}
           showsVerticalScrollIndicator={false}
         >
-          <View style={{ backgroundColor: colors.white, width: '100%' }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={[TABLE_HEADER_TEXT]}>{t('date')}</Text>
-              <Text style={[TABLE_HEADER_TEXT]}>{t('transaction')}</Text>
-              <Text style={[TABLE_HEADER_TEXT]}>{t('shares')}</Text>
-              <Text style={[TABLE_HEADER_TEXT]}>{t('value')}($)</Text>
-            </View>
-          </View>
-          {map(insiderTransactions, (transaction, idx: number) => {
-            const { unitsSold, unitsBought, unitsOptionsCoverted, unitsWorth, action, publishedAt, link } = transaction
+          <InsiderTransactionSection companyId={companyId} />
+        </Animated.ScrollView>
 
-            return action === '' ? null : (
-              <Pressable
-                style={{
-                  height: 50,
-                  width: '100%',
-                  // borderColor: colors.brightGray,
-                  // borderWidth: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  // backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
-                }}
-                key={`InsiderTransaction-${idx}`}
-                onPress={() => InAppBrowser.open(link)}
-              >
-                {
-                  <>
-                    <View style={{ width: 80, alignItems: 'center' }}>
-                      <Text style={[INSIDER_TRANSACTION_CELL_TEXT]}>{moment(publishedAt).format('DD-MM-YYYY')}</Text>
-                    </View>
-                    <View style={{ width: 80, alignItems: 'center' }}>
-                      <Text
-                        style={{
-                          width: '80%',
-                          textAlign: 'center',
-                          backgroundColor: colors.darkBlueGray,
-                          color: colors.white,
-                          fontWeight: 'bold',
-                          fontSize: 10,
-                          paddingVertical: 4,
-                        }}
-                      >
-                        {action}
-                      </Text>
-                    </View>
-                    <View style={{ width: 80, alignItems: 'center' }}>
-                      <Text style={[INSIDER_TRANSACTION_CELL_TEXT, {}]}>
-                        {action === 'Sale' ? unitsSold : action === 'Buy' ? unitsBought : action === 'Option' ? unitsOptionsCoverted : ''}
-                      </Text>
-                    </View>
-                    <View style={{ width: 80, alignItems: 'center' }}>
-                      <Text style={[INSIDER_TRANSACTION_CELL_TEXT]}>{moneyConvertToKMB(Number(unitsWorth.replace(/,/g, '')))}</Text>
-                    </View>
-                  </>
-                }
-              </Pressable>
-            )
-          })}
-        </ScrollView>
-
-        <View style={SECTION_TITLE_VIEW}>
+        <Animated.View entering={FadeInDown.delay(3500).duration(500)} style={SECTION_TITLE_VIEW}>
           <Text style={SECTION_TITLE_TEXT}>{t('secFilings')}</Text>
-        </View>
+        </Animated.View>
 
-        <ScrollView style={{ maxHeight: 300 }} contentContainerStyle={[SECTION_VIEW, {}]} showsVerticalScrollIndicator={false}>
-          {map(secFilings, (sec, idx: number) => {
-            return (
-              <Pressable
-                style={{
-                  height: 60,
-                  // paddingHorizontal: 10,
-                  width: '100%',
-                  // borderColor: colors.brightGray,
-                  // borderWidth: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  // backgroundColor: idx % 2 === 0 ? colors.white : colors.brightGray,
-                }}
-                key={`SecFiling-${idx}`}
-                onPress={() => InAppBrowser.open(sec.link)}
-              >
-                {
-                  <View style={{ flexDirection: 'row' }}>
-                    {/* <View style={{ flex: 1 }}>
-                      <Image source={{ uri: config.defaultSECImg }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
-                    </View> */}
-                    <View style={{ flex: 4, justifyContent: 'center' }}>
-                      <View style={{}}>
-                        <Text numberOfLines={1} style={{ color: colors.darkBlueGray, fontSize: 12, fontWeight: 'bold' }}>
-                          {sec.title}
-                        </Text>
-                      </View>
-                      <View style={{}}>
-                        <Text numberOfLines={2} style={{ color: colors.darkBlueGray, fontSize: 10 }}>
-                          {sec.summary}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                }
-              </Pressable>
-            )
-          })}
-        </ScrollView>
+        <Animated.ScrollView
+          entering={FadeInDown.delay(4000).duration(500)}
+          style={{ maxHeight: 300 }}
+          contentContainerStyle={[SECTION_VIEW, {}]}
+          showsVerticalScrollIndicator={false}
+        >
+          <SecFilingSection companyId={companyId} />
+        </Animated.ScrollView>
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )
