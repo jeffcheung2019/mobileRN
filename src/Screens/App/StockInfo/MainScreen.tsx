@@ -21,6 +21,7 @@ import { SharedElement } from 'react-navigation-shared-element'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, {
   color,
+  FadeIn,
   FadeInDown,
   FadeInLeft,
   FadeInRight,
@@ -30,6 +31,12 @@ import Animated, {
   FadeOutRight,
   FadeOutUp,
   SequencedTransition,
+  SlideInLeft,
+  SlideInRight,
+  SlideInUp,
+  SlideOutLeft,
+  SlideOutRight,
+  SlideOutUp,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -92,12 +99,12 @@ const sectionButtons: SectionButton[] = [
     redirectTo: RouteStacks.shortInterests,
   },
   {
-    icon: () => <Foundation name='graph-bar' size={windowWidth / 14} color={colors.white} />,
+    icon: () => <Entypo name='bar-graph' size={windowWidth / 14} color={colors.white} />,
     sectionType: 'usEconomicData',
     redirectTo: RouteStacks.usEconomicData,
   },
   {
-    icon: () => <Entypo name='bar-graph' size={windowWidth / 14} color={colors.white} />,
+    icon: () => <Foundation name='graph-bar' size={windowWidth / 14} color={colors.white} />,
     sectionType: 'euEconomicData',
     redirectTo: RouteStacks.euEconomicData,
   },
@@ -107,9 +114,19 @@ const sectionButtons: SectionButton[] = [
     redirectTo: RouteStacks.asianEconomicData,
   },
   {
-    icon: () => <MaterialCommunityIcons name='alert-box' size={windowWidth / 14} color={colors.white} />,
-    sectionType: 'options',
-    redirectTo: RouteStacks.priceTargetList,
+    icon: () => <MaterialCommunityIcons name='truck-delivery' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'globalSupplyChain',
+    redirectTo: RouteStacks.globalSupplyChain,
+  },
+  {
+    icon: () => <MaterialCommunityIcons name='food' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'foodPriceIndex',
+    redirectTo: RouteStacks.foodPriceIndex,
+  },
+  {
+    icon: () => <MaterialCommunityIcons name='offer' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'offering',
+    redirectTo: RouteStacks.offering,
   },
 ]
 
@@ -134,6 +151,10 @@ const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigatio
     usEconomicData: true,
     euEconomicData: true,
     asianEconomicData: true,
+    foodPriceIndex: true,
+    globalSupplyChain: true,
+    unusualOptions: true,
+    offering: true,
   })
 
   useFocusEffect(
@@ -144,8 +165,16 @@ const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigatio
   )
 
   return unmountWholeScreen ? null : (
-    <ScreenBackgrounds screenName={RouteTopTabs.stockInfoMain}>
-      <KeyboardAwareScrollView style={Layout.fill} contentContainerStyle={[Layout.fullSize, Layout.colCenter]}>
+    <ScreenBackgrounds screenName={RouteStacks.stockInfoMain}>
+      <KeyboardAwareScrollView
+        style={
+          (Layout.fill,
+          {
+            backgroundColor: colors.brightGray,
+          })
+        }
+        contentContainerStyle={[Layout.fullSize, Layout.colCenter]}
+      >
         <Header headerText={t('stockInfo')} />
         <ScrollView
           style={{
@@ -166,20 +195,22 @@ const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigatio
             let currShowSection = showSections[elem.sectionType]
             let enteringAnimation =
               idx % 4 === 0
-                ? FadeInLeft.duration(1000)
+                ? SlideInLeft.duration(500)
                 : idx % 4 === 1 || idx % 4 === 2
-                ? FadeInUp.duration(1000)
+                ? SlideInUp.duration(500)
                 : idx % 4 === 3
-                ? FadeInRight.duration(1000)
+                ? SlideInRight.duration(500)
                 : undefined
-            let exitingAnimation =
-              idx % 4 === 0
-                ? FadeOutLeft.duration(1000)
-                : idx % 4 === 1 || idx % 4 === 2
-                ? FadeOutUp.duration(1000)
-                : idx % 4 === 3
-                ? FadeOutRight.duration(1000)
-                : undefined
+            let exitingAnimation = showDelButton
+              ? undefined
+              : idx % 4 === 0
+              ? SlideOutLeft.duration(500)
+              : idx % 4 === 1 || idx % 4 === 2
+              ? SlideOutUp.duration(500)
+              : idx % 4 === 3
+              ? SlideOutRight.duration(500)
+              : undefined
+
             return (
               currShowSection && (
                 <Animated.View
@@ -207,7 +238,7 @@ const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigatio
                       setUnmountWholeScreen(true)
                       setTimeout(() => {
                         navigation.navigate(elem.redirectTo)
-                      }, 800)
+                      }, 500)
                     }}
                   >
                     <View style={{ alignItems: 'center' }}>
@@ -258,8 +289,8 @@ const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigatio
               height: windowWidth / 4,
               padding: 4,
             }}
-            entering={ZoomIn.duration(1000)}
-            exiting={ZoomOut.duration(1000)}
+            entering={FadeIn.duration(500)}
+            exiting={FadeOut.duration(500)}
             layout={SequencedTransition}
           >
             <Pressable

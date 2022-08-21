@@ -11,16 +11,31 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
 import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
 import { RouteTopTabs, RouteTabs, RouteStacks } from '@/Navigators/routes'
-import { AddWatchListScreen, InsiderTransactionListScreen, MainScreen, PriceTargetListScreen, SecFilingListScreen } from './StockInfo'
+import {
+  AddWatchListScreen,
+  FoodPriceIndexScreen,
+  InsiderTransactionListScreen,
+  InvestorHoldingListScreen,
+  MainScreen,
+  PriceTargetListScreen,
+  EventListScreen,
+  SecFilingListScreen,
+  ShortInterestsScreen,
+  EUEconomicDataScreen,
+  USEconomicDataScreen,
+  UnusualOptionsScreen,
+  LawsuitScreen,
+  LeadershipUpdateScreen,
+  OfferingScreen,
+} from './StockInfo'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { TabView, SceneMap, Route, TabBar } from 'react-native-tab-view'
-import StockInfoMainScreen from './StockInfo/MainScreen'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
-import EventListScreen from './StockInfo/EventListScreen'
+import AsianEconomicDataScreen from './StockInfo/AsianEconomicDataScreen'
 
 export type StockInfoStackNavigatorParamList = {
   [RouteStacks.stockInfoMain]: undefined
@@ -34,6 +49,12 @@ export type StockInfoStackNavigatorParamList = {
   [RouteStacks.usEconomicData]: undefined
   [RouteStacks.euEconomicData]: undefined
   [RouteStacks.asianEconomicData]: undefined
+  [RouteStacks.globalSupplyChain]: undefined
+  [RouteStacks.foodPriceIndex]: undefined
+  [RouteStacks.unusualOptions]: undefined
+  [RouteStacks.lawsuit]: undefined
+  [RouteStacks.leadershipUpdate]: undefined
+  [RouteStacks.offering]: undefined
 }
 
 export type StockInfoStackNavigationProps = CompositeScreenProps<
@@ -74,6 +95,17 @@ const StockInfoScreen: FC<StockInfoStackNavigationProps> = ({ navigation, route 
           presentation: 'modal',
         }}
       />
+      <Stack.Screen name={RouteStacks.investorHoldingList} component={InvestorHoldingListScreen} />
+      <Stack.Screen name={RouteStacks.shortInterests} component={ShortInterestsScreen} />
+      <Stack.Screen name={RouteStacks.usEconomicData} component={USEconomicDataScreen} />
+      <Stack.Screen name={RouteStacks.euEconomicData} component={EUEconomicDataScreen} />
+      <Stack.Screen name={RouteStacks.asianEconomicData} component={AsianEconomicDataScreen} />
+      <Stack.Screen name={RouteStacks.globalSupplyChain} component={SecFilingListScreen} />
+      <Stack.Screen name={RouteStacks.foodPriceIndex} component={FoodPriceIndexScreen} />
+      <Stack.Screen name={RouteStacks.unusualOptions} component={UnusualOptionsScreen} />
+      <Stack.Screen name={RouteStacks.lawsuit} component={LawsuitScreen} />
+      <Stack.Screen name={RouteStacks.leadershipUpdate} component={LeadershipUpdateScreen} />
+      <Stack.Screen name={RouteStacks.offering} component={OfferingScreen} />
     </Stack.Navigator>
   )
 }

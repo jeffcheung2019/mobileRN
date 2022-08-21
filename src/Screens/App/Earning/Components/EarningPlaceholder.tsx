@@ -7,6 +7,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
 import times from 'lodash/times'
 import { Skeleton } from '@rneui/themed'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 
 type EarningPlaceholderProps = {}
 const EARNING_REV_EPS_SKELETON: ViewStyle = {
@@ -29,7 +30,8 @@ const EarningPlaceholder: FC<EarningPlaceholderProps> = () => {
 
       {times(10).map((e, idx) => {
         return (
-          <View
+          <Animated.View
+            entering={FadeInDown.duration(1000)}
             style={{
               flexDirection: 'row',
               height: 60,
@@ -93,7 +95,7 @@ const EarningPlaceholder: FC<EarningPlaceholderProps> = () => {
                 </View>
               </View>
             </View>
-          </View>
+          </Animated.View>
         )
       })}
     </ScrollView>

@@ -14,11 +14,13 @@ import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import { MainScreen } from './Event'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import AddStockQuoteScreen from './Event/AddStockQuoteScreen'
 
 const Stack = createStackNavigator()
 
 export type EventScreenNavigatorParamList = {
   [RouteStacks.eventMain]: undefined
+  [RouteStacks.addStockQuote]: undefined
 }
 
 export type EventScreenNavigationProps = CompositeScreenProps<
@@ -34,6 +36,7 @@ const EventScreen: FC<EventScreenNavigationProps> = ({ navigation, route }) => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name={RouteStacks.eventMain} component={MainScreen} />
+      <Stack.Screen name={RouteStacks.addStockQuote} component={AddStockQuoteScreen} />
     </Stack.Navigator>
   )
 }

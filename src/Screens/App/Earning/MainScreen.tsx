@@ -34,6 +34,7 @@ import { tradingViewEarningApi } from '@/Utils/apiUtils'
 import useSWR, { SWRConfiguration } from 'swr'
 import axios from 'axios'
 import useSWRImmutable from 'swr/immutable'
+import Header from '@/Components/Header'
 const Stack = createStackNavigator()
 const windowWidth = Dimensions.get('window').width
 
@@ -70,8 +71,17 @@ const EarningMainScreen: FC<EarningMainScreenNavigationProps> = ({ navigation, r
 
   return (
     <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+      <Header headerText={t('earningCalendar')} />
+
       <View style={{ flexBasis: 44, paddingHorizontal: 10 }}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ height: 44, alignItems: 'center' }}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            height: 44,
+            alignItems: 'center',
+          }}
+        >
           {map(weekStr, (week, idx) => {
             return (
               <Pressable

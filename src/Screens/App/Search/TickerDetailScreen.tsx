@@ -1,6 +1,18 @@
 import React, { useState, useEffect, useCallback, FC, useMemo } from 'react'
 import { StackScreenProps } from '@react-navigation/stack'
-import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle, Image } from 'react-native'
+import {
+  View,
+  ActivityIndicator,
+  Text,
+  TextInput,
+  Pressable,
+  ScrollView,
+  TextStyle,
+  Alert,
+  ViewStyle,
+  Image,
+  Dimensions,
+} from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/Hooks'
 import { changeTheme, ThemeState } from '@/Store/Theme'
@@ -35,6 +47,8 @@ import EarningSection from './Components/EarningSection'
 import { useRealm } from '@/Realms/RealmContext'
 import SecFilingSection from './Components/SecFilingSection'
 import NotiSubscribeButton from './Components/NotiSubscribeButton'
+
+const windowWidth = Dimensions.get('window').width
 
 type TickerDetailScreenNavigationProps = CompositeScreenProps<
   StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.tickerDetail>,
@@ -177,7 +191,14 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
               height: '100%',
             }}
           >
-            <LineStockChart chartData={chartData} height={250} priceChangePercent={priceChangePercent} lowest={lowest} highest={highest} />
+            <LineStockChart
+              chartData={chartData}
+              width={windowWidth}
+              height={250}
+              priceChangePercent={priceChangePercent}
+              lowest={lowest}
+              highest={highest}
+            />
           </View>
         </View>
 

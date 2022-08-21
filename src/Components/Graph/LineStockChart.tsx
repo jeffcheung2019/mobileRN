@@ -25,10 +25,12 @@ type LineStockChartProps = {
   lowest: number
   highest: number
   height: number
+  hideYAxis?: boolean
+  width: number
 }
 
 const LineStockChart: FC<LineStockChartProps> = props => {
-  const { title, chartData, contentContainerStyle, priceChangePercent, lowest, height, highest } = props
+  const { title, chartData, contentContainerStyle, priceChangePercent, lowest, height, highest, width, hideYAxis } = props
 
   const animatedStyleVal = useSharedValue({
     x: 0,
@@ -47,7 +49,7 @@ const LineStockChart: FC<LineStockChartProps> = props => {
         height,
       }}
     >
-      <VictoryChart theme={VictoryTheme.material} height={height} width={windowWidth + 20} style={{}}>
+      <VictoryChart theme={VictoryTheme.material} height={height} width={width} style={{}}>
         <VictoryArea
           animate={{
             duration: 2000,
@@ -66,12 +68,14 @@ const LineStockChart: FC<LineStockChartProps> = props => {
           x='date'
           y='value'
         />
-        <VictoryAxis
-          dependentAxis
-          style={{
-            grid: { stroke: 'transparent' },
-          }}
-        />
+        {hideYAxis ? null : (
+          <VictoryAxis
+            dependentAxis
+            style={{
+              grid: { stroke: 'transparent' },
+            }}
+          />
+        )}
         <VictoryAxis
           style={{
             axis: { stroke: 'transparent' },

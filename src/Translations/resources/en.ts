@@ -124,6 +124,11 @@ export default {
   euEconomicData: 'EU Market',
   asianEconomicData: 'Asian Market',
   shortInterests: 'Short Interests',
+  unusualOptions: 'Unusual options',
+  lawsuit: 'lawsuit',
+  offering: 'Offering',
+  foodPriceIndex: 'Food Price Index',
+  globalSupplyChain: 'Global Supply Chain',
 
   editProfile: 'Edit Profile',
   editProfileDesc: 'Update your username, password, email',
@@ -140,4 +145,8 @@ export default {
   add: 'Add',
   noResult: 'No Result',
   addWatchList: 'Add watch list',
+
+  stockQuote: 'Stock Quote',
+  addStockQuote: 'Add Stock Quote',
+  earningCalendar: 'Earning Calendar',
 }

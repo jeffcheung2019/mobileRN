@@ -42,7 +42,8 @@ const Header = (props: {
         flexDirection: 'row',
         height: headerHeight,
         width: windowWidth,
-        borderBottomColor: !withProfile && headerText === undefined && onLeftPress === undefined ? colors.transparent : colors.brightGray,
+        // borderBottomColor: !withProfile && headerText === undefined && onLeftPress === undefined ? colors.transparent : colors.brightGray,
+        borderBottomColor: colors.brightGray,
         borderBottomWidth: 1,
       }}
     >
@@ -55,7 +56,7 @@ const Header = (props: {
           }}
         >
           <Animated.View
-            entering={FadeInRight.duration(1000)}
+            entering={FadeInRight.duration(800)}
             style={{
               flex: 1,
               justifyContent: 'center',

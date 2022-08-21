@@ -1,4 +1,4 @@
-import { GoogleRSSFeed, GoogleRSSFeedQuery } from '@/Types/API'
+import { FoodPriceIndexZoom, GoogleRSSFeed, GoogleRSSFeedQuery } from '@/Types/API'
 
 export const config = {
   iconSize: 28,
@@ -25,8 +25,8 @@ export const config = {
 }
 
 export const api = {
-  tickerUri: (ticker: string) => {
-    return `https://query1.finance.yahoo.com/v7/finance/spark?symbols=${ticker}&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance`
+  tickerUri: (ticker: string, range: string = '1d') => {
+    return `https://query1.finance.yahoo.com/v7/finance/spark?symbols=${ticker}&range=${range}&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance`
   },
   tiprankTickerUri: (ticker: string) => {
     return `https://www.tipranks.com/api/stocks/getNews/?ticker=${ticker}`
@@ -44,27 +44,24 @@ export const api = {
 
     return `https://news.google.com/rss/search${queryStrs === '' ? '' : '?' + queryStrs + '&ceid=US:en&hl=en-US&gl=US'}`
   },
+  foodPriceIndex: (zoom: FoodPriceIndexZoom) => {
+    return `https://ycharts.com/charts/fund_data.json?annotations=&annualizedReturns=false&calcs=&chartType=interactive&chartView=&correlations=&dateSelection=range&displayDateRange=false&displayTicker=false&endDate=&format=real&legendOnChart=false&note=&partner=basic_2000&quoteLegend=false&recessions=false&scaleType=linear&securities=id%3AI%3AFPI%2Cinclude%3Atrue%2C%2C&securityGroup=&securitylistName=&securitylistSecurityId=&source=false&splitType=single&startDate=&title=&units=false&useCustomColors=false&useEstimates=false&zoom=${zoom}&redesign=true&chartCreator=&maxPoints=588`
+  },
+
+  foodPriceIndexHtml: 'https://ycharts.com/indicators/food_index_world_bank',
+  economicDataHtml: 'https://ycharts.com/indicators',
+  globalSupplyChainCSV: 'https://www.newyorkfed.org/medialibrary/research/interactives/data/gscpi/gscpi_interactive_data.csv',
+  globalSupplyChainEstimate: 'https://www.newyorkfed.org/medialibrary/research/interactives/data/gscpi/gscpi.json',
 }
 
 // Color naming https://www.color-name.com/hex/749597
 export const colors = {
-  frenchPink: '#FF789C',
-
   transparent: 'transparent',
   white: '#FFFFFF',
   black: '#000000',
   spanishGray: '#969696',
-  violetsAreBlue: '#9472FF',
   brightTurquoise: '#00F2DE',
-  charcoal: '#343950',
-  silverSand: '#C5C5C5',
-  cornflowerBlue: '#6398F0',
-  glaucous: '#5C7CBA',
   magicPotion: '#FD4762',
-  desire: '#E23E57',
-  crystal: '#ADDCDF',
-  indigo: '#234263',
-  chineseBlack: '#141414',
   darkBlueGray: '#67739E',
   darkGunmetal: '#151C35',
   jacarta: '#38405E',
@@ -89,12 +86,9 @@ export const colors = {
   earningTheme: '#96CDFF',
   searchTheme: '#D8E1FF',
   stockInfoTheme: '#DBBADD',
-  eventTheme: '#BE92A2',
+  chartTheme: '#BE92A2',
   // Theme colors for each tab, home, earning, search, priceTarget, event
 
-  navyBlue: '#090979',
-  vividSkyBlue: '#00d4ff',
-  darkCharcoal: '#333333',
   brightGray: '#efefef',
 
   lotion: '#FAFAFA',

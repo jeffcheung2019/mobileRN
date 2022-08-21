@@ -55,7 +55,7 @@ const nameColorMap: {
   [RouteStacks.earningMain]: colors.earningTheme,
   [RouteStacks.searchMain]: colors.searchTheme,
   [RouteStacks.stockInfoMain]: colors.stockInfoTheme,
-  [RouteStacks.eventMain]: colors.eventTheme,
+  [RouteStacks.eventMain]: colors.chartTheme,
 }
 
 const showTabBarScreens: (RouteStacks | RouteTabs)[] = [
