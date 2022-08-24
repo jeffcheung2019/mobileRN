@@ -128,7 +128,6 @@ const ApplicationNavigator = () => {
     }
 
     const authListener = async ({ payload: { event, data } }: any) => {
-      console.log('event ', event)
       switch (event) {
         case 'signIn':
         case 'cognitoHostedUI':
@@ -182,7 +181,7 @@ const ApplicationNavigator = () => {
   }, [])
 
   return (
-    <SafeAreaView edges={['right', 'top', 'left']} style={[Layout.fullSize, { opacity: 1 }]}>
+    <SafeAreaView edges={['right', 'top', 'left']} style={[Layout.fullSize, { opacity: 0.2 }]}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SnackBar
           {...snackBarConfig}

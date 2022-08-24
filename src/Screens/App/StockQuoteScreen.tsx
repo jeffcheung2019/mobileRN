@@ -11,34 +11,34 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { config } from '@/Utils/constants'
 import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
-import { MainScreen } from './Event'
+import { MainScreen } from './StockQuote'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import AddStockQuoteScreen from './Event/AddStockQuoteScreen'
+import AddStockQuoteScreen from './StockQuote/AddStockQuoteScreen'
 
 const Stack = createStackNavigator()
 
-export type EventScreenNavigatorParamList = {
-  [RouteStacks.eventMain]: undefined
+export type StockQuoteScreenNavigatorParamList = {
+  [RouteStacks.stockQuoteMain]: undefined
   [RouteStacks.addStockQuote]: undefined
 }
 
-export type EventScreenNavigationProps = CompositeScreenProps<
-  BottomTabScreenProps<MainTabNavigatorParamList, RouteTabs.event>,
+export type StockQuoteScreenNavigationProps = CompositeScreenProps<
+  BottomTabScreenProps<MainTabNavigatorParamList, RouteTabs.stockQuote>,
   MainTabNavigatorProps
 >
 
-const EventScreen: FC<EventScreenNavigationProps> = ({ navigation, route }) => {
+const StockQuoteScreen: FC<StockQuoteScreenNavigationProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name={RouteStacks.eventMain} component={MainScreen} />
+      <Stack.Screen name={RouteStacks.stockQuoteMain} component={MainScreen} />
       <Stack.Screen name={RouteStacks.addStockQuote} component={AddStockQuoteScreen} />
     </Stack.Navigator>
   )
 }
 
-export default EventScreen
+export default StockQuoteScreen

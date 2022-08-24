@@ -39,7 +39,7 @@ const EventListScreen: FC<EventListScreenNavigationProps> = ({ navigation, route
     <ScreenBackgrounds screenName={RouteStacks.eventList}>
       <Header headerText={t('events')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={Layout.fill}
+        style={[Layout.fill, {}]}
         contentContainerStyle={[Layout.fullSize, Layout.colCenter, Gutters.smallHPadding]}
       ></KeyboardAwareScrollView>
     </ScreenBackgrounds>

@@ -4,7 +4,7 @@ export enum RouteTabs {
 
   stockInfo = 'stockInfo',
   earning = 'earning',
-  event = 'event',
+  stockQuote = 'stockQuote',
   search = 'search',
 }
 
@@ -38,7 +38,6 @@ export enum RouteStacks {
 
   // logged in app screens
   earningMain = 'earningMain',
-  eventMain = 'eventMain',
   settingMain = 'settingMain',
   notificationMain = 'notificationMain',
   notification = 'notification',
@@ -72,6 +71,10 @@ export enum RouteStacks {
   leadershipUpdate = 'leadershipUpdate',
   offering = 'offering',
   addStockQuote = 'addStockQuote',
+
+  stockQuoteMain = 'stockQuoteMain',
+
+  investorHoldingDetail = 'investorHoldingDetail',
 
   setting = 'setting',
   mainTab = 'mainTab',

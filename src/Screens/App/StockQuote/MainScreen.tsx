@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, FC } from 'react'
+import React, { useState, useEffect, useCallback, FC, useRef } from 'react'
 import { StackScreenProps } from '@react-navigation/stack'
 import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -16,27 +16,55 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { EventScreenNavigationProps, EventScreenNavigatorParamList } from '../EventScreen'
+import { StockQuoteScreenNavigationProps, StockQuoteScreenNavigatorParamList } from '../StockQuoteScreen'
 import Header from '@/Components/Header'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import TickerQuote from './Components/TickerQuote'
+import { useRealm } from '@/Realms/RealmContext'
+import { StockQuoteTab } from '@/Realms/Schemas/StockQuoteTabSchema'
+import { map } from 'lodash'
+import StockQuoteTabItem from './Components/StockQuoteTabItem'
+import ObjectId from 'bson-objectid'
 
-type EventMainScreenNavigationProps = CompositeScreenProps<
-  StackScreenProps<EventScreenNavigatorParamList, RouteStacks.eventMain>,
-  EventScreenNavigationProps
+type StockQuoteMainScreenNavigationProps = CompositeScreenProps<
+  StackScreenProps<StockQuoteScreenNavigatorParamList, RouteStacks.stockQuoteMain>,
+  StockQuoteScreenNavigationProps
 >
 
-const EventMainScreen: FC<EventMainScreenNavigationProps> = ({ navigation, route }) => {
+const StockQuoteMainScreen: FC<StockQuoteMainScreenNavigationProps> = ({ navigation, route }) => {
+  const realm = useRealm()
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
+  const [stockQuoteTab, setStockQuoteTab] = useState<StockQuoteTab[]>([])
+  const [currStockQuoteTab, setCurrStockQuoteTab] = useState(0)
 
-  const onAddStockQuoteTabPress = () => {}
+  useEffect(() => {
+    if (realm) {
+      let realmStockQuoteTabs = realm?.objects<StockQuoteTab>('StockQuoteTab') ?? []
+      let newStockQuoteTab = []
+      for (let i = 0; i < realmStockQuoteTabs.length; i++) {
+        newStockQuoteTab.push({
+          tabName: realmStockQuoteTabs[i].tabName,
+          tickers: realmStockQuoteTabs[i].tickers,
+        })
+      }
+      setStockQuoteTab(newStockQuoteTab)
+    }
+  }, [realm])
+
+  const onAddStockQuoteTabPress = () => {
+    realm?.write(() => {
+      // realm.create("StockQuoteTab", {
+      //   _id: ObjectId(),
+      // })
+    })
+  }
 
   return (
-    <ScreenBackgrounds screenName={RouteStacks.eventMain}>
+    <ScreenBackgrounds screenName={RouteStacks.stockQuoteMain}>
       <Header headerText={t('stockQuote')} />
       <KeyboardAwareScrollView
         style={{
@@ -58,6 +86,7 @@ const EventMainScreen: FC<EventMainScreenNavigationProps> = ({ navigation, route
           style={{
             height: 50,
             justifyContent: 'center',
+            flexDirection: 'row',
           }}
         >
           <ScrollView
@@ -71,30 +100,28 @@ const EventMainScreen: FC<EventMainScreenNavigationProps> = ({ navigation, route
               width: '100%',
             }}
           >
-            <Pressable
-              style={{
-                borderWidth: 1,
-                borderColor: colors.darkBlueGray,
-                borderRadius: 20,
-                marginRight: 4,
-                justifyContent: 'center',
-                paddingHorizontal: 8,
-                paddingVertical: 8,
-              }}
-            >
-              <Text
-                style={{
-                  color: colors.darkBlueGray,
-                  fontSize: 12,
-                }}
-              >
-                Custom
-              </Text>
-            </Pressable>
+            {map(stockQuoteTab, (elem, idx) => {
+              return <StockQuoteTabItem currTab={currStockQuoteTab} tabIdx={idx} tabName={elem.tabName} />
+            })}
             <Pressable onPress={onAddStockQuoteTabPress}>
               <Ionicons name='add-circle' size={config.iconSize} color={colors.darkBlueGray} />
             </Pressable>
           </ScrollView>
+          <Pressable
+            style={{
+              flexBasis: 50,
+              backgroundColor: colors.red,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={onAddStockQuoteTabPress}
+          >
+            <MaterialCommunityIcons
+              name='delete'
+              size={config.iconSize}
+              color={currStockQuoteTab !== 0 ? colors.darkBlueGray : colors.white}
+            />
+          </Pressable>
         </View>
 
         <TickerQuote ticker={'UPST'} />
@@ -137,4 +164,4 @@ const EventMainScreen: FC<EventMainScreenNavigationProps> = ({ navigation, route
   )
 }
 
-export default EventMainScreen
+export default StockQuoteMainScreen

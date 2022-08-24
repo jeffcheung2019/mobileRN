@@ -34,8 +34,8 @@ import MainCustomTabBar from './MainCustomTabBar'
 import Animated from 'react-native-reanimated'
 import { t } from 'i18next'
 import { startLoading } from '@/Store/UI/actions'
-import EventScreen, { EventScreenNavigatorParamList } from '@/Screens/App/EventScreen'
-import StockInfoScreen, { StockInfoTopTabNavigatorParamList } from '@/Screens/App/StockInfoScreen'
+import StockQuoteScreen, { StockQuoteScreenNavigatorParamList } from '@/Screens/App/StockQuoteScreen'
+import StockInfoScreen, { StockInfoStackNavigatorParamList } from '@/Screens/App/StockInfoScreen'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 import AppSplashScreen from '@/Screens/AppSplashScreen'
 
@@ -48,16 +48,14 @@ export type MainStackNavigatorParamList = {
   [RouteStacks.setting]: NavigatorScreenParams<SettingScreenNavigatorParamList>
   [RouteStacks.appSplashScreen]: undefined
   [RouteStacks.notification]: NavigatorScreenParams<NotificationScreenNavigatorParamList>
-  // [RouteStacks.mainTab]: undefined
-  // [RouteStacks.setting]: undefined
 }
 
 export type MainTabNavigatorParamList = {
   [RouteTabs.home]: NavigatorScreenParams<HomeScreenNavigatorParamList>
   [RouteTabs.earning]: NavigatorScreenParams<EarningScreenNavigatorParamList>
   [RouteTabs.search]: NavigatorScreenParams<SearchScreenNavigatorParamList>
-  [RouteTabs.stockInfo]: NavigatorScreenParams<StockInfoTopTabNavigatorParamList>
-  [RouteTabs.event]: NavigatorScreenParams<EventScreenNavigatorParamList>
+  [RouteTabs.stockInfo]: NavigatorScreenParams<StockInfoStackNavigatorParamList>
+  [RouteTabs.stockQuote]: NavigatorScreenParams<StockQuoteScreenNavigatorParamList>
   // 🔥 Your screens go here
 }
 
@@ -96,7 +94,7 @@ const MainTabNavigator: FC<MainTabNavigatorProps> = ({ navigation }) => {
         <Foundation name='results' size={config.iconSize} color={colors.darkBlueGray} />
       </View>
     ),
-    event: () => (
+    stockQuote: () => (
       <View style={TABBAR_ICON_VIEW}>
         <MaterialCommunityIcons name='chart-areaspline' size={config.iconSize} color={colors.darkBlueGray} />
       </View>
@@ -115,14 +113,14 @@ const MainTabNavigator: FC<MainTabNavigatorProps> = ({ navigation }) => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={RouteTabs.event}
+        initialRouteName={RouteTabs.home}
         tabBar={(bottomTabBarProps: BottomTabBarProps) => <MainCustomTabBar {...bottomTabBarProps} tabBarIconsMap={tabBarIconsMap} />}
       >
         <Tab.Screen name={RouteTabs.home} component={HomeScreen} />
         <Tab.Screen name={RouteTabs.earning} component={EarningScreen} />
         <Tab.Screen name={RouteTabs.search} component={SearchScreen} />
         <Tab.Screen name={RouteTabs.stockInfo} component={StockInfoScreen} />
-        <Tab.Screen name={RouteTabs.event} component={EventScreen} />
+        <Tab.Screen name={RouteTabs.stockQuote} component={StockQuoteScreen} />
       </Tab.Navigator>
     </View>
   )

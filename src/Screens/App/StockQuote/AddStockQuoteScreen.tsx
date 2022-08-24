@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback, FC, useMemo } from 'react'
-import { View, ActivityIndicator, Text, TextInput, ScrollView, TextStyle, Alert, ViewStyle, Pressable, Image } from 'react-native'
+import React, { useState, useEffect, useCallback, FC } from 'react'
+import { StackScreenProps } from '@react-navigation/stack'
+import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/Hooks'
 import { changeTheme, ThemeState } from '@/Store/Theme'
@@ -8,36 +9,36 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
-import { RouteStacks, RouteTabs } from '@/Navigators/routes'
+import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { CompositeScreenProps } from '@react-navigation/native'
+import { HomeScreenNavigatorParamList } from '../HomeScreen'
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import ActionButton from '@/Components/Buttons/ActionButton'
-import { Header } from '@/Components'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { CompositeScreenProps } from '@react-navigation/native'
-import { gql, useQuery } from '@apollo/client'
-import map from 'lodash/map'
-import { StackScreenProps } from '@react-navigation/stack'
-import { SearchScreenNavigationProps, SearchScreenNavigatorParamList } from '../SearchScreen'
-import { getTickers } from '@/Queries/SearchTab'
 import { SharedElement } from 'react-navigation-shared-element'
-import Animated, { FadeInDown } from 'react-native-reanimated'
+import { PanGestureHandler } from 'react-native-gesture-handler'
+import Animated, { FadeInDown, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
+import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
+import Header from '@/Components/Header'
 import noDataGif from '@/Assets/Images/Illustrations/noData.gif'
+import { StockQuoteScreenNavigationProps, StockQuoteScreenNavigatorParamList } from '../StockQuoteScreen'
+import { getTickers } from '@/Queries/SearchTab'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import BrightGrayInput from '@/Components/Inputs/BrightGrayInput'
+import map from 'lodash/map'
 import FastImage from 'react-native-fast-image'
 
-export type SearchMainScreenNavigationProps = CompositeScreenProps<
-  StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.searchMain>,
-  SearchScreenNavigationProps
+export type AddStockQuoteScreenNavigationProps = CompositeScreenProps<
+  StackScreenProps<StockQuoteScreenNavigatorParamList, RouteStacks.addStockQuote>,
+  StockQuoteScreenNavigationProps
 >
 
-const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, route }) => {
+const AddStockQuoteScreen: FC<AddStockQuoteScreenNavigationProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
-
-  const params = route!.params || { username: null }
 
   const [searchText, setSearchText] = useState('')
   const tickers: any = getTickers(searchText)
@@ -46,9 +47,11 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
     setSearchText(text)
   }
 
+  const onTickerPress = (ticker: string) => {}
+
   return (
-    <ScreenBackgrounds screenName={RouteStacks.searchMain}>
-      <Header headerText={t('searchTicker')} withProfile={false} />
+    <ScreenBackgrounds screenName={RouteStacks.addStockQuote}>
+      <Header headerText={t('addStockQuote')} withProfile={false} onLeftPress={() => navigation.navigate(RouteStacks.stockQuoteMain)} />
       <View
         style={{
           width: '100%',
@@ -100,13 +103,7 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
               <Animated.View entering={FadeInDown.delay(100 * idx).duration(300)} key={`TickerView-${idx}`}>
                 <Pressable
                   key={`ticker-${elem.name}`}
-                  onPress={() => {
-                    navigation.navigate(RouteStacks.tickerDetail, {
-                      ticker: elem.ticker,
-                      id: elem.id,
-                      name: elem.name,
-                    })
-                  }}
+                  onPress={() => onTickerPress(elem.ticker)}
                   style={[
                     Layout.fullWidth,
                     {
@@ -154,4 +151,4 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
   )
 }
 
-export default SearchMainScreen
+export default AddStockQuoteScreen

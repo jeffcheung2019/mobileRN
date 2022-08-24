@@ -151,10 +151,11 @@ export const privateLinking: LinkingOptions<ApplicationNavigatorParamList> = {
                   [RouteTopTabs.insider]: RouteTopTabs.insider,
                 },
               },
-              [RouteTabs.event]: {
-                path: RouteTabs.event,
+              [RouteTabs.stockQuote]: {
+                path: RouteTabs.stockQuote,
                 screens: {
-                  [RouteStacks.eventMain]: RouteStacks.eventMain,
+                  [RouteStacks.stockQuoteMain]: RouteStacks.stockQuoteMain,
+                  [RouteStacks.addStockQuote]: RouteStacks.addStockQuote,
                 },
               },
             },

@@ -7,12 +7,12 @@ export type EarningCalendar = {
   tickerIcon: string
   ticker: string
   tickerName: string
-  epsEst: string
-  epsReported: string
+  epsEst: number
+  epsReported: number
   revEst: string
   revReported: string
   earningResultTime: string
-  marketCap: string
+  marketCap: number
 }
 
 export const EarningCalendarSchema: Schema = {

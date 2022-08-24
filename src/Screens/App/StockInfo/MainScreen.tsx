@@ -166,15 +166,7 @@ const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigatio
 
   return unmountWholeScreen ? null : (
     <ScreenBackgrounds screenName={RouteStacks.stockInfoMain}>
-      <KeyboardAwareScrollView
-        style={
-          (Layout.fill,
-          {
-            backgroundColor: colors.brightGray,
-          })
-        }
-        contentContainerStyle={[Layout.fullSize, Layout.colCenter]}
-      >
+      <KeyboardAwareScrollView style={(Layout.fill, {})} contentContainerStyle={[Layout.fullSize, Layout.colCenter]}>
         <Header headerText={t('stockInfo')} />
         <ScrollView
           style={{

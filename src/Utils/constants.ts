@@ -52,6 +52,7 @@ export const api = {
   economicDataHtml: 'https://ycharts.com/indicators',
   globalSupplyChainCSV: 'https://www.newyorkfed.org/medialibrary/research/interactives/data/gscpi/gscpi_interactive_data.csv',
   globalSupplyChainEstimate: 'https://www.newyorkfed.org/medialibrary/research/interactives/data/gscpi/gscpi.json',
+  topInvestorsHoldingHtml: 'https://fintel.io/top-investors',
 }
 
 // Color naming https://www.color-name.com/hex/749597

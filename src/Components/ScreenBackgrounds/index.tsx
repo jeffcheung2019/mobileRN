@@ -38,7 +38,7 @@ const ScreenImageMap: any = {
   [RouteStacks.homeNewsDetail]: bg2,
 
   [RouteStacks.earningMain]: bg2,
-  [RouteStacks.eventMain]: bg2,
+  [RouteStacks.stockQuoteMain]: bg2,
   [RouteStacks.stockInfoMain]: bg2,
 
   [RouteStacks.setting]: bg2,
@@ -55,7 +55,7 @@ const nameColorMap: {
   [RouteStacks.earningMain]: colors.earningTheme,
   [RouteStacks.searchMain]: colors.searchTheme,
   [RouteStacks.stockInfoMain]: colors.stockInfoTheme,
-  [RouteStacks.eventMain]: colors.chartTheme,
+  [RouteStacks.stockQuoteMain]: colors.chartTheme,
 }
 
 const showTabBarScreens: (RouteStacks | RouteTabs)[] = [
@@ -63,7 +63,7 @@ const showTabBarScreens: (RouteStacks | RouteTabs)[] = [
   RouteStacks.earningMain,
   RouteStacks.searchMain,
   RouteStacks.stockInfoMain,
-  RouteStacks.eventMain,
+  RouteStacks.stockQuoteMain,
 ]
 
 const ScreenBackgrounds = ({ uri, screenName, children }: ScreenBackgroundsProps) => {

@@ -27,6 +27,7 @@ import {
   LawsuitScreen,
   LeadershipUpdateScreen,
   OfferingScreen,
+  InvestorHoldingDetailScreen,
 } from './StockInfo'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -36,6 +37,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { TabView, SceneMap, Route, TabBar } from 'react-native-tab-view'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 import AsianEconomicDataScreen from './StockInfo/AsianEconomicDataScreen'
+import { InvestorHolding } from './StockInfo/InvestorHoldingListScreen'
 
 export type StockInfoStackNavigatorParamList = {
   [RouteStacks.stockInfoMain]: undefined
@@ -45,6 +47,7 @@ export type StockInfoStackNavigatorParamList = {
   [RouteStacks.eventList]: undefined
   [RouteStacks.addWatchList]: undefined
   [RouteStacks.investorHoldingList]: undefined
+  [RouteStacks.investorHoldingDetail]: InvestorHolding
   [RouteStacks.shortInterests]: undefined
   [RouteStacks.usEconomicData]: undefined
   [RouteStacks.euEconomicData]: undefined
@@ -96,6 +99,7 @@ const StockInfoScreen: FC<StockInfoStackNavigationProps> = ({ navigation, route 
         }}
       />
       <Stack.Screen name={RouteStacks.investorHoldingList} component={InvestorHoldingListScreen} />
+      <Stack.Screen name={RouteStacks.investorHoldingDetail} component={InvestorHoldingDetailScreen} />
       <Stack.Screen name={RouteStacks.shortInterests} component={ShortInterestsScreen} />
       <Stack.Screen name={RouteStacks.usEconomicData} component={USEconomicDataScreen} />
       <Stack.Screen name={RouteStacks.euEconomicData} component={EUEconomicDataScreen} />
