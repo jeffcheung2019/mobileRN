@@ -16,7 +16,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { StockQuoteScreenNavigationProps, StockQuoteScreenNavigatorParamList } from '../StockQuoteScreen'
+import { StockQuoteScreenProps, StockQuoteScreenNavigatorParamList } from '../StockQuoteScreen'
 import Header from '@/Components/Header'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -28,12 +28,12 @@ import { map } from 'lodash'
 import StockQuoteTabItem from './Components/StockQuoteTabItem'
 import ObjectId from 'bson-objectid'
 
-type StockQuoteMainScreenNavigationProps = CompositeScreenProps<
+type StockQuoteMainScreenProps = CompositeScreenProps<
   StackScreenProps<StockQuoteScreenNavigatorParamList, RouteStacks.stockQuoteMain>,
-  StockQuoteScreenNavigationProps
+  StockQuoteScreenProps
 >
 
-const StockQuoteMainScreen: FC<StockQuoteMainScreenNavigationProps> = ({ navigation, route }) => {
+const StockQuoteMainScreen: FC<StockQuoteMainScreenProps> = ({ navigation, route }) => {
   const realm = useRealm()
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()

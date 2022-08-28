@@ -8,7 +8,7 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
+import { MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -19,19 +19,20 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { gql, useQuery } from '@apollo/client'
 import map from 'lodash/map'
 import { StackScreenProps } from '@react-navigation/stack'
-import { SearchScreenNavigationProps, SearchScreenNavigatorParamList } from '../SearchScreen'
+import { SearchScreenProps, SearchScreenNavigatorParamList } from '../SearchScreen'
 import { getTickers } from '@/Queries/SearchTab'
 import { SharedElement } from 'react-navigation-shared-element'
-import Animated, { FadeInDown } from 'react-native-reanimated'
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 import BrightGrayInput from '@/Components/Inputs/BrightGrayInput'
 import { Switch } from '@rneui/themed'
 import { useRealm } from '@/Realms/RealmContext'
 import ObjectId from 'bson-objectid'
 import { TickerDetailSections, TickerDetailDisplay, tickerDetailSectionsStrMap } from '@/Realms/Schemas/TickerDetailDisplaySchema'
 import { UpdateMode } from 'realm'
-export type TickerNotiSubscriptionScreenNavigationProps = CompositeScreenProps<
+
+export type TickerNotiSubscriptionScreenProps = CompositeScreenProps<
   StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.tickerNotiSubscription>,
-  SearchScreenNavigationProps
+  SearchScreenProps
 >
 export type SectionSubscriptionState = {
   [key: string]: boolean
@@ -65,7 +66,7 @@ const notificationSections: {
   },
 ]
 
-const TickerNotiSubscriptionScreen: FC<TickerNotiSubscriptionScreenNavigationProps> = ({ navigation, route }) => {
+const TickerNotiSubscriptionScreen: FC<TickerNotiSubscriptionScreenProps> = ({ navigation, route }) => {
   const realm = useRealm()
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
@@ -145,15 +146,20 @@ const TickerNotiSubscriptionScreen: FC<TickerNotiSubscriptionScreenNavigationPro
         }}
       >
         <View style={{ alignItems: 'center', paddingBottom: 10, flexDirection: 'row', flex: 1 }}>
-          <View style={{ paddingRight: 10 }}>
+          <View
+            style={{
+              paddingRight: 10,
+              borderRadius: 4,
+              backgroundColor: colors.darkBlueGray,
+              paddingVertical: 4,
+              paddingHorizontal: 8,
+            }}
+          >
             <Text
               style={{
                 fontSize: 16,
-                fontWeight: 'bold',
                 color: colors.white,
-                backgroundColor: colors.darkBlueGray,
-                paddingVertical: 4,
-                paddingHorizontal: 8,
+                fontWeight: 'bold',
               }}
             >
               ${ticker}
@@ -162,6 +168,7 @@ const TickerNotiSubscriptionScreen: FC<TickerNotiSubscriptionScreenNavigationPro
           <View
             style={{
               flex: 1,
+              marginLeft: 10,
             }}
           >
             <Text

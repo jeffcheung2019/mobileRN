@@ -25,7 +25,7 @@ import { UserState } from '@/Store/Users/reducer'
 import AnimateNumber from 'react-native-animate-number'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { api, colors, config } from '@/Utils/constants'
-import { HomeScreenNavigatorParamList, HomeScreenNavigationProps } from '@/Screens/App/HomeScreen'
+import { HomeScreenNavigatorParamList, HomeScreenProps } from '@/Screens/App/HomeScreen'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Share from 'react-native-share'
 import share from '@/Utils/share'
@@ -83,10 +83,7 @@ const PURPLE_COLOR = {
   color: colors.magicPotion,
 }
 
-type HomeMainScreenNavigationProps = CompositeScreenProps<
-  StackScreenProps<HomeScreenNavigatorParamList, RouteStacks.homeMain>,
-  HomeScreenNavigationProps
->
+type HomeMainScreenProps = CompositeScreenProps<StackScreenProps<HomeScreenNavigatorParamList, RouteStacks.homeMain>, HomeScreenProps>
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -102,7 +99,7 @@ const parser: Parser<any, any> = new Parser({
   },
 })
 
-const HomeMainScreen: FC<HomeMainScreenNavigationProps> = ({ navigation, route }) => {
+const HomeMainScreen: FC<HomeMainScreenProps> = ({ navigation, route }) => {
   const keyboardAwareScrollViewRef = useRef<Animated.ScrollView>(null)
   // const cardsContainerARef: React.LegacyRef<Animated.ScrollView> = useAnimatedRef()
   const { t } = useTranslation()
@@ -317,16 +314,16 @@ const HomeMainScreen: FC<HomeMainScreenNavigationProps> = ({ navigation, route }
                 })
               }
               style={{
-                height: 280,
+                maxHeight: 280,
                 width: '100%',
                 paddingHorizontal: 10,
-                paddingBottom: 10,
               }}
             >
               <View
                 style={{
                   height: 170,
                   width: '100%',
+                  justifyContent: 'flex-start',
                 }}
               >
                 <SharedElement id={`news.${liveFeedResult[0]?.newsItem?.link}.image`}>
@@ -344,51 +341,57 @@ const HomeMainScreen: FC<HomeMainScreenNavigationProps> = ({ navigation, route }
                 </SharedElement>
               </View>
 
-              <ScrollView
-                horizontal
+              <View
                 style={{
-                  width: '100%',
                   height: 50,
                 }}
-                contentContainerStyle={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
               >
-                <SharedElement
-                  id={`news.${liveFeedResult[0]?.newsItem?.link}.tickers.${join(
-                    liveFeedResult[0]?.companies.map((company: TickerCompanyDetail) => {
-                      return company.ticker
-                    }),
-                    '-',
-                  )}`}
+                <ScrollView
+                  horizontal
+                  style={{
+                    width: '100%',
+                  }}
+                  contentContainerStyle={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
                 >
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                    }}
+                  <SharedElement
+                    id={`news.${liveFeedResult[0]?.newsItem?.link}.tickers.${join(
+                      liveFeedResult[0]?.companies.map((company: TickerCompanyDetail) => {
+                        return company.ticker
+                      }),
+                      '-',
+                    )}`}
                   >
-                    {map(liveFeedResult[0]?.companies, (company, idx) => {
-                      return (
-                        <View
-                          key={`ticker-${idx}`}
-                          style={{
-                            backgroundColor: colors.darkBlueGray,
-                            marginRight: 4,
-                            height: 30,
-                            justifyContent: 'center',
-                            paddingHorizontal: 8,
-                          }}
-                        >
-                          <Text style={{ fontWeight: 'bold', fontSize: 14, color: colors.white }}>${company?.ticker}</Text>
-                        </View>
-                      )
-                    })}
-                  </View>
-                </SharedElement>
-              </ScrollView>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                      }}
+                    >
+                      {map(liveFeedResult[0]?.companies, (company, idx) => {
+                        return (
+                          <View
+                            key={`ticker-${idx}`}
+                            style={{
+                              backgroundColor: colors.darkBlueGray,
+                              marginRight: 4,
+                              height: 30,
+                              justifyContent: 'center',
+                              paddingHorizontal: 8,
+                              borderRadius: 4,
+                            }}
+                          >
+                            <Text style={{ fontWeight: 'bold', fontSize: 14, color: colors.white }}>${company?.ticker}</Text>
+                          </View>
+                        )
+                      })}
+                    </View>
+                  </SharedElement>
+                </ScrollView>
+              </View>
 
-              <View style={{ height: 60, justifyContent: 'center' }}>
+              <View style={{ maxHeight: 60, justifyContent: 'center' }}>
                 <SharedElement id={`news.${liveFeedResult[0]?.newsItem?.link}.title`}>
                   <Text style={{ color: colors.darkBlueGray, fontSize: 14, fontWeight: 'bold' }} numberOfLines={3}>
                     {liveFeedResult[0]?.newsItem.title}

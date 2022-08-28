@@ -19,19 +19,19 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import LinearGradient from 'react-native-linear-gradient'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { MainStackNavigatorParamList, MainStackNavigtorProps } from '@/Navigators/MainStackNavigator'
-import { SettingScreenNavigationProps, SettingScreenNavigatorParamList } from '../SettingScreen'
-import { NotificationScreenNavigationProps, NotificationScreenNavigatorParamList } from '../NotificationScreen'
+import { MainStackNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
+import { SettingScreenProps, SettingScreenNavigatorParamList } from '../SettingScreen'
+import { NotificationScreenProps, NotificationScreenNavigatorParamList } from '../NotificationScreen'
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
 
-export type NotificationDetailScreenNavigationProps = CompositeScreenProps<
+export type NotificationDetailScreenProps = CompositeScreenProps<
   StackScreenProps<NotificationScreenNavigatorParamList, RouteStacks.notificationDetail>,
-  NotificationScreenNavigationProps
+  NotificationScreenProps
 >
 
-const NotificationDetailScreen: FC<NotificationDetailScreenNavigationProps> = ({ navigation, route }) => {
+const NotificationDetailScreen: FC<NotificationDetailScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()

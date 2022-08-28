@@ -21,11 +21,11 @@ import { UserState } from '@/Store/Users/reducer'
 import { createStackNavigator } from '@react-navigation/stack'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
+import { MainTabNavigatorNavigationProp, MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import { MainScreen } from './Earning'
-import { CompositeScreenProps } from '@react-navigation/native'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { CompositeNavigationProp, CompositeScreenProps } from '@react-navigation/native'
+import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { Route, TabBar, TabView } from 'react-native-tab-view'
 import EarningMainScreen from './Earning/MainScreen'
 import EarningWeekDayContainer from './Earning/EarningWeekDayContainer'
@@ -43,9 +43,13 @@ export type EarningScreenNavigatorParamList = {
   [RouteStacks.earningMain]: undefined
 }
 
-export type EarningScreenNavigationProps = CompositeScreenProps<
+export type EarningScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabNavigatorParamList, RouteTabs.earning>,
-  MainTabNavigatorProps
+  MainTabNavigatorScreenProps
+>
+export type EarningScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainTabNavigatorParamList, RouteTabs.earning>,
+  MainTabNavigatorNavigationProp
 >
 
 type SceneRoute = {
@@ -56,7 +60,7 @@ type SceneRoute = {
 
 const weekDayStr = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 
-const EarningScreen: FC<EarningScreenNavigationProps> = ({ navigation, route }) => {
+const EarningScreen: FC<EarningScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()

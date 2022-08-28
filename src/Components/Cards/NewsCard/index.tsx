@@ -117,7 +117,7 @@ const NewsCard: FC<NewsCardProps> = ({ onPress, news }) => {
                   height: '100%',
                   width: '100%',
                 }}
-                resizeMode={FastImage.resizeMode.cover}
+                resizeMode={FastImage.resizeMode.contain}
                 onLoadEnd={() => setIsLoading(false)}
               />
 
@@ -164,6 +164,7 @@ const NewsCard: FC<NewsCardProps> = ({ onPress, news }) => {
                       height: 30,
                       justifyContent: 'center',
                       paddingHorizontal: 8,
+                      borderRadius: 4,
                     }}
                   >
                     <Text style={{ fontWeight: 'bold', fontSize: 14, color: colors.white }}>${ticker}</Text>

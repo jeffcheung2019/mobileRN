@@ -29,12 +29,12 @@ const TickerQuote: FC<TickerQuoteProps> = ({ ticker }) => {
       entering={FadeInRight}
       exiting={FadeOutLeft}
       style={{
-        height: 90,
-        width: '100%',
         flexDirection: 'column',
+        height: 70,
         backgroundColor: colors.white,
         borderRadius: 10,
         marginVertical: 6,
+        padding: 8,
       }}
     >
       <View
@@ -44,26 +44,26 @@ const TickerQuote: FC<TickerQuoteProps> = ({ ticker }) => {
           flexDirection: 'row',
         }}
       >
-        <View
-          style={{
-            flexBasis: 100,
-            justifyContent: 'center',
-            paddingLeft: 10,
-          }}
-        >
-          <Text
+        <View style={{ alignItems: 'center' }}>
+          <View
             style={{
-              textAlign: 'center',
-              fontSize: 14,
-              fontWeight: 'bold',
-              paddingVertical: 4,
               backgroundColor: colors.darkBlueGray,
-              color: colors.white,
+              paddingVertical: 4,
               marginVertical: 4,
+              paddingHorizontal: 8,
             }}
           >
-            ${ticker}
-          </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 14,
+                fontWeight: 'bold',
+                color: colors.white,
+              }}
+            >
+              ${ticker}
+            </Text>
+          </View>
 
           <Text
             style={{
@@ -74,40 +74,31 @@ const TickerQuote: FC<TickerQuoteProps> = ({ ticker }) => {
           >
             ${currClose}
           </Text>
+        </View>
 
+        <View
+          style={{
+            paddingLeft: 4,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}
+        >
           <Text
             style={{
-              fontSize: 10,
+              fontSize: 14,
+              color: priceChangePercent > 0 ? colors.electricGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
+            }}
+          >
+            {(currClose - prevClose).toFixed(2)}
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
               color: priceChangePercent > 0 ? colors.electricGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
             }}
           >
             {priceChangePercent === 0 ? '-' : priceChangePercent > 0 ? '▲' : '▼'} {priceChangePercent?.toFixed(2)}%
           </Text>
-        </View>
-
-        <View
-          style={{
-            flex: 1,
-            height: '100%',
-          }}
-        >
-          <View
-            style={{
-              position: 'absolute',
-              top: -50,
-              left: -20,
-            }}
-          >
-            <LineStockChart
-              chartData={chartData}
-              height={170}
-              width={windowWidth - 45}
-              priceChangePercent={priceChangePercent}
-              lowest={lowest}
-              hideYAxis
-              highest={highest}
-            />
-          </View>
         </View>
       </View>
     </Animated.View>

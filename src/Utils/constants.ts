@@ -53,6 +53,12 @@ export const api = {
   globalSupplyChainCSV: 'https://www.newyorkfed.org/medialibrary/research/interactives/data/gscpi/gscpi_interactive_data.csv',
   globalSupplyChainEstimate: 'https://www.newyorkfed.org/medialibrary/research/interactives/data/gscpi/gscpi.json',
   topInvestorsHoldingHtml: 'https://fintel.io/top-investors',
+  investorHtmlPrefix: 'https://fintel.io/',
+  benzingaOfferingNews: (offset: number, limit: number = 10) => {
+    return `https://www.benzinga.com/api/news?channels=65&displayOutput=abstract&limit=${limit}&offset=${offset}`
+  },
+  shortInterestsHtml: 'https://www.marketwatch.com/tools/screener/short-interest',
+  quantIsNowInsight: `https://quantisnow.com/insight/`,
 }
 
 // Color naming https://www.color-name.com/hex/749597

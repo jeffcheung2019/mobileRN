@@ -9,11 +9,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { useTranslation } from 'react-i18next'
 import { colors, config } from '@/Utils/constants'
-import { createStackNavigator, StackScreenProps } from '@react-navigation/stack'
+import { createStackNavigator, StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
 import { RouteStacks, RouteTabs } from './routes'
 
 import { Dimensions, ImageBackground, Text, TextStyle, View, ViewStyle } from 'react-native'
-import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native'
+import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native'
 import { Auth } from 'aws-amplify'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '@/Store/Users/actions'
@@ -42,7 +42,9 @@ import AppSplashScreen from '@/Screens/AppSplashScreen'
 const Tab = createBottomTabNavigator()
 const Stack = createSharedElementStackNavigator()
 
-export type MainStackNavigtorProps = StackScreenProps<ApplicationNavigatorParamList, RouteStacks.mainStack>
+export type MainStackNavigtorScreenProps = StackScreenProps<ApplicationNavigatorParamList, RouteStacks.mainStack>
+export type MainStackNavigtorNavigationProp = StackNavigationProp<ApplicationNavigatorParamList, RouteStacks.mainStack>
+
 export type MainStackNavigatorParamList = {
   [RouteStacks.mainTab]: NavigatorScreenParams<MainTabNavigatorParamList>
   [RouteStacks.setting]: NavigatorScreenParams<SettingScreenNavigatorParamList>
@@ -56,12 +58,16 @@ export type MainTabNavigatorParamList = {
   [RouteTabs.search]: NavigatorScreenParams<SearchScreenNavigatorParamList>
   [RouteTabs.stockInfo]: NavigatorScreenParams<StockInfoStackNavigatorParamList>
   [RouteTabs.stockQuote]: NavigatorScreenParams<StockQuoteScreenNavigatorParamList>
-  // 🔥 Your screens go here
 }
 
-export type MainTabNavigatorProps = CompositeScreenProps<
+export type MainTabNavigatorScreenProps = CompositeScreenProps<
   StackScreenProps<MainStackNavigatorParamList, RouteStacks.mainTab>,
-  MainStackNavigtorProps
+  MainStackNavigtorScreenProps
+>
+
+export type MainTabNavigatorNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<MainStackNavigatorParamList, RouteStacks.mainTab>,
+  MainStackNavigtorNavigationProp
 >
 
 const TABBAR_ICON_VIEW: ViewStyle = {
@@ -70,7 +76,7 @@ const TABBAR_ICON_VIEW: ViewStyle = {
   flex: 1,
 }
 
-const MainTabNavigator: FC<MainTabNavigatorProps> = ({ navigation }) => {
+const MainTabNavigator: FC<MainTabNavigatorScreenProps> = ({ navigation }) => {
   const tabBarIconsMap: {
     [Key in RouteStacks as string]?: () => React.ReactNode
   } = {
@@ -126,7 +132,7 @@ const MainTabNavigator: FC<MainTabNavigatorProps> = ({ navigation }) => {
   )
 }
 
-const MainStackNavigator: FC<MainStackNavigtorProps> = ({ navigation }) => {
+const MainStackNavigator: FC<MainStackNavigtorScreenProps> = ({ navigation }) => {
   return (
     <Stack.Navigator
       screenOptions={{

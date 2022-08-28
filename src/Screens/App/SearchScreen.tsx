@@ -9,11 +9,11 @@ import { UserState } from '@/Store/Users/reducer'
 import { createStackNavigator } from '@react-navigation/stack'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { config } from '@/Utils/constants'
-import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
+import { MainTabNavigatorNavigationProp, MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import { MainScreen } from './Search'
-import { CompositeScreenProps } from '@react-navigation/native'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { CompositeNavigationProp, CompositeScreenProps } from '@react-navigation/native'
+import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import TickerDetailScreen from './Search/TickerDetailScreen'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 import TickerNotiSubscriptionScreen from './Search/TickerNotiSubscriptionScreen'
@@ -32,12 +32,16 @@ export type SearchScreenNavigatorParamList = {
   }
 }
 
-export type SearchScreenNavigationProps = CompositeScreenProps<
+export type SearchScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabNavigatorParamList, RouteTabs.search>,
-  MainTabNavigatorProps
+  MainTabNavigatorScreenProps
+>
+export type SearchScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainTabNavigatorParamList, RouteTabs.search>,
+  MainTabNavigatorNavigationProp
 >
 
-const SearchScreen: FC<SearchScreenNavigationProps> = ({ navigation, route }) => {
+const SearchScreen: FC<SearchScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()

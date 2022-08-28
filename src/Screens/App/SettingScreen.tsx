@@ -12,7 +12,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Header } from '@/Components'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack'
-import { MainStackNavigatorParamList, MainStackNavigtorProps } from '@/Navigators/MainStackNavigator'
+import { MainStackNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import { MainScreen, SettingEditProfileScreen } from './Setting'
 
 const windowHeight = Dimensions.get('window').height
@@ -23,14 +23,14 @@ export type SettingScreenNavigatorParamList = {
   [RouteStacks.settingEditProfile]: undefined
 }
 
-export type SettingScreenNavigationProps = CompositeScreenProps<
+export type SettingScreenProps = CompositeScreenProps<
   StackScreenProps<MainStackNavigatorParamList, RouteStacks.setting>,
-  MainStackNavigtorProps
+  MainTabNavigatorScreenProps
 >
 
 const Stack = createStackNavigator()
 
-const SettingScreen: FC<SettingScreenNavigationProps> = ({ navigation, route }) => {
+const SettingScreen: FC<SettingScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()

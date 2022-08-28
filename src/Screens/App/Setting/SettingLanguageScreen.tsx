@@ -20,8 +20,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import LinearGradient from 'react-native-linear-gradient'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { MainStackNavigatorParamList, MainStackNavigtorProps } from '@/Navigators/MainStackNavigator'
-import { SettingScreenNavigationProps, SettingScreenNavigatorParamList } from '../SettingScreen'
+import { MainStackNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
+import { SettingScreenProps, SettingScreenNavigatorParamList } from '../SettingScreen'
 import { awsLogout } from '@/Utils/helpers'
 import { Icon } from '@rneui/base'
 import StandardInput from '@/Components/Inputs/StandardInput'
@@ -31,9 +31,9 @@ import BrightGrayInput from '@/Components/Inputs/BrightGrayInput'
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
 
-export type SettingEditProfileScreenNavigationProps = CompositeScreenProps<
+export type SettingEditProfileScreenProps = CompositeScreenProps<
   StackScreenProps<SettingScreenNavigatorParamList, RouteStacks.settingMain>,
-  SettingScreenNavigationProps
+  SettingScreenProps
 >
 
 const SETTING_SECTION_VIEW: ViewStyle = {
@@ -45,7 +45,7 @@ const SETTING_SECTION_VIEW: ViewStyle = {
 
 const SETTING_ACTION_BUTTON: PressableProps = {}
 
-const SettingEditProfileScreen: FC<SettingEditProfileScreenNavigationProps> = ({ navigation, route }) => {
+const SettingEditProfileScreen: FC<SettingEditProfileScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()

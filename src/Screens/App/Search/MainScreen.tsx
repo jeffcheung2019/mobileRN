@@ -8,18 +8,18 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
+import { MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ActionButton from '@/Components/Buttons/ActionButton'
 import { Header } from '@/Components'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { CompositeScreenProps } from '@react-navigation/native'
+import { CompositeNavigationProp, CompositeScreenProps } from '@react-navigation/native'
 import { gql, useQuery } from '@apollo/client'
 import map from 'lodash/map'
-import { StackScreenProps } from '@react-navigation/stack'
-import { SearchScreenNavigationProps, SearchScreenNavigatorParamList } from '../SearchScreen'
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
+import { SearchScreenProps, SearchScreenNavigatorParamList, SearchScreenNavigationProp } from '../SearchScreen'
 import { getTickers } from '@/Queries/SearchTab'
 import { SharedElement } from 'react-navigation-shared-element'
 import Animated, { FadeInDown } from 'react-native-reanimated'
@@ -27,12 +27,17 @@ import noDataGif from '@/Assets/Images/Illustrations/noData.gif'
 import BrightGrayInput from '@/Components/Inputs/BrightGrayInput'
 import FastImage from 'react-native-fast-image'
 
-export type SearchMainScreenNavigationProps = CompositeScreenProps<
+export type SearchMainScreenProps = CompositeScreenProps<
   StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.searchMain>,
-  SearchScreenNavigationProps
+  SearchScreenProps
 >
 
-const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, route }) => {
+export type SearchMainScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<SearchScreenNavigatorParamList, RouteStacks.searchMain>,
+  SearchScreenNavigationProp
+>
+
+const SearchMainScreen: FC<SearchMainScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
@@ -82,6 +87,7 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
               source={noDataGif}
               style={{
                 height: '40%',
+                width: '100%',
               }}
               resizeMode='contain'
             />
@@ -122,21 +128,27 @@ const SearchMainScreen: FC<SearchMainScreenNavigationProps> = ({ navigation, rou
                 >
                   <View style={{ flex: 1, alignItems: 'flex-start', paddingHorizontal: 20 }}>
                     <SharedElement id={`ticker.${elem.ticker}`}>
-                      <Text
-                        numberOfLines={1}
+                      <View
                         style={{
-                          textAlign: 'center',
-                          fontSize: 14,
-                          width: 80,
-                          fontWeight: 'bold',
                           paddingHorizontal: 6,
+                          width: 80,
                           paddingVertical: 6,
                           backgroundColor: colors.darkBlueGray,
-                          color: colors.white,
+                          borderRadius: 4,
                         }}
                       >
-                        ${elem.ticker}
-                      </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            textAlign: 'center',
+                            fontSize: 14,
+                            fontWeight: 'bold',
+                            color: colors.white,
+                          }}
+                        >
+                          ${elem.ticker}
+                        </Text>
+                      </View>
                     </SharedElement>
                   </View>
                   <View style={{ flex: 2, alignItems: 'center' }}>

@@ -13,6 +13,13 @@ type PriceTargetSectionProps = {
   priceTargets: PriceTarget[] | undefined
 }
 
+const RATING_VIEW: ViewStyle = {
+  backgroundColor: colors.darkBlueGray,
+  paddingVertical: 4,
+  paddingHorizontal: 6,
+  borderRadius: 4,
+}
+
 const PriceTargetSection: FC<PriceTargetSectionProps> = ({ priceTargets }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
@@ -64,7 +71,7 @@ const PriceTargetSection: FC<PriceTargetSectionProps> = ({ priceTargets }) => {
                 <View style={{ flex: 5, alignItems: 'flex-start', justifyContent: 'center' }}>
                   <View style={{ flexDirection: 'row' }}>
                     {ratingPrior ? (
-                      <View style={{ backgroundColor: colors.darkBlueGray, paddingVertical: 4, paddingHorizontal: 6 }}>
+                      <View style={[RATING_VIEW]}>
                         <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{ratingPrior}</Text>
                       </View>
                     ) : null}
@@ -73,7 +80,7 @@ const PriceTargetSection: FC<PriceTargetSectionProps> = ({ priceTargets }) => {
                         {<Text style={{ color: colors.darkBlueGray, fontSize: 9 }}>{'->'}</Text>}
                       </View>
                     ) : null}
-                    <View style={{ backgroundColor: colors.darkBlueGray, paddingVertical: 4, paddingHorizontal: 6 }}>
+                    <View style={[RATING_VIEW]}>
                       <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{rating}</Text>
                     </View>
                   </View>

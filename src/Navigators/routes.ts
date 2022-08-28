@@ -67,13 +67,19 @@ export enum RouteStacks {
   globalSupplyChain = 'globalSupplyChain',
   foodPriceIndex = 'foodPriceIndex',
   unusualOptions = 'unusualOptions',
-  lawsuit = 'lawsuit',
+  lawsuits = 'lawsuits',
+  lawsuitsDetail = 'lawsuitsDetail',
   leadershipUpdate = 'leadershipUpdate',
   offering = 'offering',
   addStockQuote = 'addStockQuote',
-
+  offeringDetail = 'offeringDetail',
   stockQuoteMain = 'stockQuoteMain',
-
+  shortResearchReports = 'shortResearchReports',
+  shortResearchReportsDetail = 'shortResearchReportsDetail',
+  mergerAcquisition = 'mergerAcquisition',
+  mergerAcquisitionDetail = 'mergerAcquisitionDetail',
+  ipoNews = 'ipoNews',
+  ipoNewsDetail = 'ipoNewsDetail',
   investorHoldingDetail = 'investorHoldingDetail',
 
   setting = 'setting',

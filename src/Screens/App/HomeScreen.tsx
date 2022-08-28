@@ -9,12 +9,12 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { config } from '@/Utils/constants'
-import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
+import { MainTabNavigatorNavigationProp, MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import EncryptedStorage from 'react-native-encrypted-storage'
 import { MainScreen, NewsDetailScreen } from '@/Screens/App/Home'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
-import { CompositeScreenProps } from '@react-navigation/native'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { CompositeNavigationProp, CompositeScreenProps } from '@react-navigation/native'
+import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 import { NewsDetail } from './Home/NewsDetailScreen'
 import join from 'lodash/join'
@@ -28,12 +28,17 @@ export type HomeScreenNavigatorParamList = {
   }
 }
 
-export type HomeScreenNavigationProps = CompositeScreenProps<
+export type HomeScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabNavigatorParamList, RouteTabs.home>,
-  MainTabNavigatorProps
+  MainTabNavigatorScreenProps
 >
 
-const HomeScreen: FC<HomeScreenNavigationProps> = ({ navigation, route }) => {
+export type HomeScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainTabNavigatorParamList, RouteTabs.home>,
+  MainTabNavigatorNavigationProp
+>
+
+const HomeScreen: FC<HomeScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
@@ -42,6 +47,7 @@ const HomeScreen: FC<HomeScreenNavigationProps> = ({ navigation, route }) => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        presentation: 'transparentModal',
       }}
       initialRouteName={RouteStacks.homeMain}
     >

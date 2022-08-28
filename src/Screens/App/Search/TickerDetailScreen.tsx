@@ -26,7 +26,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
 import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { SearchScreenNavigationProps, SearchScreenNavigatorParamList } from '../SearchScreen'
+import { SearchScreenProps, SearchScreenNavigatorParamList } from '../SearchScreen'
 import Header from '@/Components/Header'
 import { getCompanyPage, getMetricsChart, getNewsItemPanel, getRatingsPanel, NewsItem, PriceTarget } from '@/Queries/SearchTab'
 import moment from 'moment'
@@ -50,9 +50,9 @@ import NotiSubscribeButton from './Components/NotiSubscribeButton'
 
 const windowWidth = Dimensions.get('window').width
 
-type TickerDetailScreenNavigationProps = CompositeScreenProps<
+type TickerDetailScreenProps = CompositeScreenProps<
   StackScreenProps<SearchScreenNavigatorParamList, RouteStacks.tickerDetail>,
-  SearchScreenNavigationProps
+  SearchScreenProps
 >
 
 const SECTION_VIEW: ViewStyle = {
@@ -88,7 +88,7 @@ const SECTION_TITLE_VIEW: ViewStyle = {
   paddingVertical: 10,
 }
 
-const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation, route }) => {
+const TickerDetailScreen: FC<TickerDetailScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
@@ -131,21 +131,27 @@ const TickerDetailScreen: FC<TickerDetailScreenNavigationProps> = ({ navigation,
                 }}
               >
                 <SharedElement id={`ticker.${ticker}`}>
-                  <Text
-                    numberOfLines={1}
+                  <View
                     style={{
-                      textAlign: 'center',
-                      fontSize: 14,
-                      fontWeight: 'bold',
                       paddingHorizontal: 6,
                       width: 80,
                       paddingVertical: 6,
                       backgroundColor: colors.darkBlueGray,
-                      color: colors.white,
+                      borderRadius: 4,
                     }}
                   >
-                    ${ticker}
-                  </Text>
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        textAlign: 'center',
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: colors.white,
+                      }}
+                    >
+                      ${ticker}
+                    </Text>
+                  </View>
                 </SharedElement>
               </View>
               <Animated.View

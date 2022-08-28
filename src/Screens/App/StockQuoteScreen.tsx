@@ -9,7 +9,7 @@ import { UserState } from '@/Store/Users/reducer'
 import { createStackNavigator } from '@react-navigation/stack'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { config } from '@/Utils/constants'
-import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
+import { MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import { MainScreen } from './StockQuote'
 import { CompositeScreenProps } from '@react-navigation/native'
@@ -23,12 +23,12 @@ export type StockQuoteScreenNavigatorParamList = {
   [RouteStacks.addStockQuote]: undefined
 }
 
-export type StockQuoteScreenNavigationProps = CompositeScreenProps<
+export type StockQuoteScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabNavigatorParamList, RouteTabs.stockQuote>,
-  MainTabNavigatorProps
+  MainTabNavigatorScreenProps
 >
 
-const StockQuoteScreen: FC<StockQuoteScreenNavigationProps> = ({ navigation, route }) => {
+const StockQuoteScreen: FC<StockQuoteScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()

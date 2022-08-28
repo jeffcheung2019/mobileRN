@@ -21,7 +21,7 @@ import { UserState } from '@/Store/Users/reducer'
 import { createStackNavigator } from '@react-navigation/stack'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { MainTabNavigatorParamList, MainTabNavigatorProps } from '@/Navigators/MainStackNavigator'
+import { MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -42,9 +42,9 @@ export type EarningMainScreenNavigatorParamList = {
   [RouteStacks.earningMain]: undefined
 }
 
-export type EarningMainScreenNavigationProps = CompositeScreenProps<
+export type EarningMainScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabNavigatorParamList, RouteTabs.earning>,
-  MainTabNavigatorProps
+  MainTabNavigatorScreenProps
 >
 
 type SceneRoute = {
@@ -56,7 +56,7 @@ type SceneRoute = {
 const weekDayStr = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 const weekStr = ['This week', 'Next week']
 
-const EarningMainScreen: FC<EarningMainScreenNavigationProps> = ({ navigation, route }) => {
+const EarningMainScreen: FC<EarningMainScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()

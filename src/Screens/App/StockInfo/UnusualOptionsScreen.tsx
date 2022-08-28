@@ -22,15 +22,15 @@ import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, 
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackNavigationProps } from '@/Screens/App/StockInfoScreen'
+import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
 
-export type UnusualOptionsScreenNavigationProps = CompositeScreenProps<
+export type UnusualOptionsScreenProps = CompositeScreenProps<
   StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.unusualOptions>,
-  StockInfoStackNavigationProps
+  StockInfoStackScreenProps
 >
 
-const UnusualOptionsScreen: FC<UnusualOptionsScreenNavigationProps> = ({ navigation, route }) => {
+const UnusualOptionsScreen: FC<UnusualOptionsScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
@@ -39,8 +39,17 @@ const UnusualOptionsScreen: FC<UnusualOptionsScreenNavigationProps> = ({ navigat
     <ScreenBackgrounds screenName={RouteStacks.unusualOptions}>
       <Header headerText={t('unusualOptions')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={Layout.fill}
-        contentContainerStyle={[Layout.fullSize, Layout.colCenter, Gutters.smallHPadding]}
+        style={{
+          backgroundColor: colors.brightGray,
+        }}
+        contentContainerStyle={[
+          Gutters.smallHPadding,
+          {
+            backgroundColor: colors.brightGray,
+            flexGrow: 1,
+            justifyContent: 'flex-start',
+          },
+        ]}
       ></KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )

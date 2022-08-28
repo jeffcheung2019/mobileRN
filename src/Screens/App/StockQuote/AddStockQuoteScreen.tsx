@@ -23,19 +23,19 @@ import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
 import Header from '@/Components/Header'
 import noDataGif from '@/Assets/Images/Illustrations/noData.gif'
-import { StockQuoteScreenNavigationProps, StockQuoteScreenNavigatorParamList } from '../StockQuoteScreen'
+import { StockQuoteScreenProps, StockQuoteScreenNavigatorParamList } from '../StockQuoteScreen'
 import { getTickers } from '@/Queries/SearchTab'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import BrightGrayInput from '@/Components/Inputs/BrightGrayInput'
 import map from 'lodash/map'
 import FastImage from 'react-native-fast-image'
 
-export type AddStockQuoteScreenNavigationProps = CompositeScreenProps<
+export type AddStockQuoteScreenProps = CompositeScreenProps<
   StackScreenProps<StockQuoteScreenNavigatorParamList, RouteStacks.addStockQuote>,
-  StockQuoteScreenNavigationProps
+  StockQuoteScreenProps
 >
 
-const AddStockQuoteScreen: FC<AddStockQuoteScreenNavigationProps> = ({ navigation, route }) => {
+const AddStockQuoteScreen: FC<AddStockQuoteScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
@@ -84,6 +84,7 @@ const AddStockQuoteScreen: FC<AddStockQuoteScreenNavigationProps> = ({ navigatio
             <FastImage
               source={noDataGif}
               style={{
+                width: '100%',
                 height: '40%',
               }}
               resizeMode='contain'

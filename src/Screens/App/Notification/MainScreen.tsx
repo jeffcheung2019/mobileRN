@@ -19,9 +19,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import LinearGradient from 'react-native-linear-gradient'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { MainStackNavigatorParamList, MainStackNavigtorProps } from '@/Navigators/MainStackNavigator'
-import { SettingScreenNavigationProps, SettingScreenNavigatorParamList } from '../SettingScreen'
-import { NotificationScreenNavigationProps, NotificationScreenNavigatorParamList } from '../NotificationScreen'
+import { MainStackNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
+import { SettingScreenProps, SettingScreenNavigatorParamList } from '../SettingScreen'
+import { NotificationScreenProps, NotificationScreenNavigatorParamList } from '../NotificationScreen'
 import { useRealm } from '@/Realms/RealmContext'
 import { TickerDetailDisplay, tickerDetailSectionsStrMap, TickerDetailSectionsType } from '@/Realms/Schemas/TickerDetailDisplaySchema'
 import { SectionSubscriptionState } from '../Search/TickerNotiSubscriptionScreen'
@@ -29,9 +29,9 @@ import { SectionSubscriptionState } from '../Search/TickerNotiSubscriptionScreen
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
 
-export type NotificationMainScreenNavigationProps = CompositeScreenProps<
+export type NotificationMainScreenProps = CompositeScreenProps<
   StackScreenProps<NotificationScreenNavigatorParamList, RouteStacks.notificationMain>,
-  NotificationScreenNavigationProps
+  NotificationScreenProps
 >
 
 type SubscribedTickers = {
@@ -45,7 +45,7 @@ const initTickerDetail = {
   secFilings: false,
 }
 
-const NotificationMainScreen: FC<NotificationMainScreenNavigationProps> = ({ navigation, route }) => {
+const NotificationMainScreen: FC<NotificationMainScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const realm = useRealm()
   const { Common, Fonts, Gutters, Layout } = useTheme()

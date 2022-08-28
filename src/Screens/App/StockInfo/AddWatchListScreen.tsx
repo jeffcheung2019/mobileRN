@@ -22,15 +22,15 @@ import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, 
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackNavigationProps } from '@/Screens/App/StockInfoScreen'
+import { StockInfoStackNavigatorParamList, StockInfoStackScreenNavigationProp } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
 
-export type AddWatchListScreenNavigationProps = CompositeScreenProps<
+export type AddWatchListScreenProps = CompositeScreenProps<
   MaterialTopTabScreenProps<StockInfoStackNavigatorParamList, RouteStacks.addWatchList>,
-  StockInfoStackNavigationProps
+  StockInfoStackScreenNavigationProp
 >
 
-const AddWatchListScreen: FC<AddWatchListScreenNavigationProps> = ({ navigation, route }) => {
+const AddWatchListScreen: FC<AddWatchListScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()

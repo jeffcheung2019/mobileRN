@@ -116,16 +116,22 @@ const InsiderTransactionSection: FC<InsiderTransactionSectionProps> = ({ company
                       {moneyConvertToKMB(Number(unitsWorth.replace(/,/g, '')))}
                     </Text>
                   </View>
-                  <View style={{ flexBasis: 120, alignItems: 'flex-start' }}>
+                  <View
+                    style={{
+                      flexBasis: 120,
+                      alignItems: 'center',
+                      width: '70%',
+                      backgroundColor: colors.darkBlueGray,
+                      paddingVertical: 4,
+                      borderRadius: 4,
+                    }}
+                  >
                     <Text
                       style={{
-                        width: '80%',
                         textAlign: 'center',
-                        backgroundColor: colors.darkBlueGray,
                         color: colors.white,
                         fontWeight: 'bold',
                         fontSize: 10,
-                        paddingVertical: 4,
                       }}
                     >
                       {action}

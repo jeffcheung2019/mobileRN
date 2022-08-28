@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, FC } from 'react'
-import { StackScreenProps } from '@react-navigation/stack'
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
 import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle, Dimensions } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/Hooks'
@@ -9,9 +9,13 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { StockInfoStackNavigatorParamList, StockInfoStackNavigationProps } from '@/Screens/App/StockInfoScreen'
+import {
+  StockInfoStackNavigatorParamList,
+  StockInfoStackScreenNavigationProp,
+  StockInfoStackScreenProps,
+} from '@/Screens/App/StockInfoScreen'
 import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
-import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
+import { CompositeNavigationProp, CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
@@ -48,22 +52,29 @@ import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { useRealm } from '@/Realms/RealmContext'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Header from '@/Components/Header'
 import Foundation from 'react-native-vector-icons/Foundation'
+import { triggerSnackbar } from '@/Utils/helpers'
+import Octicons from 'react-native-vector-icons/Octicons'
 
-export type StockInfoMainScreenNavigationProps = CompositeScreenProps<
+export type StockInfoMainScreenProps = CompositeScreenProps<
   StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.stockInfoMain>,
-  StockInfoStackNavigationProps
+  StockInfoStackScreenProps
+>
+
+export type StockInfoMainScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<StockInfoStackNavigatorParamList, RouteStacks.stockInfoMain>,
+  StockInfoStackScreenNavigationProp
 >
 
 const windowWidth = Dimensions.get('window').width
 
 type SectionButton = {
   icon: () => React.ReactNode
-  sectionType: string
+  sectionType: keyof StockInfoShowSection
   redirectTo: keyof StockInfoStackNavigatorParamList
 }
 
@@ -74,7 +85,7 @@ const sectionButtons: SectionButton[] = [
     redirectTo: RouteStacks.priceTargetList,
   },
   {
-    icon: () => <FontAwesome5Icon name='money-check-alt' size={windowWidth / 14} color={colors.white} />,
+    icon: () => <FontAwesome5 name='money-check-alt' size={windowWidth / 14} color={colors.white} />,
     sectionType: 'insiderTransactions',
     redirectTo: RouteStacks.insiderTransactionList,
   },
@@ -128,20 +139,57 @@ const sectionButtons: SectionButton[] = [
     sectionType: 'offering',
     redirectTo: RouteStacks.offering,
   },
+  {
+    icon: () => <Octicons name='law' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'lawsuits',
+    redirectTo: RouteStacks.lawsuits,
+  },
+  {
+    icon: () => <MaterialCommunityIcons name='archive-search' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'shortResearchReports',
+    redirectTo: RouteStacks.shortResearchReports,
+  },
+  {
+    icon: () => <MaterialCommunityIcons name='merge' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'mergerAcquisition',
+    redirectTo: RouteStacks.mergerAcquisition,
+  },
+  {
+    icon: () => <FontAwesome5 name='money-check-alt' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'ipoNews',
+    redirectTo: RouteStacks.ipoNews,
+  },
 ]
 
-type ShowSection = {
-  [key: string]: boolean
-}
+type StockInfoShowSectionType =
+  | 'priceTargets'
+  | 'insiderTransactions'
+  | 'events'
+  | 'secFilings'
+  | 'investorHoldings'
+  | 'shortInterests'
+  | 'usEconomicData'
+  | 'euEconomicData'
+  | 'asianEconomicData'
+  | 'foodPriceIndex'
+  | 'globalSupplyChain'
+  | 'unusualOptions'
+  | 'offering'
+  | 'lawsuits'
+  | 'shortResearchReports'
+  | 'mergerAcquisition'
+  | 'ipoNews'
 
-const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigation, route }) => {
+export type StockInfoShowSection = Record<StockInfoShowSectionType, boolean>
+
+const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }) => {
   const realm = useRealm()
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
   const [showDelButton, setShowDelButton] = useState(false)
   const [unmountWholeScreen, setUnmountWholeScreen] = useState(false)
-  const [showSections, setShowSections] = useState<ShowSection>({
+  const [showSections, setShowSections] = useState<StockInfoShowSection>({
     priceTargets: true,
     insiderTransactions: true,
     events: true,
@@ -155,6 +203,10 @@ const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigatio
     globalSupplyChain: true,
     unusualOptions: true,
     offering: true,
+    lawsuits: true,
+    shortResearchReports: true,
+    mergerAcquisition: true,
+    ipoNews: true,
   })
 
   useFocusEffect(
@@ -166,7 +218,11 @@ const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigatio
 
   return unmountWholeScreen ? null : (
     <ScreenBackgrounds screenName={RouteStacks.stockInfoMain}>
-      <KeyboardAwareScrollView style={(Layout.fill, {})} contentContainerStyle={[Layout.fullSize, Layout.colCenter]}>
+      <KeyboardAwareScrollView
+        style={(Layout.fill, {})}
+        stickyHeaderIndices={[0]}
+        contentContainerStyle={[Layout.fullSize, Layout.colCenter]}
+      >
         <Header headerText={t('stockInfo')} />
         <ScrollView
           style={{
@@ -210,6 +266,7 @@ const StockInfoMainScreen: FC<StockInfoMainScreenNavigationProps> = ({ navigatio
                     flexBasis: windowWidth / 4,
                     height: windowWidth / 4,
                     padding: 4,
+                    opacity: 0.8,
                   }}
                   key={`Section-${elem.sectionType}`}
                   layout={SequencedTransition}

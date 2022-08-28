@@ -1,35 +1,7 @@
 import { gql, useQuery } from '@apollo/client'
 import { number } from 'prop-types'
 
-export type LiveFeedProp = {
-  limit: number
-  companyIds: number[]
-  categoryIds: number[]
-  sourceIds: number[]
-}
-
-export const getNewsItemData = (newsItemId?: number) => {
-  if (!!!newsItemId) return []
-  const { loading, error, data } = useQuery(
-    gql`
-      query GetNewsItemData($newsitemId: int64!) {
-        newsItemData(newsitemId: $newsitemId) {
-          html
-        }
-      }
-    `,
-    {
-      variables: {
-        newsitemId: newsItemId,
-      },
-    },
-  )
-
-  return data?.newsItemData
-}
-
-export const getLiveFeed = (props: LiveFeedProp) => {
-  const { limit, companyIds, categoryIds, sourceIds } = props
+export const getLawsuitsLiveFeed = (companyIds?: number[]) => {
   const { loading, error, data } = useQuery(
     gql`
       query LiveFeed(
@@ -71,39 +43,32 @@ export const getLiveFeed = (props: LiveFeedProp) => {
           newsItem {
             id
             title
-            summary
             link
             imgUrl
-            parser
-            language
-            important
-            category
             publishedAt
-            discoveredAt
-            processedAt
           }
           companies {
             id
             ticker
             name
-            sector
-            industry
           }
         }
       }
     `,
     {
       variables: {
-        tickersOnly: true,
-        importantOnly: true,
+        categoryIds: [3],
         englishOnly: true,
-        categoryIds,
-        sourceIds,
-        limit,
-        companyIds,
+        limit: 36,
+        companyIds: companyIds,
       },
     },
   )
 
-  return data?.newsItems
+  return data?.newsItems?.map((elem: any) => {
+    return {
+      newsItem: elem.newsItem,
+      companies: elem.companies,
+    }
+  })
 }

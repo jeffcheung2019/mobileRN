@@ -22,15 +22,15 @@ import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, 
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackNavigationProps } from '@/Screens/App/StockInfoScreen'
+import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
 
-export type foodPriceIndexScreenNavigationProps = CompositeScreenProps<
+export type foodPriceIndexScreenProps = CompositeScreenProps<
   StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.foodPriceIndex>,
-  StockInfoStackNavigationProps
+  StockInfoStackScreenProps
 >
 
-const foodPriceIndexScreen: FC<foodPriceIndexScreenNavigationProps> = ({ navigation, route }) => {
+const foodPriceIndexScreen: FC<foodPriceIndexScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
@@ -39,8 +39,17 @@ const foodPriceIndexScreen: FC<foodPriceIndexScreenNavigationProps> = ({ navigat
     <ScreenBackgrounds screenName={RouteStacks.foodPriceIndex}>
       <Header headerText={t('foodPriceIndex')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={Layout.fill}
-        contentContainerStyle={[Layout.fullSize, Layout.colCenter, Gutters.smallHPadding]}
+        style={{
+          backgroundColor: colors.brightGray,
+        }}
+        contentContainerStyle={[
+          Gutters.smallHPadding,
+          {
+            backgroundColor: colors.brightGray,
+            flexGrow: 1,
+            justifyContent: 'flex-start',
+          },
+        ]}
       ></KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )

@@ -25,21 +25,19 @@ import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
 
-export type GlobalSupplyChainScreenProps = CompositeScreenProps<
-  StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.globalSupplyChain>,
+export type ShortResearchReportsScreenProps = CompositeScreenProps<
+  StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.usEconomicData>,
   StockInfoStackScreenProps
 >
 
-//https://www.newyorkfed.org/research/policy/gscpi#/interactive
-
-const GlobalSupplyChainScreen: FC<GlobalSupplyChainScreenProps> = ({ navigation, route }) => {
+const ShortResearchReportsScreen: FC<ShortResearchReportsScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
   return (
-    <ScreenBackgrounds screenName={RouteStacks.globalSupplyChain}>
-      <Header headerText={t('globalSupplyChain')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
+    <ScreenBackgrounds screenName={RouteStacks.usEconomicData}>
+      <Header headerText={t('usEconomicData')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
         style={{
           backgroundColor: colors.brightGray,
@@ -57,4 +55,4 @@ const GlobalSupplyChainScreen: FC<GlobalSupplyChainScreenProps> = ({ navigation,
   )
 }
 
-export default GlobalSupplyChainScreen
+export default ShortResearchReportsScreen

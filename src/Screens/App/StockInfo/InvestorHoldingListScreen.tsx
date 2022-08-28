@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, FC } from 'react'
-import { StackScreenProps } from '@react-navigation/stack'
+import React, { useState, useEffect, useCallback, FC, useMemo } from 'react'
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
 import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/Hooks'
@@ -10,7 +10,7 @@ import { UserState } from '@/Store/Users/reducer'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { api, colors, config } from '@/Utils/constants'
 import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
-import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
+import { CompositeNavigationProp, CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
@@ -18,18 +18,33 @@ import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { SharedElement } from 'react-navigation-shared-element'
 import { PanGestureHandler } from 'react-native-gesture-handler'
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import Animated, { FadeInDown, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackNavigationProps } from '@/Screens/App/StockInfoScreen'
+import {
+  StockInfoStackNavigatorParamList,
+  StockInfoStackScreenNavigationProp,
+  StockInfoStackScreenProps,
+} from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
 import axios from 'axios'
 import * as cheerio from 'cheerio'
+import { filter, map, throttle } from 'lodash'
+import InvestorItem from './Components/InvestorItem'
+import BrightGrayInput from '@/Components/Inputs/BrightGrayInput'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { Skeleton } from '@rneui/themed'
+import InvestorItemPlaceholder from './Components/InvestorItemPlaceholder'
 
-export type InvestorHoldingListScreenNavigationProps = CompositeScreenProps<
+export type InvestorHoldingListScreenProps = CompositeScreenProps<
   StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.investorHoldingList>,
-  StockInfoStackNavigationProps
+  StockInfoStackScreenProps
+>
+
+export type InvestorHoldingListScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<StockInfoStackNavigatorParamList, RouteStacks.investorHoldingList>,
+  StockInfoStackScreenNavigationProp
 >
 
 export type InvestorHolding = {
@@ -38,42 +53,49 @@ export type InvestorHolding = {
   profolioManager?: string | undefined | null
 }
 
-const InvestorHoldingListScreen: FC<InvestorHoldingListScreenNavigationProps> = ({ navigation, route }) => {
+const InvestorHoldingListScreen: FC<InvestorHoldingListScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
-  const [investorHoldingList, setInvestorHoldingList] = useState([])
+  const [investorHoldingList, setInvestorHoldingList] = useState<InvestorHolding[]>([])
+  const [searchText, setSearchText] = useState('')
+
+  const onSearchTextChange = (text: string) => {
+    setSearchText(text)
+  }
+
   useFocusEffect(
     useCallback(() => {
       const run = async () => {
         try {
           let topInvestorsHtmlRes = await axios.get(api.topInvestorsHoldingHtml)
           const cheerioDom = cheerio.load(topInvestorsHtmlRes.data)
-          let activistsTdOrA = cheerioDom('#activists tr td')
-          let lists: InvestorHolding[] = []
+          let activistsTdDom = cheerioDom('#activists tr td')
+          let tdLists: InvestorHolding[] = []
           let i = 1
-          let detail: InvestorHolding = {
+          let investorDtl: InvestorHolding = {
             companyName: '',
           }
-          while (i < activistsTdOrA.length) {
+
+          while (i < activistsTdDom.length) {
             if (i !== 1 && i % 3 === 1) {
-              lists.push(detail)
-              detail = {
+              tdLists.push(investorDtl)
+              investorDtl = {
                 companyName: '',
               }
             }
+
             if ([1, 2].includes(i % 3)) {
-              i += i % 3 === 1 ? 1 : 2
               if (i % 3 === 1) {
-                detail.companyName = activistsTdOrA.eq(i).text()
-                detail.slug = activistsTdOrA.children('a').attr()?.href
+                investorDtl.companyName = activistsTdDom.eq(i).text()
+                investorDtl.slug = activistsTdDom.children('a').attr()?.href
               } else {
-                detail.profolioManager = activistsTdOrA.eq(i).text()
+                investorDtl.profolioManager = activistsTdDom.eq(i).text()
               }
+              i += i % 3 === 1 ? 1 : 2
             }
           }
-
-          console.log('lists: ', JSON.stringify(lists, null, 2))
+          setInvestorHoldingList(tdLists)
         } catch (err) {
           console.log('err ', err)
         }
@@ -83,11 +105,73 @@ const InvestorHoldingListScreen: FC<InvestorHoldingListScreenNavigationProps> = 
     }, []),
   )
 
+  let filtereInvestors = useMemo(
+    throttle(() => {
+      return filter(investorHoldingList, (elem, idx) => {
+        let profolioManager = elem.profolioManager
+        let companyName = elem.companyName
+        let searchTextLowerCase = searchText.toLowerCase()
+        let tickerSymbolMatch = profolioManager?.toLowerCase().includes(searchTextLowerCase)
+        let companyNameMatch = companyName?.toLowerCase().includes(searchTextLowerCase)
+
+        return searchText === '' || tickerSymbolMatch || companyNameMatch
+      })
+    }, 600),
+    [investorHoldingList, searchText],
+  )
+
   return (
     <ScreenBackgrounds screenName={RouteStacks.investorHoldingList}>
       <Header headerText={t('investorHoldings')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
-      <KeyboardAwareScrollView style={Layout.fill} contentContainerStyle={[Layout.fullSize, Layout.colCenter, Gutters.smallHPadding]}>
-        {investorHoldingList}
+      <KeyboardAwareScrollView
+        style={{
+          backgroundColor: colors.brightGray,
+        }}
+        stickyHeaderIndices={[0]}
+        contentContainerStyle={[
+          Gutters.smallHPadding,
+          {
+            backgroundColor: colors.brightGray,
+            flexGrow: 1,
+            justifyContent: 'flex-start',
+          },
+        ]}
+      >
+        <View
+          style={{
+            paddingVertical: 8,
+            backgroundColor: colors.brightGray,
+          }}
+        >
+          <BrightGrayInput
+            value={searchText}
+            onChangeText={onSearchTextChange}
+            icon={() => <MaterialIcons name='search' size={20} color={colors.darkBlueGray} />}
+            textInputProps={{
+              placeholder: t('searchInvestor'),
+            }}
+          />
+        </View>
+        {filtereInvestors === undefined || filtereInvestors.length === 0 ? (
+          <>
+            <InvestorItemPlaceholder />
+            <InvestorItemPlaceholder />
+            <InvestorItemPlaceholder />
+            <InvestorItemPlaceholder />
+            <InvestorItemPlaceholder />
+            <InvestorItemPlaceholder />
+            <InvestorItemPlaceholder />
+            <InvestorItemPlaceholder />
+          </>
+        ) : (
+          map(filtereInvestors, (elem, idx) => {
+            return (
+              <View key={`InvestorItem-${idx}`}>
+                <InvestorItem {...elem} idx={idx} />
+              </View>
+            )
+          })
+        )}
       </KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )

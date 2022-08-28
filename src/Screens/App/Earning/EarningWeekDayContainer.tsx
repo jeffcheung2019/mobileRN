@@ -9,7 +9,7 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { EarningScreenNavigatorParamList, EarningScreenNavigationProps } from '@/Screens/App/EarningScreen'
+import { EarningScreenNavigatorParamList, EarningScreenProps } from '@/Screens/App/EarningScreen'
 import { RouteStacks } from '@/Navigators/routes'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'

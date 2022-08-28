@@ -12,7 +12,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Header } from '@/Components'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack'
-import { MainStackNavigatorParamList, MainStackNavigtorProps } from '@/Navigators/MainStackNavigator'
+import { MainStackNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import { MainScreen } from './Notification'
 import NotificationDetailScreen from './Notification/NotificationDetailScreen'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
@@ -25,14 +25,14 @@ export type NotificationScreenNavigatorParamList = {
   [RouteStacks.notificationDetail]: undefined
 }
 
-export type NotificationScreenNavigationProps = CompositeScreenProps<
+export type NotificationScreenProps = CompositeScreenProps<
   StackScreenProps<MainStackNavigatorParamList, RouteStacks.notification>,
-  MainStackNavigtorProps
+  MainTabNavigatorScreenProps
 >
 
 const Stack = createSharedElementStackNavigator()
 
-const NotificationScreen: FC<NotificationScreenNavigationProps> = ({ navigation, route }) => {
+const NotificationScreen: FC<NotificationScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()

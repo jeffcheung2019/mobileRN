@@ -23,7 +23,7 @@ import { UserState } from '@/Store/Users/reducer'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { HomeScreenNavigatorParamList, HomeScreenNavigationProps } from '@/Screens/App/HomeScreen'
+import { HomeScreenNavigatorParamList, HomeScreenProps } from '@/Screens/App/HomeScreen'
 import EncryptedStorage from 'react-native-encrypted-storage'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 // @ts-ignore
@@ -45,9 +45,9 @@ const SKELETON_NEWS_CONTENT: ViewStyle = {
   marginVertical: 4,
 }
 
-type HomeNewsDetailScreenNavigationProps = CompositeScreenProps<
+type HomeNewsDetailScreenProps = CompositeScreenProps<
   StackScreenProps<HomeScreenNavigatorParamList, RouteStacks.homeNewsDetail>,
-  HomeScreenNavigationProps
+  HomeScreenProps
 >
 
 export type NewsDetail = {
@@ -63,7 +63,7 @@ let nodeJsTimeout: NodeJS.Timeout
 
 const windowWidth = Dimensions.get('window').width
 
-const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation, route }) => {
+const NewsDetailScreen: FC<HomeNewsDetailScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const news: NewsDetail = route.params?.news ?? {
     id: '',
@@ -77,8 +77,7 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
   const dispatch = useDispatch()
   const [refreshing, setRefreshing] = useState(false)
 
-  const newsItemDataResult = getNewsItemData(news.newsItemId)
-  console.log('newsItemDataResult', newsItemDataResult)
+  const newsItemDataResult = getNewsItemData(news?.newsItemId)
 
   const onRefresh = async () => {
     setRefreshing(true)
@@ -152,6 +151,7 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenNavigationProps> = ({ navigation,
                       height: 30,
                       justifyContent: 'center',
                       paddingHorizontal: 8,
+                      borderRadius: 4,
                     }}
                   >
                     <Text style={{ fontWeight: 'bold', fontSize: 14, color: colors.white }}>${ticker}</Text>

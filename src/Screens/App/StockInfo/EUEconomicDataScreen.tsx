@@ -22,15 +22,15 @@ import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, 
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackNavigationProps } from '@/Screens/App/StockInfoScreen'
+import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
 
-export type EUEconomicDataScreenNavigationProps = CompositeScreenProps<
+export type EUEconomicDataScreenProps = CompositeScreenProps<
   StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.euEconomicData>,
-  StockInfoStackNavigationProps
+  StockInfoStackScreenProps
 >
 
-const EUEconomicDataScreen: FC<EUEconomicDataScreenNavigationProps> = ({ navigation, route }) => {
+const EUEconomicDataScreen: FC<EUEconomicDataScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
@@ -39,8 +39,17 @@ const EUEconomicDataScreen: FC<EUEconomicDataScreenNavigationProps> = ({ navigat
     <ScreenBackgrounds screenName={RouteStacks.euEconomicData}>
       <Header headerText={t('euEconomicData')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={Layout.fill}
-        contentContainerStyle={[Layout.fullSize, Layout.colCenter, Gutters.smallHPadding]}
+        style={{
+          backgroundColor: colors.brightGray,
+        }}
+        contentContainerStyle={[
+          Gutters.smallHPadding,
+          {
+            backgroundColor: colors.brightGray,
+            flexGrow: 1,
+            justifyContent: 'flex-start',
+          },
+        ]}
       ></KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )

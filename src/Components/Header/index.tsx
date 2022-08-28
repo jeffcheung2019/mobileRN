@@ -45,6 +45,7 @@ const Header = (props: {
         // borderBottomColor: !withProfile && headerText === undefined && onLeftPress === undefined ? colors.transparent : colors.brightGray,
         borderBottomColor: colors.brightGray,
         borderBottomWidth: 1,
+        backgroundColor: colors.white,
       }}
     >
       {onLeftPress ? (
@@ -77,7 +78,7 @@ const Header = (props: {
               justifyContent: 'center',
             }}
           >
-            <Text numberOfLines={2} style={[{ color: colors.darkBlueGray, fontSize: 18, fontWeight: 'bold', textAlign: 'center' }]}>
+            <Text numberOfLines={2} style={[{ color: colors.darkBlueGray, fontSize: 16, fontWeight: 'bold', textAlign: 'center' }]}>
               {headerText}
             </Text>
           </View>

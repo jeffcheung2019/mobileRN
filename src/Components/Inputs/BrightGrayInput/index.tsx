@@ -19,7 +19,6 @@ const BrightGrayInput = (props: BrightGrayInputProps) => {
   const { Layout, Images } = useTheme()
 
   const { value, textInputProps, onChangeText, icon, disableDefaultAnimation, inputStyle } = props
-  console.log('props ', props)
   let enteringAnimation = disableDefaultAnimation === true ? undefined : FadeInDown.duration(1000)
   return (
     <Animated.View

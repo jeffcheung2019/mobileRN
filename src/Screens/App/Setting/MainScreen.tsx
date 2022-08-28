@@ -19,8 +19,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import LinearGradient from 'react-native-linear-gradient'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { MainStackNavigatorParamList, MainStackNavigtorProps } from '@/Navigators/MainStackNavigator'
-import { SettingScreenNavigationProps, SettingScreenNavigatorParamList } from '../SettingScreen'
+import { MainStackNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
+import { SettingScreenProps, SettingScreenNavigatorParamList } from '../SettingScreen'
 import { awsLogout } from '@/Utils/helpers'
 import { Icon } from '@rneui/base'
 import { RootState } from '@/Store'
@@ -61,12 +61,12 @@ const SETTING_ACTION_ITEM_VIEW: ViewStyle = {
   marginVertical: 4,
 }
 
-export type SettingMainScreenNavigationProps = CompositeScreenProps<
+export type SettingMainScreenProps = CompositeScreenProps<
   StackScreenProps<SettingScreenNavigatorParamList, RouteStacks.settingMain>,
-  SettingScreenNavigationProps
+  SettingScreenProps
 >
 
-const SettingMainScreen: FC<SettingMainScreenNavigationProps> = ({ navigation, route }) => {
+const SettingMainScreen: FC<SettingMainScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
