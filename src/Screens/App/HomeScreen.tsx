@@ -47,7 +47,6 @@ const HomeScreen: FC<HomeScreenProps> = ({ navigation, route }) => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        presentation: 'transparentModal',
       }}
       initialRouteName={RouteStacks.homeMain}
     >
@@ -57,7 +56,6 @@ const HomeScreen: FC<HomeScreenProps> = ({ navigation, route }) => {
         component={NewsDetailScreen}
         sharedElements={(route, otherRoute, showing) => {
           const { news } = route.params
-
           const { tickers, id } = news
 
           let tickerStr = join(tickers, '-')
@@ -66,14 +64,20 @@ const HomeScreen: FC<HomeScreenProps> = ({ navigation, route }) => {
             {
               id: `news.${id}.image`,
               animation: 'fade',
+              resize: 'auto',
+              align: 'auto',
             },
             {
               id: `news.${id}.title`,
               animation: 'fade',
+              resize: 'auto',
+              align: 'left-top',
             },
             {
               id: `news.${id}.tickers.${tickerStr}`,
               animation: 'fade',
+              resize: 'auto',
+              align: 'auto',
             },
           ]
         }}

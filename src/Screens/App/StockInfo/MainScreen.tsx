@@ -59,6 +59,7 @@ import Header from '@/Components/Header'
 import Foundation from 'react-native-vector-icons/Foundation'
 import { triggerSnackbar } from '@/Utils/helpers'
 import Octicons from 'react-native-vector-icons/Octicons'
+import { RootState } from '@/Store'
 
 export type StockInfoMainScreenProps = CompositeScreenProps<
   StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.stockInfoMain>,
@@ -161,6 +162,26 @@ const sectionButtons: SectionButton[] = [
   },
 ]
 
+export const initStockInfoShowSection = {
+  priceTargets: true,
+  insiderTransactions: true,
+  events: true,
+  secFilings: true,
+  investorHoldings: true,
+  shortInterests: true,
+  usEconomicData: true,
+  euEconomicData: true,
+  asianEconomicData: true,
+  foodPriceIndex: true,
+  globalSupplyChain: true,
+  unusualOptions: true,
+  offering: true,
+  lawsuits: true,
+  shortResearchReports: true,
+  mergerAcquisition: true,
+  ipoNews: true,
+}
+
 type StockInfoShowSectionType =
   | 'priceTargets'
   | 'insiderTransactions'
@@ -190,24 +211,10 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
   const [showDelButton, setShowDelButton] = useState(false)
   const [unmountWholeScreen, setUnmountWholeScreen] = useState(false)
   const [showSections, setShowSections] = useState<StockInfoShowSection>({
-    priceTargets: true,
-    insiderTransactions: true,
-    events: true,
-    secFilings: true,
-    investorHoldings: true,
-    shortInterests: true,
-    usEconomicData: true,
-    euEconomicData: true,
-    asianEconomicData: true,
-    foodPriceIndex: true,
-    globalSupplyChain: true,
-    unusualOptions: true,
-    offering: true,
-    lawsuits: true,
-    shortResearchReports: true,
-    mergerAcquisition: true,
-    ipoNews: true,
+    ...initStockInfoShowSection,
   })
+
+  const stockInfoShowSection = useSelector((state: RootState) => state.ui)
 
   useFocusEffect(
     useCallback(() => {
@@ -215,6 +222,10 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
       setShowDelButton(false)
     }, []),
   )
+
+  console.log(' => stockInfoShowSection', stockInfoShowSection)
+
+  console.log('showSections', showSections)
 
   return unmountWholeScreen ? null : (
     <ScreenBackgrounds screenName={RouteStacks.stockInfoMain}>

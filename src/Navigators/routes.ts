@@ -21,7 +21,6 @@ export enum RouteStacks {
   authSplashScreen = 'authSplashScreen',
   appSplashScreen = 'appSplashScreen',
   welcomeBack = 'welcomeBack',
-  search = 'search',
 
   // auth screens
   logIn = 'logIn',

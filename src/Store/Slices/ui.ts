@@ -1,4 +1,4 @@
-import { StockInfoShowSection } from '@/Screens/App/StockInfo/MainScreen'
+import { initStockInfoShowSection, StockInfoShowSection } from '@/Screens/App/StockInfo/MainScreen'
 import { createSlice, PayloadAction, PayloadActionCreator } from '@reduxjs/toolkit'
 import { StockInfoDisplayState } from '../StockInfoDisplay/reducer'
 
@@ -34,19 +34,7 @@ const initialState: UIState = {
   },
   tabBarVisible: true,
   stockInfoShowSection: {
-    priceTargets: true,
-    insiderTransactions: true,
-    events: true,
-    secFilings: true,
-    investorHoldings: true,
-    shortInterests: true,
-    usEconomicData: true,
-    euEconomicData: true,
-    asianEconomicData: true,
-    foodPriceIndex: true,
-    globalSupplyChain: true,
-    unusualOptions: true,
-    offering: true,
+    ...initStockInfoShowSection,
   },
 }
 
@@ -69,7 +57,7 @@ const uiSlice = createSlice({
     showTabBar(state, action: PayloadAction<boolean>) {
       state.tabBarVisible = action.payload
     },
-    stockInfoDisplay(state, action: PayloadAction<Partial<StockInfoShowSection>>) {
+    updateStockInfoDisplay(state, action: PayloadAction<Partial<StockInfoShowSection>>) {
       state.stockInfoShowSection = {
         ...state.stockInfoShowSection,
         ...action.payload,
@@ -78,5 +66,5 @@ const uiSlice = createSlice({
   },
 })
 
-export const { startLoading, showSnackbar, showTabBar } = uiSlice.actions
+export const { startLoading, showSnackbar, showTabBar, updateStockInfoDisplay } = uiSlice.actions
 export default uiSlice.reducer

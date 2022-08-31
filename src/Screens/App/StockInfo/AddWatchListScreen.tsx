@@ -22,12 +22,14 @@ import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, 
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackScreenNavigationProp } from '@/Screens/App/StockInfoScreen'
+import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
+import map from 'lodash/map'
+import { initStockInfoShowSection } from './MainScreen'
 
 export type AddWatchListScreenProps = CompositeScreenProps<
   MaterialTopTabScreenProps<StockInfoStackNavigatorParamList, RouteStacks.addWatchList>,
-  StockInfoStackScreenNavigationProp
+  StockInfoStackScreenProps
 >
 
 const AddWatchListScreen: FC<AddWatchListScreenProps> = ({ navigation, route }) => {
@@ -38,10 +40,15 @@ const AddWatchListScreen: FC<AddWatchListScreenProps> = ({ navigation, route }) 
   return (
     <ScreenBackgrounds screenName={RouteStacks.addWatchList}>
       <Header headerText={t('addWatchList')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
-      <KeyboardAwareScrollView
-        style={Layout.fill}
-        contentContainerStyle={[Layout.fullSize, Layout.colCenter, Gutters.smallHPadding]}
-      ></KeyboardAwareScrollView>
+      <KeyboardAwareScrollView style={Layout.fill} contentContainerStyle={[Layout.fullSize, Layout.colCenter, Gutters.smallHPadding]}>
+        {map(Object.keys(initStockInfoShowSection), (elem, idx) => {
+          return (
+            <View style={{}}>
+              <Text>{}</Text>
+            </View>
+          )
+        })}
+      </KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )
 }

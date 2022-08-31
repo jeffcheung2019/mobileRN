@@ -23,6 +23,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/Store'
 import { MainStackNavigatorParamList } from '@/Navigators/MainStackNavigator'
 import RNBootSplash from 'react-native-bootsplash'
+import { VictoryArea, VictoryChart, VictoryTheme } from 'victory-native'
 
 let nodeJsTimeout: NodeJS.Timeout
 
@@ -85,8 +86,8 @@ const AppSplashScreen: FC<StackScreenProps<MainStackNavigatorParamList, RouteSta
         />
       </Animated.View>
 
-      <View style={{ position: 'absolute', bottom: 0, left: -40, height: windowHeight / 2, opacity: 0.4 }}>
-        <LineChart
+      <View style={{ position: 'absolute', bottom: 0, left: -50, height: windowHeight / 2, opacity: 0.4 }}>
+        {/* <LineChart
           areaChart
           isAnimated={true}
           animationDuration={1000}
@@ -117,7 +118,7 @@ const AppSplashScreen: FC<StackScreenProps<MainStackNavigatorParamList, RouteSta
               }
             }) as any
           }
-        />
+        /> */}
       </View>
     </View>
   )

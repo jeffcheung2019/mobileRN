@@ -208,75 +208,93 @@ export const getNewsItemPanel = (
   })
 }
 
-export type PriceTarget = { rating: string; ratingPrior: string; pt: number; ptPrior: number; analyst: string; date: string }
+export type PriceTarget = {
+  rating: string
+  ratingPrior: string
+  pt: number
+  ptPrior: number
+  analyst: string
+  date: string
+  ticker: string
+  name: string
+  id: number
+}
 
-export const getRatingsPanel = (companyIds: number[], limit: number): PriceTarget[] => {
-  const { loading, error, data } = useQuery(
-    gql`
-      query RatingsPanel(
-        $companyIds: [int64!]!
-        $sectors: [string!]
-        $industries: [string!]
-        $categoryIds: [int64!]
-        $afterId: int64
-        $limit: int
-        $withPtOnly: bool
-        $withPriorPtOnly: bool
-      ) {
-        ratings(
-          companyIds: $companyIds
-          sectors: $sectors
-          industries: $industries
-          categoryIds: $categoryIds
-          afterId: $afterId
-          limit: $limit
-          withPtOnly: $withPtOnly
-          withPriorPtOnly: $withPriorPtOnly
+export const getRatingsPanel = (companyIds: number[], limit: number): PriceTarget[] | undefined => {
+  try {
+    const { loading, error, data } = useQuery(
+      gql`
+        query RatingsPanel(
+          $companyIds: [int64!]!
+          $sectors: [string!]
+          $industries: [string!]
+          $categoryIds: [int64!]
+          $afterId: int64
+          $limit: int
+          $withPtOnly: bool
+          $withPriorPtOnly: bool
         ) {
-          id
-          createdAt
-          date
-          category
-          analyst
-          pt
-          ptPrior
-          rating
-          ratingPrior
-          company {
+          ratings(
+            companyIds: $companyIds
+            sectors: $sectors
+            industries: $industries
+            categoryIds: $categoryIds
+            afterId: $afterId
+            limit: $limit
+            withPtOnly: $withPtOnly
+            withPriorPtOnly: $withPriorPtOnly
+          ) {
             id
-            ticker
-            name
-            sector
-            industry
-            quote {
-              cents
+            createdAt
+            date
+            category
+            analyst
+            pt
+            ptPrior
+            rating
+            ratingPrior
+            company {
+              id
+              ticker
+              name
+              sector
+              industry
+              quote {
+                cents
+              }
             }
+            newsItemId
           }
-          newsItemId
         }
-      }
-    `,
-    {
-      variables: {
-        companyIds,
-        sectors: [],
-        limit,
-        industries: [],
-        catergoryIds: [],
-        withPriorPtOnly: false,
-        withPtOnly: true,
+      `,
+      {
+        variables: {
+          companyIds,
+          sectors: [],
+          limit,
+          industries: [],
+          catergoryIds: [],
+          withPriorPtOnly: false,
+          withPtOnly: true,
+        },
       },
-    },
-  )
+    )
 
-  return data?.ratings?.map((elem: any, idx: number) => {
-    return {
-      rating: elem.rating,
-      ratingPrior: elem.ratingPrior,
-      pt: elem.pt,
-      ptPrior: elem.ptPrior,
-      analyst: elem.analyst,
-      date: elem.date,
-    }
-  })
+    return data?.ratings?.map((elem: any, idx: number) => {
+      return {
+        id: elem.id,
+        rating: elem.rating,
+        ratingPrior: elem.ratingPrior,
+        pt: elem.pt,
+        ptPrior: elem.ptPrior,
+        analyst: elem.analyst,
+        date: elem.date,
+        ticker: elem.company.ticker,
+        name: elem.company.name,
+      }
+    })
+  } catch (err) {
+    console.log('err ', err)
+    return undefined
+  }
 }

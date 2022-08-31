@@ -29,6 +29,11 @@ export type SearchScreenNavigatorParamList = {
     ticker: string
     id: number
     name: string
+    prevScreen?: {
+      tab: keyof MainTabNavigatorParamList
+      stack: keyof SearchScreenNavigatorParamList
+      params?: any
+    }
   }
 }
 

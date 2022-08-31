@@ -93,7 +93,7 @@ const TickerDetailScreen: FC<TickerDetailScreenProps> = ({ navigation, route }) 
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
-  const { id: companyId, ticker, name } = route?.params
+  const { id: companyId, ticker, name, prevScreen } = route?.params
 
   const companyPage = getCompanyPage(ticker)
 
@@ -103,9 +103,30 @@ const TickerDetailScreen: FC<TickerDetailScreenProps> = ({ navigation, route }) 
 
   let priceChangePercent: number = ((currClose - prevClose) / prevClose) * 100
 
+  let goBackStackNavigation = prevScreen !== undefined ? [
+    prevScreen?.tab,
+    {
+      screen: prevScreen?.stack,
+      params: prevScreen?.params
+    }
+  ]: undefined
+
   return (
     <ScreenBackgrounds screenName={RouteStacks.tickerDetail}>
-      <Header headerText={`${name}`} onLeftPress={() => navigation.navigate(RouteStacks.searchMain)} withProfile={false} />
+      <Header
+        headerText={`${name}`}
+        onLeftPress={() => {
+          if(prevScreen === undefined){
+            navigation.navigate(RouteStacks.searchMain)
+          }else if (goBackStackNavigation !== undefined){
+            navigation.navigate(prevScreen.tab, {
+              screen: prevScreen?.stack,
+              params: prevScreen?.params
+            })
+          }
+        }}
+        withProfile={false}
+      />
       <KeyboardAwareScrollView
         style={[Layout.fill]}
         stickyHeaderIndices={[1, 3, 5, 7, 9]}

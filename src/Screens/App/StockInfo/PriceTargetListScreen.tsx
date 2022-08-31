@@ -9,7 +9,7 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { RouteStacks, RouteTabs, RouteTopTabs } from '@/Navigators/routes'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -24,33 +24,109 @@ import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
+import { getRatingsPanel } from '@/Queries/SearchTab'
+import moment from 'moment'
 
 export type PriceTargetListScreenProps = CompositeScreenProps<
   MaterialTopTabScreenProps<StockInfoStackNavigatorParamList, RouteStacks.insiderTransactionList>,
   StockInfoStackScreenProps
 >
 
+const RATING_VIEW: ViewStyle = {
+  backgroundColor: colors.darkBlueGray,
+  paddingVertical: 4,
+  paddingHorizontal: 6,
+  borderRadius: 4,
+}
+
 const PriceTargetListScreen: FC<PriceTargetListScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
+  const ratingsPanelData = getRatingsPanel([], 20)
+
   return (
     <ScreenBackgrounds screenName={RouteStacks.priceTargetList}>
       <Header headerText={t('priceTargets')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={{
-          backgroundColor: colors.brightGray,
-        }}
         contentContainerStyle={[
           Gutters.smallHPadding,
           {
-            backgroundColor: colors.brightGray,
             flexGrow: 1,
             justifyContent: 'flex-start',
           },
         ]}
-      ></KeyboardAwareScrollView>
+      >
+        {ratingsPanelData === undefined
+          ? null
+          : ratingsPanelData?.map((elem, idx) => {
+              const { rating, ratingPrior, pt, ptPrior, analyst, date, ticker, name, id } = elem
+              return (
+                <Pressable
+                  key={`Rating-${idx}`}
+                  onPress={() =>
+                    navigation.navigate(RouteTabs.search, {
+                      screen: RouteStacks.tickerDetail,
+                      params: {
+                        id: id,
+                        ticker: ticker,
+                        name: name,
+                        prevScreen: {
+                          tab: RouteTabs.stockInfo,
+                          stack: RouteStacks.priceTargetList,
+                        },
+                      },
+                    })
+                  }
+                  style={{
+                    flexDirection: 'row',
+                    height: 50,
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flex: 1,
+                    }}
+                  >
+                    <View style={{ flex: 4, alignItems: 'flex-start', justifyContent: 'center' }}>
+                      <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                        <Text style={{ fontWeight: 'bold' }}>{t('date')}:</Text>
+                        {`  ${moment(date).format('DD-MM-YYYY')}`}
+                      </Text>
+                      <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                        <Text style={{ fontWeight: 'bold' }}>{t('analyst')}:</Text> {` ${analyst}`}
+                      </Text>
+                      <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                        <Text style={{ fontWeight: 'bold' }}>{t('priceTargetChange')}:</Text> {ptPrior !== null ? `$${ptPrior}` : ''}{' '}
+                        {ptPrior ? '->' : ''} {`$${pt}`}
+                      </Text>
+                    </View>
+                    <View style={{ flex: 5, alignItems: 'flex-start', justifyContent: 'center' }}>
+                      <View style={{ flexDirection: 'row' }}>
+                        {ratingPrior ? (
+                          <View style={[RATING_VIEW]}>
+                            <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{ratingPrior}</Text>
+                          </View>
+                        ) : null}
+                        {ratingPrior ? (
+                          <View style={{ justifyContent: 'center', paddingHorizontal: 8 }}>
+                            {<Text style={{ color: colors.darkBlueGray, fontSize: 9 }}>{'->'}</Text>}
+                          </View>
+                        ) : null}
+                        <View style={[RATING_VIEW]}>
+                          <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{rating}</Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </Pressable>
+              )
+            })}
+      </KeyboardAwareScrollView>
     </ScreenBackgrounds>
   )
 }

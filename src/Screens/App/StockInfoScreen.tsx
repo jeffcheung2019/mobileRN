@@ -147,6 +147,9 @@ const StockInfoScreen: FC<StockInfoStackScreenProps> = ({ navigation, route }) =
       <Stack.Screen
         name={RouteStacks.lawsuitsDetail}
         component={LawsuitsDetailScreen}
+        options={{
+          presentation: 'card',
+        }}
         sharedElements={(route, otherRoute, showing) => {
           const { news } = route.params
           const { tickers, id } = news
