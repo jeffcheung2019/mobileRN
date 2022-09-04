@@ -54,8 +54,6 @@ const PriceTargetListScreen: FC<PriceTargetListScreenProps> = ({ navigation, rou
   let tickersId = tickers.map((elem: GetTickersResult) => elem.id)
   const ratingsPanelData = getRatingsPanel(tickersId, 20)
 
-  console.log('navigation.state ', JSON.stringify(navigation.getState(), null, 2))
-
   return (
     <ScreenBackgrounds screenName={RouteStacks.priceTargetList}>
       <Header headerText={t('priceTargets')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
@@ -100,7 +98,7 @@ const PriceTargetListScreen: FC<PriceTargetListScreenProps> = ({ navigation, rou
                 >
                   <Pressable
                     onPress={() => {
-                      navigation.jumpTo(RouteTabs.search, {
+                      navigation.navigate(RouteTabs.search, {
                         screen: RouteStacks.tickerDetail,
                         params: {
                           id: id,
@@ -115,7 +113,7 @@ const PriceTargetListScreen: FC<PriceTargetListScreenProps> = ({ navigation, rou
                     }}
                     style={{
                       flexDirection: 'row',
-                      height: 70,
+                      height: 80,
                       alignItems: 'center',
                       width: '100%',
                     }}
@@ -131,11 +129,12 @@ const PriceTargetListScreen: FC<PriceTargetListScreenProps> = ({ navigation, rou
                           style={{
                             backgroundColor: colors.darkBlueGray,
                             borderRadius: 4,
-                            padding: 4,
+                            padding: 6,
                             marginRight: 4,
+                            marginBottom: 4,
                           }}
                         >
-                          <Text style={{ fontSize: 10, color: colors.white }}>${ticker}</Text>
+                          <Text style={{ fontSize: 10, color: colors.white, fontWeight: 'bold' }}>${ticker}</Text>
                         </View>
                         <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
                           <Text style={{ fontWeight: 'bold' }}>{t('date')}:</Text>

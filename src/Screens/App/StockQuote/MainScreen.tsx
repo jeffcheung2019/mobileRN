@@ -85,6 +85,7 @@ const StockQuoteMainScreen: FC<StockQuoteMainScreenProps> = ({ navigation, route
             height: 50,
             justifyContent: 'center',
             flexDirection: 'row',
+            marginVertical: 8,
           }}
         >
           <ScrollView
@@ -96,6 +97,7 @@ const StockQuoteMainScreen: FC<StockQuoteMainScreenProps> = ({ navigation, route
               paddingVertical: 4,
               alignItems: 'center',
               width: '100%',
+              paddingLeft: 10,
             }}
           >
             {map(stockQuoteTab, (elem, idx) => {
@@ -111,6 +113,7 @@ const StockQuoteMainScreen: FC<StockQuoteMainScreenProps> = ({ navigation, route
               backgroundColor: colors.red,
               justifyContent: 'center',
               alignItems: 'center',
+              borderRadius: 4,
             }}
             onPress={onAddStockQuoteTabPress}
           >
@@ -122,12 +125,47 @@ const StockQuoteMainScreen: FC<StockQuoteMainScreenProps> = ({ navigation, route
           </Pressable>
         </View>
 
-        <TickerQuote ticker={'UPST'} />
+        <ScrollView
+          style={{
+            width: '100%',
+            flex: 1,
+          }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            alignItems: 'flex-start',
+            flexWrap: 'wrap',
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}
+        >
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+          <TickerQuote ticker={'UPST'} />
+        </ScrollView>
+
         <Animated.View
           entering={FadeInDown}
           style={{
-            height: 50,
+            height: 70,
             width: '100%',
+            paddingVertical: 6,
           }}
         >
           <Pressable

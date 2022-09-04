@@ -34,9 +34,15 @@ const StockQuoteScreen: FC<StockQuoteScreenProps> = ({ navigation, route }) => {
   const dispatch = useDispatch()
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false, presentation: 'transparentModal' }}>
       <Stack.Screen name={RouteStacks.stockQuoteMain} component={MainScreen} />
-      <Stack.Screen name={RouteStacks.addStockQuote} component={AddStockQuoteScreen} />
+      <Stack.Screen
+        name={RouteStacks.addStockQuote}
+        component={AddStockQuoteScreen}
+        options={{
+          presentation: 'modal',
+        }}
+      />
     </Stack.Navigator>
   )
 }

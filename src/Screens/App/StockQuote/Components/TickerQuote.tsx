@@ -7,7 +7,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
 import times from 'lodash/times'
 import { Skeleton } from '@rneui/themed'
-import Animated, { FadeInDown, FadeInRight, FadeOutLeft } from 'react-native-reanimated'
+import Animated, { FadeInDown, FadeInRight, FadeOutLeft, FadeOutUp } from 'react-native-reanimated'
 import { useFinanceGraph } from '@/Hooks/useFinanceGraph'
 import LineStockChart from '@/Components/Graph/LineStockChart'
 
@@ -26,15 +26,19 @@ const TickerQuote: FC<TickerQuoteProps> = ({ ticker }) => {
 
   return (
     <Animated.View
-      entering={FadeInRight}
-      exiting={FadeOutLeft}
+      entering={FadeInDown}
+      exiting={FadeOutUp}
       style={{
         flexDirection: 'column',
-        height: 70,
+        height: 90,
+        width: 90,
         backgroundColor: colors.white,
+        borderColor: colors.darkBlueGray,
+        borderWidth: 1,
         borderRadius: 10,
-        marginVertical: 6,
-        padding: 8,
+        margin: 4,
+        paddingVertical: 8,
+        paddingHorizontal: 4,
       }}
     >
       <View
@@ -44,13 +48,13 @@ const TickerQuote: FC<TickerQuoteProps> = ({ ticker }) => {
           flexDirection: 'row',
         }}
       >
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
           <View
             style={{
               backgroundColor: colors.darkBlueGray,
               paddingVertical: 4,
-              marginVertical: 4,
               paddingHorizontal: 8,
+              borderRadius: 4,
             }}
           >
             <Text
@@ -65,41 +69,41 @@ const TickerQuote: FC<TickerQuoteProps> = ({ ticker }) => {
             </Text>
           </View>
 
-          <Text
+          <View
             style={{
-              color: colors.darkBlueGray,
-              fontWeight: 'bold',
-              fontSize: 16,
+              paddingTop: 4,
             }}
           >
-            ${currClose}
-          </Text>
+            <Text
+              style={{
+                color: colors.darkBlueGray,
+                fontWeight: 'bold',
+                fontSize: 16,
+              }}
+            >
+              ${currClose}
+            </Text>
+          </View>
+          <View style={{ justifyContent: 'flex-end', flex: 1 }}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: priceChangePercent > 0 ? colors.electricGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
+              }}
+            >
+              {priceChangePercent === 0 ? '-' : priceChangePercent > 0 ? '▲' : '▼'} {priceChangePercent?.toFixed(2)}%
+            </Text>
+          </View>
         </View>
 
-        <View
+        {/* <View
           style={{
             paddingLeft: 4,
-            justifyContent: 'flex-end',
+            justifyContent: 'center',
             alignItems: 'center',
           }}
         >
-          <Text
-            style={{
-              fontSize: 14,
-              color: priceChangePercent > 0 ? colors.electricGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
-            }}
-          >
-            {(currClose - prevClose).toFixed(2)}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              color: priceChangePercent > 0 ? colors.electricGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
-            }}
-          >
-            {priceChangePercent === 0 ? '-' : priceChangePercent > 0 ? '▲' : '▼'} {priceChangePercent?.toFixed(2)}%
-          </Text>
-        </View>
+        </View> */}
       </View>
     </Animated.View>
   )

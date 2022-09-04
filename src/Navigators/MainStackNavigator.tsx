@@ -139,12 +139,28 @@ const MainTabNavigator: FC<MainTabNavigatorScreenProps> = ({ navigation }) => {
               tabPress: (e: any) => {
                 // To force the tab press always redirect user to RouteStacks.searchMain is essential
                 e.preventDefault()
-                navigation.navigate(RouteStacks.searchMain)
+                navigation.navigate(RouteTabs.search, {
+                  screen: RouteStacks.searchMain,
+                })
               },
             }
           }}
         />
-        <Tab.Screen name={RouteTabs.stockInfo} component={StockInfoScreen} />
+        <Tab.Screen
+          name={RouteTabs.stockInfo}
+          component={StockInfoScreen}
+          listeners={({ navigation, route }) => {
+            return {
+              tabPress: (e: any) => {
+                // To force the tab press always redirect user to RouteStacks.searchMain is essential
+                e.preventDefault()
+                navigation.navigate(RouteTabs.stockInfo, {
+                  screen: RouteStacks.stockInfoMain,
+                })
+              },
+            }
+          }}
+        />
         <Tab.Screen name={RouteTabs.stockQuote} component={StockQuoteScreen} />
       </Tab.Navigator>
     </View>

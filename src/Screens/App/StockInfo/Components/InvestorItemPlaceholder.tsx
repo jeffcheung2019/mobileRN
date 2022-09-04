@@ -29,7 +29,7 @@ const InvestorItemPlaceholder: FC<InvestorItemPlaceholderProps> = ({}) => {
         marginVertical: 4,
         height: 70,
         justifyContent: 'center',
-        paddingHorizontal: 16,
+        paddingHorizontal: 20,
       }}
     >
       <Skeleton style={{ marginVertical: 4 }} animation='pulse' height={8} />

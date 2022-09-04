@@ -337,146 +337,155 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
     return res
   }, [stockInfoShowSection])
 
-  return unmountWholeScreen ? null : (
-    <ScreenBackgrounds screenName={RouteStacks.stockInfoMain}>
-      <KeyboardAwareScrollView
-        style={(Layout.fill, {})}
-        stickyHeaderIndices={[0]}
-        contentContainerStyle={[Layout.fullSize, Layout.colCenter]}
-      >
-        <Header headerText={t('stockInfo')} />
-        <ScrollView
-          style={{
-            flex: 1,
-            width: '100%',
-          }}
-          contentContainerStyle={{
-            flex: 1,
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            padding: 0,
-            paddingTop: 4,
-          }}
-        >
-          {stockInfoShowSectionButtons.map((elem: SectionButton, idx: number) => {
-            let enteringAnimation =
-              idx % 4 === 0
-                ? SlideInLeft.duration(500)
-                : idx % 4 === 1 || idx % 4 === 2
-                ? SlideInUp.duration(500)
-                : idx % 4 === 3
-                ? SlideInRight.duration(500)
-                : undefined
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.white,
+      }}
+    >
+      {unmountWholeScreen ? null : (
+        <ScreenBackgrounds screenName={RouteStacks.stockInfoMain}>
+          <KeyboardAwareScrollView
+            style={(Layout.fill, {})}
+            stickyHeaderIndices={[0]}
+            contentContainerStyle={[Layout.fullSize, Layout.colCenter]}
+          >
+            <Header headerText={t('stockInfo')} />
+            <ScrollView
+              style={{
+                flex: 1,
+                width: '100%',
+              }}
+              contentContainerStyle={{
+                flex: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                padding: 0,
+                paddingTop: 4,
+              }}
+            >
+              {stockInfoShowSectionButtons.map((elem: SectionButton, idx: number) => {
+                let enteringAnimation =
+                  idx % 4 === 0
+                    ? SlideInLeft.duration(500)
+                    : idx % 4 === 1 || idx % 4 === 2
+                    ? SlideInUp.duration(500)
+                    : idx % 4 === 3
+                    ? SlideInRight.duration(500)
+                    : undefined
 
-            return (
+                return (
+                  <Animated.View
+                    style={[
+                      {
+                        flexBasis: windowWidth / 4,
+                        height: windowWidth / 4,
+                        padding: 4,
+                      },
+                      showDelButton && stockInfoDisplayAnimatedStyle,
+                    ]}
+                    key={`Section-${elem.sectionType}`}
+                    layout={SequencedTransition.duration(1000).delay(500)}
+                    entering={enteringAnimation}
+                    exiting={FadeOut.duration(500)}
+                  >
+                    <Pressable
+                      style={{
+                        backgroundColor: colors.darkBlueGray,
+                        borderRadius: 10,
+                        width: '100%',
+                        height: '100%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      onLongPress={() => setShowDelButton(!showDelButton)}
+                      onPress={() => {
+                        setUnmountWholeScreen(true)
+                        setTimeout(() => {
+                          navigation.navigate(elem.redirectTo)
+                        }, 500)
+                      }}
+                    >
+                      <View style={{ alignItems: 'center' }}>
+                        <View style={{ flex: 1, justifyContent: 'flex-end' }}>{elem.icon()}</View>
+                        <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 4 }}>
+                          <Text style={{ color: colors.white, fontSize: 12, textAlign: 'center' }}>{t(elem.sectionType)}</Text>
+                        </View>
+                      </View>
+                    </Pressable>
+                    {showDelButton && (
+                      <Animated.View
+                        entering={ZoomIn.duration(500)}
+                        exiting={ZoomOut.duration(500)}
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          right: 0,
+                        }}
+                      >
+                        <Pressable
+                          style={{
+                            borderRadius: 20,
+                            width: 26,
+                            height: 26,
+                            backgroundColor: colors.white,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                          onPress={() => onSectionClosePress(elem.sectionType)}
+                        >
+                          <MaterialCommunityIcons name='close-circle' size={26} color={colors.darkBlueGray} />
+                        </Pressable>
+                      </Animated.View>
+                    )}
+                  </Animated.View>
+                )
+              })}
+
               <Animated.View
-                style={[
-                  {
-                    flexBasis: windowWidth / 4,
-                    height: windowWidth / 4,
-                    padding: 4,
-                  },
-                  showDelButton && stockInfoDisplayAnimatedStyle,
-                ]}
-                key={`Section-${elem.sectionType}`}
-                layout={SequencedTransition.duration(1000).delay(500)}
-                entering={enteringAnimation}
+                style={{
+                  flexBasis: windowWidth / 4,
+                  height: windowWidth / 4,
+                  padding: 4,
+                }}
+                entering={FadeIn.duration(500)}
                 exiting={FadeOut.duration(500)}
+                layout={SequencedTransition.duration(1000)}
               >
                 <Pressable
                   style={{
-                    backgroundColor: colors.darkBlueGray,
+                    borderColor: colors.darkBlueGray,
+                    borderWidth: 1,
+                    borderStyle: 'dashed',
                     borderRadius: 10,
                     width: '100%',
                     height: '100%',
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
-                  onLongPress={() => setShowDelButton(!showDelButton)}
-                  onPress={() => {
-                    setUnmountWholeScreen(true)
-                    setTimeout(() => {
-                      navigation.navigate(elem.redirectTo)
-                    }, 500)
-                  }}
+                  onPress={() => navigation.navigate(RouteStacks.addWatchList)}
                 >
                   <View style={{ alignItems: 'center' }}>
-                    <View style={{ flex: 1, justifyContent: 'flex-end' }}>{elem.icon()}</View>
-                    <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 4 }}>
-                      <Text style={{ color: colors.white, fontSize: 12, textAlign: 'center' }}>{t(elem.sectionType)}</Text>
-                    </View>
+                    <MaterialIcons
+                      name='add-circle'
+                      size={30}
+                      color={colors.darkBlueGray}
+                      style={{
+                        paddingBottom: 10,
+                      }}
+                    />
+                    <Text style={{ color: colors.darkBlueGray, fontSize: 12, textAlign: 'center' }}>{t('add')}</Text>
                   </View>
                 </Pressable>
-                {showDelButton && (
-                  <Animated.View
-                    entering={ZoomIn.duration(500)}
-                    exiting={ZoomOut.duration(500)}
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
-                    }}
-                  >
-                    <Pressable
-                      style={{
-                        borderRadius: 20,
-                        width: 26,
-                        height: 26,
-                        backgroundColor: colors.white,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => onSectionClosePress(elem.sectionType)}
-                    >
-                      <MaterialCommunityIcons name='close-circle' size={26} color={colors.darkBlueGray} />
-                    </Pressable>
-                  </Animated.View>
-                )}
               </Animated.View>
-            )
-          })}
-
-          <Animated.View
-            style={{
-              flexBasis: windowWidth / 4,
-              height: windowWidth / 4,
-              padding: 4,
-            }}
-            entering={FadeIn.duration(500)}
-            exiting={FadeOut.duration(500)}
-            layout={SequencedTransition.duration(1000)}
-          >
-            <Pressable
-              style={{
-                borderColor: colors.darkBlueGray,
-                borderWidth: 1,
-                borderStyle: 'dashed',
-                borderRadius: 10,
-                width: '100%',
-                height: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={() => navigation.navigate(RouteStacks.addWatchList)}
-            >
-              <View style={{ alignItems: 'center' }}>
-                <MaterialIcons
-                  name='add-circle'
-                  size={30}
-                  color={colors.darkBlueGray}
-                  style={{
-                    paddingBottom: 10,
-                  }}
-                />
-                <Text style={{ color: colors.darkBlueGray, fontSize: 12, textAlign: 'center' }}>{t('add')}</Text>
-              </View>
-            </Pressable>
-          </Animated.View>
-        </ScrollView>
-      </KeyboardAwareScrollView>
-    </ScreenBackgrounds>
+            </ScrollView>
+          </KeyboardAwareScrollView>
+        </ScreenBackgrounds>
+      )}
+    </View>
   )
 }
 

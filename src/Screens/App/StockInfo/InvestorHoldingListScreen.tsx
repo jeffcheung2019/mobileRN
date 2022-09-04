@@ -129,7 +129,6 @@ const InvestorHoldingListScreen: FC<InvestorHoldingListScreenProps> = ({ navigat
         style={{}}
         stickyHeaderIndices={[0]}
         contentContainerStyle={[
-          Gutters.smallHPadding,
           {
             flexGrow: 1,
             justifyContent: 'flex-start',
@@ -138,8 +137,9 @@ const InvestorHoldingListScreen: FC<InvestorHoldingListScreenProps> = ({ navigat
       >
         <View
           style={{
-            paddingVertical: 8,
-            backgroundColor: colors.brightGray,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            backgroundColor: colors.white,
           }}
         >
           <BrightGrayInput

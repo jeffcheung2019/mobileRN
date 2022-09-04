@@ -38,13 +38,10 @@ const USEconomicDataScreen: FC<USEconomicDataScreenProps> = ({ navigation, route
     <ScreenBackgrounds screenName={RouteStacks.usEconomicData}>
       <Header headerText={t('usEconomicData')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={{
-          backgroundColor: colors.brightGray,
-        }}
+        style={{}}
         contentContainerStyle={[
           Gutters.smallHPadding,
           {
-            backgroundColor: colors.brightGray,
             flexGrow: 1,
             justifyContent: 'flex-start',
           },

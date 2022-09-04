@@ -77,13 +77,10 @@ const ShortInterestsScreen: FC<ShortInterestsScreenProps> = ({ navigation, route
     <ScreenBackgrounds screenName={RouteStacks.shortInterests}>
       <Header headerText={t('shortInterests')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={{
-          backgroundColor: colors.brightGray,
-        }}
+        style={{}}
         contentContainerStyle={[
           Gutters.smallHPadding,
           {
-            backgroundColor: colors.brightGray,
             flexGrow: 1,
             justifyContent: 'flex-start',
           },

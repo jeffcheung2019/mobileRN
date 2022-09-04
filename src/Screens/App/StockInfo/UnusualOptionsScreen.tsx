@@ -38,13 +38,10 @@ const UnusualOptionsScreen: FC<UnusualOptionsScreenProps> = ({ navigation, route
     <ScreenBackgrounds screenName={RouteStacks.unusualOptions}>
       <Header headerText={t('unusualOptions')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={{
-          backgroundColor: colors.brightGray,
-        }}
+        style={{}}
         contentContainerStyle={[
           Gutters.smallHPadding,
           {
-            backgroundColor: colors.brightGray,
             flexGrow: 1,
             justifyContent: 'flex-start',
           },

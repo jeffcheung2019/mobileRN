@@ -307,7 +307,7 @@ const EarningWeekDayContainer: FC<EarningWeekDayContainerProps> = props => {
                 {metaDataArr[11] === -1 ? (
                   <MaterialCommunityIcons name={'white-balance-sunny'} size={config.iconSize} color={colors.darkBlueGray} />
                 ) : (
-                  <Ionicons name='moon' size={config.iconSize} color={colors.darkBlueGray} />
+                  <Ionicons name='moon' size={18} color={colors.darkBlueGray} />
                 )}
               </View>
             </Animated.View>

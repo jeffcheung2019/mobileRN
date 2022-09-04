@@ -112,62 +112,14 @@ const TickerDetailScreen: FC<TickerDetailScreenProps> = ({ navigation, route }) 
           if (prevScreen === undefined) {
             navigation.navigate(RouteStacks.searchMain)
           } else if (prevScreen !== undefined) {
-            // navigation.reset({
-            //   index: 0,
-            //   routes: [
-            //     {
-            //       name: RouteStacks.searchMain,
-            //     },
-            //   ],
-            // })
-            // navigation.popToTop()
-            // CommonActions.reset({
-            //   index: 0,
-            //   routes: [{ name: RouteStacks.searchMain }],
-            // })
-            // console.log(JSON.stringify(navigation.getState(), null, 2))
-            // navigation.navigate(RouteStacks.searchMain)
-
-            // navigation.setParams({
-            //   id: undefined,
-            //   name: undefined,
-            //   prevScreen: undefined,
-            //   ticker: undefined,
-            // })
-
-            // navigation.reset({
-            //   index: 0,
-            //   routes: [{ name: RouteStacks.searchMain }],
-            // })
-
-            // navigation.dispatch(state => {
-            //   console.log('@@@@@ state ', JSON.stringify(state, null, 2))
-            //   const routes = state.routes.filter(r => r.name !== RouteStacks.tickerDetail)
-            //   return CommonActions.reset({
-            //     ...state,
-            //     index: 0,
-            //     routes: [
-            //       {
-            //         name: RouteStacks.searchMain,
-            //       },
-            //     ],
-            //   })
-            // })
-            navigation.navigate(RouteStacks.searchMain)
-
-            // navigation.navigate(prevScreen.tab, {
-            //   screen: prevScreen.stack,
-
-            // }, {
-
-            // })
-
-            setTimeout(() => {
-              navigation.jumpTo(prevScreen.tab, {
-                screen: prevScreen.stack,
-                params: prevScreen.params,
-              })
-            }, 2000)
+            navigation.reset({
+              index: 0,
+              routes: [{ name: RouteStacks.searchMain }],
+            })
+            navigation.navigate(prevScreen.tab, {
+              screen: prevScreen.stack,
+              params: prevScreen.params,
+            })
           }
         }}
         withProfile={false}

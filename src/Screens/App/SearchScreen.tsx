@@ -76,15 +76,15 @@ const SearchScreen: FC<SearchScreenProps> = ({ navigation, route }) => {
       <Stack.Screen
         name={RouteStacks.tickerDetail}
         component={TickerDetailScreen}
-        // sharedElements={(route, otherRoute, showing) => {
-        //   const { ticker } = route.params
-        //   return [
-        //     {
-        //       id: `ticker.${ticker}`,
-        //       animation: 'fade',
-        //     },
-        //   ]
-        // }}
+        sharedElements={(route, otherRoute, showing) => {
+          const { ticker } = route.params
+          return [
+            {
+              id: `ticker.${ticker}`,
+              animation: 'fade',
+            },
+          ]
+        }}
       />
       <Stack.Screen
         name={RouteStacks.tickerNotiSubscription}

@@ -38,13 +38,10 @@ const SecFilingListScreen: FC<SecFilingListScreenProps> = ({ navigation, route }
     <ScreenBackgrounds screenName={RouteStacks.secFilingList}>
       <Header headerText={t('secFilings')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={{
-          backgroundColor: colors.brightGray,
-        }}
+        style={{}}
         contentContainerStyle={[
           Gutters.smallHPadding,
           {
-            backgroundColor: colors.brightGray,
             flexGrow: 1,
             justifyContent: 'flex-start',
           },
