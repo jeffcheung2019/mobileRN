@@ -21,18 +21,18 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { FadeInDown, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
-import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
+import { StockInfoScreenNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
 import axios from 'axios'
 import * as cheerio from 'cheerio'
 import map from 'lodash/map'
 
 export type ShortInterestsScreenProps = CompositeScreenProps<
-  StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.shortInterests>,
+  StackScreenProps<StockInfoScreenNavigatorParamList, RouteStacks.shortInterests>,
   StockInfoStackScreenProps
 >
 
+let abortController = new AbortController()
 const ShortInterestsScreen: FC<ShortInterestsScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
@@ -41,7 +41,9 @@ const ShortInterestsScreen: FC<ShortInterestsScreenProps> = ({ navigation, route
 
   useEffect(() => {
     const run = async () => {
-      const shortInterestsRes = await axios.get(api.shortInterestsHtml)
+      const shortInterestsRes = await axios.get(api.shortInterestsHtml, {
+        signal: abortController.signal,
+      })
       const cheerioDom = cheerio.load(shortInterestsRes.data)
       let shortInterestTable = cheerioDom('table')
       let shortInterestsTrDom = shortInterestTable.children('tbody').children('tr')
@@ -62,10 +64,13 @@ const ShortInterestsScreen: FC<ShortInterestsScreenProps> = ({ navigation, route
         }
         newShortInterestsRow.push(tableRow)
       }
-      console.log('newShortInterestsRow', JSON.stringify(newShortInterestsRow, null, 2))
       setShortInterestsRow(newShortInterestsRow)
     }
     run()
+
+    return () => {
+      abortController.abort()
+    }
   }, [])
 
   return (

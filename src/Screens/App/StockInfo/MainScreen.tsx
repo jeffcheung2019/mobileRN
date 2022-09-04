@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, FC } from 'react'
+import React, { useState, useEffect, useCallback, FC, useMemo } from 'react'
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
 import { View, ActivityIndicator, Text, TextInput, Pressable, ScrollView, TextStyle, Alert, ViewStyle, Dimensions } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +10,7 @@ import { UserState } from '@/Store/Users/reducer'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
 import {
-  StockInfoStackNavigatorParamList,
+  StockInfoScreenNavigatorParamList,
   StockInfoStackScreenNavigationProp,
   StockInfoStackScreenProps,
 } from '@/Screens/App/StockInfoScreen'
@@ -43,8 +43,11 @@ import Animated, {
   SlideOutUp,
   useAnimatedGestureHandler,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
+  withRepeat,
   withSpring,
+  withTiming,
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
@@ -60,23 +63,134 @@ import Foundation from 'react-native-vector-icons/Foundation'
 import { triggerSnackbar } from '@/Utils/helpers'
 import Octicons from 'react-native-vector-icons/Octicons'
 import { RootState } from '@/Store'
+import { updateStockInfoShowSection } from '@/Store/Slices/ui'
+import keys from 'lodash/keys'
 
 export type StockInfoMainScreenProps = CompositeScreenProps<
-  StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.stockInfoMain>,
+  StackScreenProps<StockInfoScreenNavigatorParamList, RouteStacks.stockInfoMain>,
   StockInfoStackScreenProps
 >
 
 export type StockInfoMainScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<StockInfoStackNavigatorParamList, RouteStacks.stockInfoMain>,
+  StackNavigationProp<StockInfoScreenNavigatorParamList, RouteStacks.stockInfoMain>,
   StockInfoStackScreenNavigationProp
 >
-
-const windowWidth = Dimensions.get('window').width
-
 type SectionButton = {
   icon: () => React.ReactNode
   sectionType: keyof StockInfoShowSection
-  redirectTo: keyof StockInfoStackNavigatorParamList
+  redirectTo: keyof StockInfoScreenNavigatorParamList
+}
+
+const windowWidth = Dimensions.get('window').width
+
+export const initStockInfoShowSection = {
+  priceTargets: true,
+  insiderTransactions: true,
+  events: true,
+  secFilings: true,
+  investorHoldings: true,
+  shortInterests: true,
+  usEconomicData: true,
+  euEconomicData: true,
+  asianEconomicData: true,
+  foodPriceIndex: true,
+  globalSupplyChain: true,
+  unusualOptions: true,
+  offering: true,
+  lawsuits: true,
+  shortResearchReports: true,
+  mergerAcquisition: true,
+  ipoNews: true,
+}
+
+export type StockInfoShowSectionType = keyof typeof initStockInfoShowSection
+
+const sectionButtonsMap: Record<string, SectionButton> = {
+  priceTargets: {
+    icon: () => <MaterialCommunityIcons name='target' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'priceTargets',
+    redirectTo: RouteStacks.priceTargetList,
+  },
+  insiderTransactions: {
+    icon: () => <FontAwesome5 name='money-check-alt' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'insiderTransactions',
+    redirectTo: RouteStacks.insiderTransactionList,
+  },
+  events: {
+    icon: () => <MaterialIcons name='event' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'events',
+    redirectTo: RouteStacks.eventList,
+  },
+  secFilings: {
+    icon: () => <MaterialCommunityIcons name='file-document' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'secFilings',
+    redirectTo: RouteStacks.secFilingList,
+  },
+  investorHoldings: {
+    icon: () => <MaterialCommunityIcons name='human-male-board-poll' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'investorHoldings',
+    redirectTo: RouteStacks.investorHoldingList,
+  },
+  shortInterests: {
+    icon: () => <MaterialCommunityIcons name='file-document' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'shortInterests',
+    redirectTo: RouteStacks.shortInterests,
+  },
+  usEconomicData: {
+    icon: () => <Entypo name='bar-graph' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'usEconomicData',
+    redirectTo: RouteStacks.usEconomicData,
+  },
+  euEconomicData: {
+    icon: () => <Foundation name='graph-bar' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'euEconomicData',
+    redirectTo: RouteStacks.euEconomicData,
+  },
+  asianEconomicData: {
+    icon: () => <Foundation name='graph-trend' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'asianEconomicData',
+    redirectTo: RouteStacks.asianEconomicData,
+  },
+  globalSupplyChain: {
+    icon: () => <MaterialCommunityIcons name='truck-delivery' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'globalSupplyChain',
+    redirectTo: RouteStacks.globalSupplyChain,
+  },
+  foodPriceIndex: {
+    icon: () => <MaterialCommunityIcons name='food' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'foodPriceIndex',
+    redirectTo: RouteStacks.foodPriceIndex,
+  },
+  unusualOptions: {
+    icon: () => <MaterialIcons name='money' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'unusualOptions',
+    redirectTo: RouteStacks.unusualOptions,
+  },
+  offering: {
+    icon: () => <MaterialCommunityIcons name='offer' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'offering',
+    redirectTo: RouteStacks.offering,
+  },
+  lawsuits: {
+    icon: () => <Octicons name='law' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'lawsuits',
+    redirectTo: RouteStacks.lawsuits,
+  },
+  shortResearchReports: {
+    icon: () => <MaterialCommunityIcons name='archive-search' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'shortResearchReports',
+    redirectTo: RouteStacks.shortResearchReports,
+  },
+  mergerAcquisition: {
+    icon: () => <MaterialCommunityIcons name='merge' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'mergerAcquisition',
+    redirectTo: RouteStacks.mergerAcquisition,
+  },
+  ipoNews: {
+    icon: () => <Entypo name='news' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'ipoNews',
+    redirectTo: RouteStacks.ipoNews,
+  },
 }
 
 const sectionButtons: SectionButton[] = [
@@ -162,45 +276,6 @@ const sectionButtons: SectionButton[] = [
   },
 ]
 
-export const initStockInfoShowSection = {
-  priceTargets: true,
-  insiderTransactions: true,
-  events: true,
-  secFilings: true,
-  investorHoldings: true,
-  shortInterests: true,
-  usEconomicData: true,
-  euEconomicData: true,
-  asianEconomicData: true,
-  foodPriceIndex: true,
-  globalSupplyChain: true,
-  unusualOptions: true,
-  offering: true,
-  lawsuits: true,
-  shortResearchReports: true,
-  mergerAcquisition: true,
-  ipoNews: true,
-}
-
-type StockInfoShowSectionType =
-  | 'priceTargets'
-  | 'insiderTransactions'
-  | 'events'
-  | 'secFilings'
-  | 'investorHoldings'
-  | 'shortInterests'
-  | 'usEconomicData'
-  | 'euEconomicData'
-  | 'asianEconomicData'
-  | 'foodPriceIndex'
-  | 'globalSupplyChain'
-  | 'unusualOptions'
-  | 'offering'
-  | 'lawsuits'
-  | 'shortResearchReports'
-  | 'mergerAcquisition'
-  | 'ipoNews'
-
 export type StockInfoShowSection = Record<StockInfoShowSectionType, boolean>
 
 const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }) => {
@@ -210,11 +285,31 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
   const dispatch = useDispatch()
   const [showDelButton, setShowDelButton] = useState(false)
   const [unmountWholeScreen, setUnmountWholeScreen] = useState(false)
-  const [showSections, setShowSections] = useState<StockInfoShowSection>({
-    ...initStockInfoShowSection,
-  })
+  const { stockInfoShowSection } = useSelector((state: RootState) => state.ui)
+  const sectionRotateVal = useSharedValue(-1)
 
-  const stockInfoShowSection = useSelector((state: RootState) => state.ui)
+  const derivedRotateVal = useDerivedValue(() => {
+    return withRepeat(
+      withTiming(sectionRotateVal.value, {
+        duration: 150,
+      }),
+      -1,
+      true,
+    )
+  }, [])
+  const stockInfoDisplayAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          rotate: `${derivedRotateVal.value}deg`,
+        },
+      ],
+    }
+  }, [])
+
+  useEffect(() => {
+    sectionRotateVal.value = 1
+  }, [])
 
   useFocusEffect(
     useCallback(() => {
@@ -223,9 +318,24 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
     }, []),
   )
 
-  console.log(' => stockInfoShowSection', stockInfoShowSection)
+  const onSectionClosePress = (sectionType: string) => {
+    dispatch(
+      updateStockInfoShowSection({
+        [sectionType]: false,
+      }),
+    )
+  }
 
-  console.log('showSections', showSections)
+  const stockInfoShowSectionButtons = useMemo(() => {
+    let res: SectionButton[] = []
+    let objectKeys = Object.keys(stockInfoShowSection) as Array<StockInfoShowSectionType>
+    objectKeys.forEach((elem: StockInfoShowSectionType) => {
+      if (stockInfoShowSection[elem]) {
+        res.push(sectionButtonsMap[elem])
+      }
+    })
+    return res
+  }, [stockInfoShowSection])
 
   return unmountWholeScreen ? null : (
     <ScreenBackgrounds screenName={RouteStacks.stockInfoMain}>
@@ -250,8 +360,7 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
             paddingTop: 4,
           }}
         >
-          {sectionButtons.map((elem: SectionButton, idx: number) => {
-            let currShowSection = showSections[elem.sectionType]
+          {stockInfoShowSectionButtons.map((elem: SectionButton, idx: number) => {
             let enteringAnimation =
               idx % 4 === 0
                 ? SlideInLeft.duration(500)
@@ -260,86 +369,72 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
                 : idx % 4 === 3
                 ? SlideInRight.duration(500)
                 : undefined
-            let exitingAnimation = showDelButton
-              ? undefined
-              : idx % 4 === 0
-              ? SlideOutLeft.duration(500)
-              : idx % 4 === 1 || idx % 4 === 2
-              ? SlideOutUp.duration(500)
-              : idx % 4 === 3
-              ? SlideOutRight.duration(500)
-              : undefined
 
             return (
-              currShowSection && (
-                <Animated.View
-                  style={{
+              <Animated.View
+                style={[
+                  {
                     flexBasis: windowWidth / 4,
                     height: windowWidth / 4,
                     padding: 4,
-                    opacity: 0.8,
+                  },
+                  showDelButton && stockInfoDisplayAnimatedStyle,
+                ]}
+                key={`Section-${elem.sectionType}`}
+                layout={SequencedTransition.duration(1000).delay(500)}
+                entering={enteringAnimation}
+                exiting={FadeOut.duration(500)}
+              >
+                <Pressable
+                  style={{
+                    backgroundColor: colors.darkBlueGray,
+                    borderRadius: 10,
+                    width: '100%',
+                    height: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
-                  key={`Section-${elem.sectionType}`}
-                  layout={SequencedTransition}
-                  entering={enteringAnimation}
-                  exiting={exitingAnimation}
+                  onLongPress={() => setShowDelButton(!showDelButton)}
+                  onPress={() => {
+                    setUnmountWholeScreen(true)
+                    setTimeout(() => {
+                      navigation.navigate(elem.redirectTo)
+                    }, 500)
+                  }}
                 >
-                  <Pressable
+                  <View style={{ alignItems: 'center' }}>
+                    <View style={{ flex: 1, justifyContent: 'flex-end' }}>{elem.icon()}</View>
+                    <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 4 }}>
+                      <Text style={{ color: colors.white, fontSize: 12, textAlign: 'center' }}>{t(elem.sectionType)}</Text>
+                    </View>
+                  </View>
+                </Pressable>
+                {showDelButton && (
+                  <Animated.View
+                    entering={ZoomIn.duration(500)}
+                    exiting={ZoomOut.duration(500)}
                     style={{
-                      backgroundColor: colors.darkBlueGray,
-                      borderRadius: 10,
-                      width: '100%',
-                      height: '100%',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                    onLongPress={() => setShowDelButton(!showDelButton)}
-                    onPress={() => {
-                      setUnmountWholeScreen(true)
-                      setTimeout(() => {
-                        navigation.navigate(elem.redirectTo)
-                      }, 500)
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
                     }}
                   >
-                    <View style={{ alignItems: 'center' }}>
-                      <View style={{ flex: 1, justifyContent: 'flex-end' }}>{elem.icon()}</View>
-                      <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 4 }}>
-                        <Text style={{ color: colors.white, fontSize: 12, textAlign: 'center' }}>{t(elem.sectionType)}</Text>
-                      </View>
-                    </View>
-                  </Pressable>
-                  {showDelButton && (
-                    <Animated.View
-                      entering={ZoomIn.duration(500)}
-                      exiting={ZoomOut.duration(500)}
+                    <Pressable
                       style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
+                        borderRadius: 20,
+                        width: 26,
+                        height: 26,
+                        backgroundColor: colors.white,
+                        justifyContent: 'center',
+                        alignItems: 'center',
                       }}
+                      onPress={() => onSectionClosePress(elem.sectionType)}
                     >
-                      <Pressable
-                        style={{
-                          borderRadius: 20,
-                          width: 26,
-                          height: 26,
-                          backgroundColor: colors.white,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                        onPress={() =>
-                          setShowSections({
-                            ...showSections,
-                            [elem.sectionType]: false,
-                          })
-                        }
-                      >
-                        <MaterialCommunityIcons name='close-circle' size={26} color={colors.darkBlueGray} />
-                      </Pressable>
-                    </Animated.View>
-                  )}
-                </Animated.View>
-              )
+                      <MaterialCommunityIcons name='close-circle' size={26} color={colors.darkBlueGray} />
+                    </Pressable>
+                  </Animated.View>
+                )}
+              </Animated.View>
             )
           })}
 
@@ -351,7 +446,7 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
             }}
             entering={FadeIn.duration(500)}
             exiting={FadeOut.duration(500)}
-            layout={SequencedTransition}
+            layout={SequencedTransition.duration(1000)}
           >
             <Pressable
               style={{

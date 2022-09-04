@@ -20,13 +20,26 @@ const EarningPlaceholder: FC<EarningPlaceholderProps> = () => {
   const dispatch = useDispatch()
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }} stickyHeaderIndices={[0]}>
       <View
         style={{
-          height: 50,
-          backgroundColor: colors.brightGray,
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          backgroundColor: colors.white,
         }}
-      ></View>
+      >
+        <View
+          style={{
+            height: 50,
+            borderRadius: 10,
+            backgroundColor: colors.brightGray,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ fontSize: 12, color: colors.darkBlueGray }}>{t('loading')}...</Text>
+        </View>
+      </View>
 
       {times(10).map((e, idx) => {
         return (

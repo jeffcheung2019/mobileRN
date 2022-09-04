@@ -19,8 +19,8 @@ import { changeTheme, ThemeState } from '@/Store/Theme'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config, elevationStyle } from '@/Utils/constants'
-import { RouteStacks } from '@/Navigators/routes'
-import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
+import { RouteStacks, RouteTabs } from '@/Navigators/routes'
+import { CommonActions, CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { MainTabNavigatorParamList } from '@/Navigators/MainStackNavigator'
@@ -94,7 +94,6 @@ const TickerDetailScreen: FC<TickerDetailScreenProps> = ({ navigation, route }) 
   const dispatch = useDispatch()
 
   const { id: companyId, ticker, name, prevScreen } = route?.params
-
   const companyPage = getCompanyPage(ticker)
 
   let { chartData, prevClose, currClose, lowest, highest } = useFinanceGraph(ticker)
@@ -103,26 +102,72 @@ const TickerDetailScreen: FC<TickerDetailScreenProps> = ({ navigation, route }) 
 
   let priceChangePercent: number = ((currClose - prevClose) / prevClose) * 100
 
-  let goBackStackNavigation = prevScreen !== undefined ? [
-    prevScreen?.tab,
-    {
-      screen: prevScreen?.stack,
-      params: prevScreen?.params
-    }
-  ]: undefined
+  console.log('STATE ', JSON.stringify(navigation.getState(), null, 2))
 
   return (
     <ScreenBackgrounds screenName={RouteStacks.tickerDetail}>
       <Header
         headerText={`${name}`}
         onLeftPress={() => {
-          if(prevScreen === undefined){
+          if (prevScreen === undefined) {
             navigation.navigate(RouteStacks.searchMain)
-          }else if (goBackStackNavigation !== undefined){
-            navigation.navigate(prevScreen.tab, {
-              screen: prevScreen?.stack,
-              params: prevScreen?.params
-            })
+          } else if (prevScreen !== undefined) {
+            // navigation.reset({
+            //   index: 0,
+            //   routes: [
+            //     {
+            //       name: RouteStacks.searchMain,
+            //     },
+            //   ],
+            // })
+            // navigation.popToTop()
+            // CommonActions.reset({
+            //   index: 0,
+            //   routes: [{ name: RouteStacks.searchMain }],
+            // })
+            // console.log(JSON.stringify(navigation.getState(), null, 2))
+            // navigation.navigate(RouteStacks.searchMain)
+
+            // navigation.setParams({
+            //   id: undefined,
+            //   name: undefined,
+            //   prevScreen: undefined,
+            //   ticker: undefined,
+            // })
+
+            // navigation.reset({
+            //   index: 0,
+            //   routes: [{ name: RouteStacks.searchMain }],
+            // })
+
+            // navigation.dispatch(state => {
+            //   console.log('@@@@@ state ', JSON.stringify(state, null, 2))
+            //   const routes = state.routes.filter(r => r.name !== RouteStacks.tickerDetail)
+            //   return CommonActions.reset({
+            //     ...state,
+            //     index: 0,
+            //     routes: [
+            //       {
+            //         name: RouteStacks.searchMain,
+            //       },
+            //     ],
+            //   })
+            // })
+            navigation.navigate(RouteStacks.searchMain)
+
+            // navigation.navigate(prevScreen.tab, {
+            //   screen: prevScreen.stack,
+
+            // }, {
+
+            // })
+
+            setTimeout(() => {
+              navigation.jumpTo(prevScreen.tab, {
+                screen: prevScreen.stack,
+                params: prevScreen.params,
+              })
+            }, 2000)
           }
         }}
         withProfile={false}

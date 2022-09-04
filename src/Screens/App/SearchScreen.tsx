@@ -12,11 +12,14 @@ import { config } from '@/Utils/constants'
 import { MainTabNavigatorNavigationProp, MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import { MainScreen } from './Search'
-import { CompositeNavigationProp, CompositeScreenProps } from '@react-navigation/native'
+import { CompositeNavigationProp, CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import TickerDetailScreen from './Search/TickerDetailScreen'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 import TickerNotiSubscriptionScreen from './Search/TickerNotiSubscriptionScreen'
+import { StockInfoScreenNavigatorParamList } from './StockInfoScreen'
+import { EarningMainScreenNavigatorParamList } from './Earning/MainScreen'
+import { StockQuoteScreenNavigatorParamList } from './StockQuoteScreen'
 const Stack = createSharedElementStackNavigator()
 
 export type SearchScreenNavigatorParamList = {
@@ -31,7 +34,7 @@ export type SearchScreenNavigatorParamList = {
     name: string
     prevScreen?: {
       tab: keyof MainTabNavigatorParamList
-      stack: keyof SearchScreenNavigatorParamList
+      stack: RouteStacks.priceTargetList // more prevScreen stack screen to be added later
       params?: any
     }
   }
@@ -51,28 +54,44 @@ const SearchScreen: FC<SearchScreenProps> = ({ navigation, route }) => {
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
+  // useFocusEffect(useCallback(() => {
+  //   navigation.reset({
+  //     index: 0,
+  //     routes: [{ name: RouteStacks.searchMain }],
+  //   })
+  // }, []))
+
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      screenListeners={({ navigation }) => {
+        return {
+          state: e => {
+            console.log('SEARCH SCREEN STATE', JSON.stringify(e, null, 2))
+          },
+        }
+      }}
+    >
       <Stack.Screen name={RouteStacks.searchMain} component={MainScreen} />
+      <Stack.Screen
+        name={RouteStacks.tickerDetail}
+        component={TickerDetailScreen}
+        // sharedElements={(route, otherRoute, showing) => {
+        //   const { ticker } = route.params
+        //   return [
+        //     {
+        //       id: `ticker.${ticker}`,
+        //       animation: 'fade',
+        //     },
+        //   ]
+        // }}
+      />
       <Stack.Screen
         name={RouteStacks.tickerNotiSubscription}
         options={{
           presentation: 'modal',
         }}
         component={TickerNotiSubscriptionScreen}
-      />
-      <Stack.Screen
-        name={RouteStacks.tickerDetail}
-        component={TickerDetailScreen}
-        sharedElements={(route, otherRoute, showing) => {
-          const { ticker } = route.params
-          return [
-            {
-              id: `ticker.${ticker}`,
-              animation: 'fade',
-            },
-          ]
-        }}
       />
     </Stack.Navigator>
   )

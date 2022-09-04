@@ -54,6 +54,7 @@ const EARNING_CONTENT_SUB_TEXT_STYLE: TextStyle = {
 }
 
 const windowWidth = Dimensions.get('window').width
+let abortController = new AbortController()
 const EarningWeekDayContainer: FC<EarningWeekDayContainerProps> = props => {
   const { earningDay, earningWeek } = props
 
@@ -68,40 +69,47 @@ const EarningWeekDayContainer: FC<EarningWeekDayContainerProps> = props => {
 
   useEffect(() => {
     const run = async () => {
+      console.log('RUNNNN')
       setIsLoading(true)
       let newEanringDay = Number(earningDay) + earningWeek * 7
-      let tradingViewEarningApiRes = axios(tradingViewEarningApi(newEanringDay)).then(res => {
-        let tradingViewEarningData = res?.data?.data ?? []
-        let newEarningCompanies = []
-
-        let startTimestamp = moment()
-          .startOf('week')
-          .add(12 * (1 + (newEanringDay + 1) * 2), 'hours')
-          .unix()
-
-        let endTimestamp = moment()
-          .startOf('week')
-          .add(12 * (2 + (newEanringDay + 1) * 2), 'hours')
-          .unix()
-        tradingViewEarningData.forEach((elem: any) => {
-          newEarningCompanies.push({
-            earningDate: [startTimestamp, endTimestamp],
-            tickerIcon: elem[0],
-            ticker: elem[1],
-            marketCap: elem[2],
-            tickerName: elem[12],
-            epsEst: elem[3],
-            epsReported: elem[4],
-            revEst: moneyConvertToKMB(elem[7]),
-            revReported: moneyConvertToKMB(elem[8]),
-          })
-        })
-
-        setEarningCompanies(tradingViewEarningData)
-        setIsLoading(false)
+      let tradingViewEarningApiRes = await axios({
+        ...tradingViewEarningApi(newEanringDay),
+        signal: abortController.signal,
       })
+      let tradingViewEarningData = tradingViewEarningApiRes?.data?.data ?? []
+      let newEarningCompanies = []
+
+      let startTimestamp = moment()
+        .startOf('week')
+        .add(12 * (1 + (newEanringDay + 1) * 2), 'hours')
+        .unix()
+
+      let endTimestamp = moment()
+        .startOf('week')
+        .add(12 * (2 + (newEanringDay + 1) * 2), 'hours')
+        .unix()
+      tradingViewEarningData.forEach((elem: any) => {
+        newEarningCompanies.push({
+          earningDate: [startTimestamp, endTimestamp],
+          tickerIcon: elem[0],
+          ticker: elem[1],
+          marketCap: elem[2],
+          tickerName: elem[12],
+          epsEst: elem[3],
+          epsReported: elem[4],
+          revEst: moneyConvertToKMB(elem[7]),
+          revReported: moneyConvertToKMB(elem[8]),
+        })
+      })
+
+      setEarningCompanies(tradingViewEarningData)
+      setIsLoading(false)
     }
     run()
+
+    return () => {
+      abortController.abort()
+    }
     // imgName === '' then symbol
     // https://s3-symbol-logo.tradingview.com/${imgName}.svg
     // imgName, ticker, market cap, eps estimate, 456,revenue forecast, 8,date, period ending, release time -1 = pre, 1 = post
@@ -131,7 +139,7 @@ const EarningWeekDayContainer: FC<EarningWeekDayContainerProps> = props => {
     <EarningPlaceholder />
   ) : (
     <View style={{ flex: 1 }}>
-      <View style={{ flexBasis: 50 }}>
+      <View style={{ flexBasis: 70, paddingHorizontal: 20, paddingVertical: 10 }}>
         <BrightGrayInput
           value={tickerQuery}
           onChangeText={setTickerQuery}
@@ -170,6 +178,7 @@ const EarningWeekDayContainer: FC<EarningWeekDayContainerProps> = props => {
                       height: 40,
                       justifyContent: 'center',
                       alignItems: 'center',
+                      borderRadius: 4,
                     }}
                   >
                     <Text style={[EARNING_CONTENT_TEXT_STYLE, { color: colors.white }]}>{ticker[0]}</Text>

@@ -21,12 +21,11 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
-import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
+import { StockInfoScreenNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
 
 export type AsianEconomicDataScreenProps = CompositeScreenProps<
-  StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.asianEconomicData>,
+  StackScreenProps<StockInfoScreenNavigatorParamList, RouteStacks.asianEconomicData>,
   StockInfoStackScreenProps
 >
 
@@ -39,13 +38,10 @@ const AsianEconomicDataScreen: FC<AsianEconomicDataScreenProps> = ({ navigation,
     <ScreenBackgrounds screenName={RouteStacks.asianEconomicData}>
       <Header headerText={t('asianEconomicData')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={{
-          backgroundColor: colors.brightGray,
-        }}
+        style={{}}
         contentContainerStyle={[
           Gutters.smallHPadding,
           {
-            backgroundColor: colors.brightGray,
             flexGrow: 1,
             justifyContent: 'flex-start',
           },

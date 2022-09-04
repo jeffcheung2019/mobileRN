@@ -70,10 +70,10 @@ const EarningMainScreen: FC<EarningMainScreenProps> = ({ navigation, route }) =>
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+    <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: colors.white }}>
       <Header headerText={t('earningCalendar')} />
 
-      <View style={{ flexBasis: 44, paddingHorizontal: 10 }}>
+      <View style={{ flexBasis: 54, paddingHorizontal: 10, paddingTop: 10 }}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}

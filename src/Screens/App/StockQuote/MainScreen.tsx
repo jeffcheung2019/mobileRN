@@ -68,7 +68,6 @@ const StockQuoteMainScreen: FC<StockQuoteMainScreenProps> = ({ navigation, route
       <Header headerText={t('stockQuote')} />
       <KeyboardAwareScrollView
         style={{
-          backgroundColor: colors.brightGray,
           flex: 1,
         }}
         contentContainerStyle={[
@@ -76,7 +75,6 @@ const StockQuoteMainScreen: FC<StockQuoteMainScreenProps> = ({ navigation, route
           Layout.colCenter,
           Gutters.smallHPadding,
           {
-            backgroundColor: colors.brightGray,
             justifyContent: 'flex-start',
             flex: 1,
           },

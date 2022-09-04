@@ -113,7 +113,6 @@ const NotificationMainScreen: FC<NotificationMainScreenProps> = ({ navigation, r
                 paddingVertical: 4,
               }}
               key={`SubscribedTicker-${ticker}`}
-              // onPress={() => }
             >
               <View style={{}}>
                 <Text

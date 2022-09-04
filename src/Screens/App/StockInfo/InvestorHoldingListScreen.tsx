@@ -21,9 +21,8 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { FadeInDown, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
-import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 import {
-  StockInfoStackNavigatorParamList,
+  StockInfoScreenNavigatorParamList,
   StockInfoStackScreenNavigationProp,
   StockInfoStackScreenProps,
 } from '@/Screens/App/StockInfoScreen'
@@ -38,12 +37,12 @@ import { Skeleton } from '@rneui/themed'
 import InvestorItemPlaceholder from './Components/InvestorItemPlaceholder'
 
 export type InvestorHoldingListScreenProps = CompositeScreenProps<
-  StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.investorHoldingList>,
+  StackScreenProps<StockInfoScreenNavigatorParamList, RouteStacks.investorHoldingList>,
   StockInfoStackScreenProps
 >
 
 export type InvestorHoldingListScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<StockInfoStackNavigatorParamList, RouteStacks.investorHoldingList>,
+  StackNavigationProp<StockInfoScreenNavigatorParamList, RouteStacks.investorHoldingList>,
   StockInfoStackScreenNavigationProp
 >
 
@@ -52,7 +51,7 @@ export type InvestorHolding = {
   slug?: string | undefined | null
   profolioManager?: string | undefined | null
 }
-
+let abortController = new AbortController()
 const InvestorHoldingListScreen: FC<InvestorHoldingListScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
@@ -64,47 +63,50 @@ const InvestorHoldingListScreen: FC<InvestorHoldingListScreenProps> = ({ navigat
     setSearchText(text)
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      const run = async () => {
-        try {
-          let topInvestorsHtmlRes = await axios.get(api.topInvestorsHoldingHtml)
-          const cheerioDom = cheerio.load(topInvestorsHtmlRes.data)
-          let activistsTdDom = cheerioDom('#activists tr td')
-          let tdLists: InvestorHolding[] = []
-          let i = 1
-          let investorDtl: InvestorHolding = {
-            companyName: '',
-          }
-
-          while (i < activistsTdDom.length) {
-            if (i !== 1 && i % 3 === 1) {
-              tdLists.push(investorDtl)
-              investorDtl = {
-                companyName: '',
-              }
-            }
-
-            if ([1, 2].includes(i % 3)) {
-              if (i % 3 === 1) {
-                investorDtl.companyName = activistsTdDom.eq(i).text()
-                investorDtl.slug = activistsTdDom.children('a').attr()?.href
-              } else {
-                investorDtl.profolioManager = activistsTdDom.eq(i).text()
-              }
-              i += i % 3 === 1 ? 1 : 2
-            }
-          }
-          setInvestorHoldingList(tdLists)
-        } catch (err) {
-          console.log('err ', err)
+  useEffect(() => {
+    const run = async () => {
+      try {
+        let topInvestorsHtmlRes = await axios.get(api.topInvestorsHoldingHtml, {
+          signal: abortController.signal,
+        })
+        const cheerioDom = cheerio.load(topInvestorsHtmlRes.data)
+        let activistsTdDom = cheerioDom('#activists tr td')
+        let tdLists: InvestorHolding[] = []
+        let i = 1
+        let investorDtl: InvestorHolding = {
+          companyName: '',
         }
+
+        while (i < activistsTdDom.length) {
+          if (i !== 1 && i % 3 === 1) {
+            tdLists.push(investorDtl)
+            investorDtl = {
+              companyName: '',
+            }
+          }
+
+          if ([1, 2].includes(i % 3)) {
+            if (i % 3 === 1) {
+              investorDtl.companyName = activistsTdDom.eq(i).text()
+              investorDtl.slug = activistsTdDom.children('a').attr()?.href
+            } else {
+              investorDtl.profolioManager = activistsTdDom.eq(i).text()
+            }
+            i += i % 3 === 1 ? 1 : 2
+          }
+        }
+        setInvestorHoldingList(tdLists)
+      } catch (err) {
+        console.log('err ', err)
       }
+    }
 
-      run()
-    }, []),
-  )
+    run()
 
+    return () => {
+      abortController.abort()
+    }
+  }, [])
   let filtereInvestors = useMemo(
     throttle(() => {
       return filter(investorHoldingList, (elem, idx) => {
@@ -124,14 +126,11 @@ const InvestorHoldingListScreen: FC<InvestorHoldingListScreenProps> = ({ navigat
     <ScreenBackgrounds screenName={RouteStacks.investorHoldingList}>
       <Header headerText={t('investorHoldings')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={{
-          backgroundColor: colors.brightGray,
-        }}
+        style={{}}
         stickyHeaderIndices={[0]}
         contentContainerStyle={[
           Gutters.smallHPadding,
           {
-            backgroundColor: colors.brightGray,
             flexGrow: 1,
             justifyContent: 'flex-start',
           },

@@ -42,10 +42,10 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    startLoading(state, action: PayloadAction<boolean>) {
+    startLoading: (state, action: PayloadAction<boolean>) => {
       state.isScreenLoading = action.payload
     },
-    showSnackbar(state, action: PayloadAction<ShowSnackbarPayload>) {
+    showSnackbar: (state, action: PayloadAction<ShowSnackbarPayload>) => {
       state.snackBarConfig = {
         visible: action.payload.visible ?? false,
         textMessage: action.payload.textMessage ?? '',
@@ -54,10 +54,10 @@ const uiSlice = createSlice({
         autoHidingTime: action.payload.autoHidingTime ?? 30000,
       }
     },
-    showTabBar(state, action: PayloadAction<boolean>) {
+    showTabBar: (state, action: PayloadAction<boolean>) => {
       state.tabBarVisible = action.payload
     },
-    updateStockInfoDisplay(state, action: PayloadAction<Partial<StockInfoShowSection>>) {
+    updateStockInfoShowSection: (state, action: PayloadAction<Partial<StockInfoShowSection>>) => {
       state.stockInfoShowSection = {
         ...state.stockInfoShowSection,
         ...action.payload,
@@ -66,5 +66,5 @@ const uiSlice = createSlice({
   },
 })
 
-export const { startLoading, showSnackbar, showTabBar, updateStockInfoDisplay } = uiSlice.actions
+export const { startLoading, showSnackbar, showTabBar, updateStockInfoShowSection } = uiSlice.actions
 export default uiSlice.reducer

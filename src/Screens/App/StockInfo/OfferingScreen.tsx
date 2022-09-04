@@ -21,9 +21,8 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
-import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 import {
-  StockInfoStackNavigatorParamList,
+  StockInfoScreenNavigatorParamList,
   StockInfoStackScreenNavigationProp,
   StockInfoStackScreenProps,
 } from '@/Screens/App/StockInfoScreen'
@@ -33,7 +32,7 @@ import map from 'lodash/map'
 import FastImage from 'react-native-fast-image'
 
 export type OfferingScreenProps = CompositeScreenProps<
-  StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.offering>,
+  StackScreenProps<StockInfoScreenNavigatorParamList, RouteStacks.offering>,
   StockInfoStackScreenProps
 >
 

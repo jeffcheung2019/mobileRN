@@ -21,8 +21,7 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
-import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
+import { StockInfoScreenNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
 import { getLawsuitsLiveFeed } from '@/Queries/StockInfoTab'
 import map from 'lodash/map'
@@ -41,7 +40,7 @@ const SKELETON_NEWS_CONTENT: ViewStyle = {
 const windowWidth = Dimensions.get('window').width
 
 export type LawsuitDetailScreenProps = CompositeScreenProps<
-  StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.lawsuitsDetail>,
+  StackScreenProps<StockInfoScreenNavigatorParamList, RouteStacks.lawsuitsDetail>,
   StockInfoStackScreenProps
 >
 
@@ -129,7 +128,7 @@ const LawsuitDetailScreen: FC<LawsuitDetailScreenProps> = ({ navigation, route }
                   {map(news.tickers, (ticker: string, idx: number) => {
                     return (
                       <View
-                        key={`ticker-${idx}`}
+                        key={`lawsuitTicker-${idx}`}
                         style={{
                           backgroundColor: colors.darkBlueGray,
                           marginHorizontal: 4,

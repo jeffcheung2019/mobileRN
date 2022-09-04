@@ -13,7 +13,14 @@ import { createStackNavigator, StackNavigationProp, StackScreenProps } from '@re
 import { RouteStacks, RouteTabs } from './routes'
 
 import { Dimensions, ImageBackground, Text, TextStyle, View, ViewStyle } from 'react-native'
-import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native'
+import {
+  CompositeNavigationProp,
+  CompositeScreenProps,
+  EventArg,
+  EventMapBase,
+  EventMapCore,
+  NavigatorScreenParams,
+} from '@react-navigation/native'
 import { Auth } from 'aws-amplify'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '@/Store/Users/actions'
@@ -35,7 +42,7 @@ import Animated from 'react-native-reanimated'
 import { t } from 'i18next'
 import { startLoading } from '@/Store/UI/actions'
 import StockQuoteScreen, { StockQuoteScreenNavigatorParamList } from '@/Screens/App/StockQuoteScreen'
-import StockInfoScreen, { StockInfoStackNavigatorParamList } from '@/Screens/App/StockInfoScreen'
+import StockInfoScreen, { StockInfoScreenNavigatorParamList } from '@/Screens/App/StockInfoScreen'
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 import AppSplashScreen from '@/Screens/AppSplashScreen'
 
@@ -56,7 +63,7 @@ export type MainTabNavigatorParamList = {
   [RouteTabs.home]: NavigatorScreenParams<HomeScreenNavigatorParamList>
   [RouteTabs.earning]: NavigatorScreenParams<EarningScreenNavigatorParamList>
   [RouteTabs.search]: NavigatorScreenParams<SearchScreenNavigatorParamList>
-  [RouteTabs.stockInfo]: NavigatorScreenParams<StockInfoStackNavigatorParamList>
+  [RouteTabs.stockInfo]: NavigatorScreenParams<StockInfoScreenNavigatorParamList>
   [RouteTabs.stockQuote]: NavigatorScreenParams<StockQuoteScreenNavigatorParamList>
 }
 
@@ -124,7 +131,19 @@ const MainTabNavigator: FC<MainTabNavigatorScreenProps> = ({ navigation }) => {
       >
         <Tab.Screen name={RouteTabs.home} component={HomeScreen} />
         <Tab.Screen name={RouteTabs.earning} component={EarningScreen} />
-        <Tab.Screen name={RouteTabs.search} component={SearchScreen} />
+        <Tab.Screen
+          name={RouteTabs.search}
+          component={SearchScreen}
+          listeners={({ navigation, route }) => {
+            return {
+              tabPress: (e: any) => {
+                // To force the tab press always redirect user to RouteStacks.searchMain is essential
+                e.preventDefault()
+                navigation.navigate(RouteStacks.searchMain)
+              },
+            }
+          }}
+        />
         <Tab.Screen name={RouteTabs.stockInfo} component={StockInfoScreen} />
         <Tab.Screen name={RouteTabs.stockQuote} component={StockQuoteScreen} />
       </Tab.Navigator>

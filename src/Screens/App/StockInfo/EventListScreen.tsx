@@ -21,12 +21,11 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
-import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
+import { StockInfoScreenNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
 
 export type EventListScreenProps = CompositeScreenProps<
-  MaterialTopTabScreenProps<StockInfoStackNavigatorParamList, RouteStacks.eventList>,
+  StackScreenProps<StockInfoScreenNavigatorParamList, RouteStacks.eventList>,
   StockInfoStackScreenProps
 >
 
@@ -39,13 +38,10 @@ const EventListScreen: FC<EventListScreenProps> = ({ navigation, route }) => {
     <ScreenBackgrounds screenName={RouteStacks.eventList}>
       <Header headerText={t('events')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
       <KeyboardAwareScrollView
-        style={{
-          backgroundColor: colors.brightGray,
-        }}
+        style={{}}
         contentContainerStyle={[
           Gutters.smallHPadding,
           {
-            backgroundColor: colors.brightGray,
             flexGrow: 1,
             justifyContent: 'flex-start',
           },

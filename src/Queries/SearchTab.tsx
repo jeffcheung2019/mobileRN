@@ -34,16 +34,16 @@ export const getCompanyPage = (ticker: string) => {
   return data?.company
 }
 
-export const getTickers = (
-  searchText: string,
-): {
+export type GetTickersResult = {
   exchange: string
   id: number
   industry: string
   name: string
   sector: string
   ticker: string
-}[] => {
+}
+
+export const getTickers = (searchText: string): GetTickersResult[] => {
   const { loading, error, data } = useQuery(
     gql`
       query CompanySearch(
@@ -282,7 +282,7 @@ export const getRatingsPanel = (companyIds: number[], limit: number): PriceTarge
 
     return data?.ratings?.map((elem: any, idx: number) => {
       return {
-        id: elem.id,
+        id: elem.company.id,
         rating: elem.rating,
         ratingPrior: elem.ratingPrior,
         pt: elem.pt,

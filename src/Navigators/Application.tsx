@@ -49,9 +49,10 @@ export type ApplicationNavigatorParamList = {
   // 🔥 Your screens go here
 }
 const Stack = createSharedElementStackNavigator<ApplicationNavigatorParamList>()
-const abortControllers: AbortController[] = times(2, () => {
-  return new AbortController()
-})
+// const abortControllers: AbortController[] = times(2, () => {
+//   return new AbortController()
+// })
+let abortController = new AbortController()
 // @refresh reset
 const ApplicationNavigator = () => {
   const { Layout, darkMode, NavigationTheme } = useTheme()
@@ -71,7 +72,7 @@ const ApplicationNavigator = () => {
 
         let jwtToken = user?.signInUserSession?.idToken?.jwtToken
         const userProfileRes = await axios.get(config.userProfile, {
-          signal: abortControllers[0].signal,
+          signal: abortController.signal,
           headers: {
             Authorization: jwtToken, //the token is a variable which holds the token
           },
@@ -103,7 +104,7 @@ const ApplicationNavigator = () => {
     }
 
     return () => {
-      abortControllers[0].abort()
+      // abortController.abort()
     }
   }, [isLoggedIn])
 
@@ -175,13 +176,12 @@ const ApplicationNavigator = () => {
     Hub.listen('auth', authListener)
 
     return () => {
-      abortControllers[1].abort()
       Hub.remove('auth', authListener)
     }
   }, [])
 
   return (
-    <SafeAreaView edges={['right', 'top', 'left']} style={[Layout.fullSize, { opacity: 0.2 }]}>
+    <SafeAreaView edges={['right', 'top', 'left']} style={[Layout.fullSize, { opacity: 1 }]}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SnackBar
           {...snackBarConfig}

@@ -32,7 +32,7 @@ import {
   LawsuitsDetailScreen,
 } from './StockInfo'
 import { CompositeNavigationProp, CompositeScreenProps } from '@react-navigation/native'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -47,7 +47,7 @@ import MergerAcquisitionDetailScreen from './StockInfo/MergerAcquistionDetailScr
 import { LawsuitNewsDetail } from './StockInfo/LawsuitsDetailScreen'
 import join from 'lodash/join'
 
-export type StockInfoStackNavigatorParamList = {
+export type StockInfoScreenNavigatorParamList = {
   [RouteStacks.stockInfoMain]: undefined
   [RouteStacks.insiderTransactionList]: undefined
   [RouteStacks.priceTargetList]: undefined
@@ -86,16 +86,16 @@ export type StockInfoStackNavigatorParamList = {
 }
 
 export type StockInfoStackScreenProps = CompositeScreenProps<
-  StackScreenProps<MainTabNavigatorParamList, RouteTabs.stockInfo>,
+  BottomTabScreenProps<MainTabNavigatorParamList, RouteTabs.stockInfo>,
   MainTabNavigatorScreenProps
 >
 
 export type StockInfoStackScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<MainTabNavigatorParamList, RouteTabs.stockInfo>,
+  BottomTabNavigationProp<MainTabNavigatorParamList, RouteTabs.stockInfo>,
   MainTabNavigatorNavigationProp
 >
 
-const Stack = createSharedElementStackNavigator()
+const Stack = createSharedElementStackNavigator<StockInfoScreenNavigatorParamList>()
 
 const TAB_BAR_TEXT_STYLE = {
   fontSize: 14,

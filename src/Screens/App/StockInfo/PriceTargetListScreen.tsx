@@ -18,17 +18,18 @@ import ScreenBackgrounds from '@/Components/ScreenBackgrounds'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { SharedElement } from 'react-navigation-shared-element'
 import { PanGestureHandler } from 'react-native-gesture-handler'
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import Animated, { FadeInDown, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
-import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import { StockInfoStackNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
+import { StockInfoScreenNavigatorParamList, StockInfoStackScreenProps } from '@/Screens/App/StockInfoScreen'
 import Header from '@/Components/Header'
-import { getRatingsPanel } from '@/Queries/SearchTab'
+import { getRatingsPanel, getTickers, GetTickersResult } from '@/Queries/SearchTab'
 import moment from 'moment'
+import BrightGrayInput from '@/Components/Inputs/BrightGrayInput'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 export type PriceTargetListScreenProps = CompositeScreenProps<
-  MaterialTopTabScreenProps<StockInfoStackNavigatorParamList, RouteStacks.insiderTransactionList>,
+  StackScreenProps<StockInfoScreenNavigatorParamList, RouteStacks.insiderTransactionList>,
   StockInfoStackScreenProps
 >
 
@@ -43,12 +44,39 @@ const PriceTargetListScreen: FC<PriceTargetListScreenProps> = ({ navigation, rou
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
+  const [searchText, setSearchText] = useState('')
 
-  const ratingsPanelData = getRatingsPanel([], 20)
+  const tickers: GetTickersResult[] = getTickers(searchText) ?? []
+
+  const onSearchTextChange = (text: string) => {
+    setSearchText(text)
+  }
+  let tickersId = tickers.map((elem: GetTickersResult) => elem.id)
+  const ratingsPanelData = getRatingsPanel(tickersId, 20)
+
+  console.log('navigation.state ', JSON.stringify(navigation.getState(), null, 2))
 
   return (
     <ScreenBackgrounds screenName={RouteStacks.priceTargetList}>
       <Header headerText={t('priceTargets')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
+
+      <View
+        style={{
+          width: '100%',
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+        }}
+      >
+        <BrightGrayInput
+          value={searchText}
+          onChangeText={onSearchTextChange}
+          icon={() => <MaterialIcons name='search' size={20} color={colors.darkBlueGray} />}
+          textInputProps={{
+            autoCapitalize: 'characters',
+            placeholder: t('searchTickerPrompt'),
+          }}
+        />
+      </View>
       <KeyboardAwareScrollView
         contentContainerStyle={[
           Gutters.smallHPadding,
@@ -63,67 +91,84 @@ const PriceTargetListScreen: FC<PriceTargetListScreenProps> = ({ navigation, rou
           : ratingsPanelData?.map((elem, idx) => {
               const { rating, ratingPrior, pt, ptPrior, analyst, date, ticker, name, id } = elem
               return (
-                <Pressable
-                  key={`Rating-${idx}`}
-                  onPress={() =>
-                    navigation.navigate(RouteTabs.search, {
-                      screen: RouteStacks.tickerDetail,
-                      params: {
-                        id: id,
-                        ticker: ticker,
-                        name: name,
-                        prevScreen: {
-                          tab: RouteTabs.stockInfo,
-                          stack: RouteStacks.priceTargetList,
-                        },
-                      },
-                    })
-                  }
+                <Animated.View
+                  entering={FadeInDown.duration(500).delay(idx * 100)}
+                  key={`PriceTargetFeed-${idx}`}
                   style={{
-                    flexDirection: 'row',
-                    height: 50,
-                    alignItems: 'center',
-                    width: '100%',
+                    paddingHorizontal: 10,
                   }}
                 >
-                  <View
+                  <Pressable
+                    onPress={() => {
+                      navigation.jumpTo(RouteTabs.search, {
+                        screen: RouteStacks.tickerDetail,
+                        params: {
+                          id: id,
+                          ticker: ticker,
+                          name: name,
+                          prevScreen: {
+                            tab: RouteTabs.stockInfo,
+                            stack: RouteStacks.priceTargetList,
+                          },
+                        },
+                      })
+                    }}
                     style={{
                       flexDirection: 'row',
-                      flex: 1,
+                      height: 70,
+                      alignItems: 'center',
+                      width: '100%',
                     }}
                   >
-                    <View style={{ flex: 4, alignItems: 'flex-start', justifyContent: 'center' }}>
-                      <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
-                        <Text style={{ fontWeight: 'bold' }}>{t('date')}:</Text>
-                        {`  ${moment(date).format('DD-MM-YYYY')}`}
-                      </Text>
-                      <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
-                        <Text style={{ fontWeight: 'bold' }}>{t('analyst')}:</Text> {` ${analyst}`}
-                      </Text>
-                      <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
-                        <Text style={{ fontWeight: 'bold' }}>{t('priceTargetChange')}:</Text> {ptPrior !== null ? `$${ptPrior}` : ''}{' '}
-                        {ptPrior ? '->' : ''} {`$${pt}`}
-                      </Text>
-                    </View>
-                    <View style={{ flex: 5, alignItems: 'flex-start', justifyContent: 'center' }}>
-                      <View style={{ flexDirection: 'row' }}>
-                        {ratingPrior ? (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                      }}
+                    >
+                      <View style={{ flex: 5, alignItems: 'flex-start', justifyContent: 'center' }}>
+                        <View
+                          style={{
+                            backgroundColor: colors.darkBlueGray,
+                            borderRadius: 4,
+                            padding: 4,
+                            marginRight: 4,
+                          }}
+                        >
+                          <Text style={{ fontSize: 10, color: colors.white }}>${ticker}</Text>
+                        </View>
+                        <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                          <Text style={{ fontWeight: 'bold' }}>{t('date')}:</Text>
+                          {`  ${moment(date).format('DD-MM-YYYY')}`}
+                        </Text>
+                        <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                          <Text style={{ fontWeight: 'bold' }}>{t('analyst')}:</Text> {` ${analyst}`}
+                        </Text>
+                        <Text style={{ color: colors.darkBlueGray, fontSize: 10 }}>
+                          <Text style={{ fontWeight: 'bold' }}>{t('priceTargetChange')}:</Text> {ptPrior !== null ? `$${ptPrior}` : ''}{' '}
+                          {ptPrior ? '->' : ''} {`$${pt}`}
+                        </Text>
+                      </View>
+                      <View style={{ flex: 5, paddingLeft: 20, alignItems: 'flex-start', justifyContent: 'center' }}>
+                        <View style={{ flexDirection: 'row' }}>
+                          {ratingPrior ? (
+                            <View style={[RATING_VIEW]}>
+                              <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{ratingPrior}</Text>
+                            </View>
+                          ) : null}
+                          {ratingPrior ? (
+                            <View style={{ justifyContent: 'center', paddingHorizontal: 8 }}>
+                              {<Text style={{ color: colors.darkBlueGray, fontSize: 9 }}>{'->'}</Text>}
+                            </View>
+                          ) : null}
                           <View style={[RATING_VIEW]}>
-                            <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{ratingPrior}</Text>
+                            <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{rating}</Text>
                           </View>
-                        ) : null}
-                        {ratingPrior ? (
-                          <View style={{ justifyContent: 'center', paddingHorizontal: 8 }}>
-                            {<Text style={{ color: colors.darkBlueGray, fontSize: 9 }}>{'->'}</Text>}
-                          </View>
-                        ) : null}
-                        <View style={[RATING_VIEW]}>
-                          <Text style={{ fontWeight: 'bold', color: colors.white, fontSize: 9 }}>{rating}</Text>
                         </View>
                       </View>
                     </View>
-                  </View>
-                </Pressable>
+                  </Pressable>
+                </Animated.View>
               )
             })}
       </KeyboardAwareScrollView>

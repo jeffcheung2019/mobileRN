@@ -4,8 +4,6 @@ import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
-import { api } from '@/Services/api'
-import * as modules from '@/Services/modules'
 import theme from './Theme'
 import userReducer from '@/Store/Users/reducer'
 import uiSlice from './Slices/ui'
@@ -13,13 +11,6 @@ import stockInfoDisplayReducer from '@/Store/StockInfoDisplay/reducer'
 
 const reducers = combineReducers({
   theme,
-  ...Object.values(modules).reduce(
-    (acc, module) => ({
-      ...acc,
-      [module.reducerPath]: module.reducer,
-    }),
-    {},
-  ),
   user: userReducer,
   ui: uiSlice,
   stockInfoDisplay: stockInfoDisplayReducer,
@@ -43,7 +34,7 @@ const store = configureStore({
       // 	ignoredActionPaths: [ 'payload.startTime' ],
       // },
       serializableCheck: false,
-    }).concat(api.middleware as Middleware)
+    })
 
     if (__DEV__ && !process.env.JEST_WORKER_ID) {
       const createDebugger = require('redux-flipper').default

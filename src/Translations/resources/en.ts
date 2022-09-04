@@ -170,4 +170,6 @@ export default {
   float: 'Float',
   shortRatio: 'Short Ratio',
   lawsuitsDetail: 'Lawsuit Detail',
+  all: 'All',
+  loading: 'Loading',
 }

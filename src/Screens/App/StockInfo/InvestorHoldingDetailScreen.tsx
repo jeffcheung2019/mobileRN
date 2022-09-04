@@ -28,9 +28,8 @@ import Animated, {
 } from 'react-native-reanimated'
 import DraggableCard from '@/Components/Buttons/Draggable/DraggableCard'
 import DraggableCards from '@/Components/Buttons/Draggable/DraggableCard'
-import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 import {
-  StockInfoStackNavigatorParamList,
+  StockInfoScreenNavigatorParamList,
   StockInfoStackScreenNavigationProp,
   StockInfoStackScreenProps,
 } from '@/Screens/App/StockInfoScreen'
@@ -40,12 +39,12 @@ import * as cheerio from 'cheerio'
 import map from 'lodash/map'
 
 export type InvestorHoldingDetailScreenProps = CompositeScreenProps<
-  StackScreenProps<StockInfoStackNavigatorParamList, RouteStacks.investorHoldingDetail>,
+  StackScreenProps<StockInfoScreenNavigatorParamList, RouteStacks.investorHoldingDetail>,
   StockInfoStackScreenProps
 >
 
 export type InvestorHoldingDetailNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<StockInfoStackNavigatorParamList, RouteStacks.investorHoldingDetail>,
+  StackNavigationProp<StockInfoScreenNavigatorParamList, RouteStacks.investorHoldingDetail>,
   StockInfoStackScreenNavigationProp
 >
 
@@ -94,14 +93,12 @@ const InvestorHoldingDetailScreen: FC<InvestorHoldingDetailScreenProps> = ({ nav
       <KeyboardAwareScrollView
         style={{
           flex: 1,
-          backgroundColor: colors.brightGray,
         }}
         contentContainerStyle={[
           Layout.colCenter,
           Gutters.smallHPadding,
           {
             flexGrow: 1,
-            backgroundColor: colors.brightGray,
             paddingVertical: 4,
           },
         ]}
