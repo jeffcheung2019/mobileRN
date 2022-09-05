@@ -145,6 +145,7 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
         })
         if (touchIdAuthRes) {
           dispatch(startLoading(true))
+          setIsLoggingIn(true)
 
           const user = await Auth.signIn(keychainCred.username, keychainCred.password)
           let { attributes, username } = user
@@ -164,8 +165,6 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
               username,
             }),
           )
-
-          setIsLoggingIn(true)
         }
       } else {
         // TBD: snackbar remind user to enable fingerprint
@@ -215,6 +214,8 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
 
     try {
       if (loginOpt === 'normal') {
+        setIsLoggingIn(true)
+
         const user = await Auth.signIn(emailUsernameHash(credential.email), credential.password)
         let { attributes, username } = user
         let jwtToken = user?.signInUserSession?.idToken?.jwtToken
@@ -234,8 +235,6 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
             username,
           }),
         )
-
-        setIsLoggingIn(true)
       } else if (loginOpt === 'facebook') {
         await Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Facebook })
       } else if (loginOpt === 'apple') {
@@ -245,9 +244,9 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
       }
     } catch (err: any) {
       loginErrHandler(err)
-      dispatch(startLoading(false))
-    } finally {
       setIsLoggingIn(false)
+    } finally {
+      dispatch(startLoading(false))
     }
   }
 

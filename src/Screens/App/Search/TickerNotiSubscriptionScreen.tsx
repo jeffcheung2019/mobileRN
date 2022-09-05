@@ -27,7 +27,7 @@ import BrightGrayInput from '@/Components/Inputs/BrightGrayInput'
 import { Switch } from '@rneui/themed'
 import { useRealm } from '@/Realms/RealmContext'
 import ObjectId from 'bson-objectid'
-import { TickerDetailSections, TickerDetailDisplay, tickerDetailSectionsStrMap } from '@/Realms/Schemas/TickerDetailDisplaySchema'
+import { TickerDetailSections, TickerDetailDisplay, tickerDetailSectionsStrMap } from '@/Realms/Schemas/SearchTab/TickerDetailDisplaySchema'
 import { UpdateMode } from 'realm'
 
 export type TickerNotiSubscriptionScreenProps = CompositeScreenProps<

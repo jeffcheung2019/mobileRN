@@ -23,7 +23,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import TickerQuote from './Components/TickerQuote'
 import { useRealm } from '@/Realms/RealmContext'
-import { StockQuoteTab } from '@/Realms/Schemas/StockQuoteTabSchema'
+import { SubscribedStockQuote } from '@/Realms/Schemas/StockQuoteTab/SubscribedStockQuoteSchema'
 import { map } from 'lodash'
 import StockQuoteTabItem from './Components/StockQuoteTabItem'
 import ObjectId from 'bson-objectid'
@@ -38,12 +38,12 @@ const StockQuoteMainScreen: FC<StockQuoteMainScreenProps> = ({ navigation, route
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
-  const [stockQuoteTab, setStockQuoteTab] = useState<StockQuoteTab[]>([])
+  const [stockQuoteTab, setStockQuoteTab] = useState<SubscribedStockQuote[]>([])
   const [currStockQuoteTab, setCurrStockQuoteTab] = useState(0)
 
   useEffect(() => {
     if (realm) {
-      let realmStockQuoteTabs = realm?.objects<StockQuoteTab>('StockQuoteTab') ?? []
+      let realmStockQuoteTabs = realm?.objects<SubscribedStockQuote>('SubscribedStockQuote') ?? []
       let newStockQuoteTab = []
       for (let i = 0; i < realmStockQuoteTabs.length; i++) {
         newStockQuoteTab.push({
@@ -57,7 +57,7 @@ const StockQuoteMainScreen: FC<StockQuoteMainScreenProps> = ({ navigation, route
 
   const onAddStockQuoteTabPress = () => {
     realm?.write(() => {
-      // realm.create("StockQuoteTab", {
+      // realm.create("SubscribedStockQuote", {
       //   _id: ObjectId(),
       // })
     })

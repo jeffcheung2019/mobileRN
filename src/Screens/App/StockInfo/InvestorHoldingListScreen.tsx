@@ -107,7 +107,7 @@ const InvestorHoldingListScreen: FC<InvestorHoldingListScreenProps> = ({ navigat
       abortController.abort()
     }
   }, [])
-  let filtereInvestors = useMemo(
+  let filtereInvestors: InvestorHolding[] | undefined = useMemo(
     throttle(() => {
       return filter(investorHoldingList, (elem, idx) => {
         let profolioManager = elem.profolioManager

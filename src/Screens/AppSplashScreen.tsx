@@ -74,7 +74,15 @@ const AppSplashScreen: FC<StackScreenProps<MainStackNavigatorParamList, RouteSta
   }, [isLoggedIn])
 
   return (
-    <View style={[Layout.fill, Layout.colCenter]}>
+    <View
+      style={[
+        Layout.fill,
+        Layout.colCenter,
+        {
+          backgroundColor: colors.white,
+        },
+      ]}
+    >
       <Animated.View style={[animatedStyle, {}]}>
         <AppLogo
           imageStyle={{
@@ -85,41 +93,6 @@ const AppSplashScreen: FC<StackScreenProps<MainStackNavigatorParamList, RouteSta
           type='color'
         />
       </Animated.View>
-
-      <View style={{ position: 'absolute', bottom: 0, left: -50, height: windowHeight / 2, opacity: 0.4 }}>
-        {/* <LineChart
-          areaChart
-          isAnimated={true}
-          animationDuration={1000}
-          showXAxisIndices={false}
-          showYAxisIndices={false}
-          hideYAxisText={true}
-          yAxisThickness={0}
-          yAxisIndicesWidth={0}
-          yAxisLabelWidth={0}
-          yAxisOffset={0}
-          disableScroll
-          hideDataPoints
-          hideRules={true}
-          curved
-          hideOrigin
-          initialSpacing={0}
-          width={windowWidth + 60}
-          height={windowHeight / 2}
-          yAxisTextNumberOfLines={0}
-          thickness={0}
-          adjustToWidth
-          startFillColor={colors.darkBlueGray}
-          endFillColor={colors.white}
-          data={
-            times(10, e => {
-              return {
-                value: Math.random() * 4 + e,
-              }
-            }) as any
-          }
-        /> */}
-      </View>
     </View>
   )
 }

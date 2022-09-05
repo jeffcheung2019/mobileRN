@@ -1,15 +1,15 @@
 import Realm from 'realm'
-import { Schema } from './Schema'
+import { Schema } from '../Schema'
 import ObjectId from 'bson-objectid'
 
 // Declare Schema
-export type StockQuoteTab = {
+export type SubscribedStockQuote = {
   tabName: string
   tickers: string[]
 }
 
-export const StockQuoteTabSchema: Schema = {
-  name: 'StockQuoteTab',
+export const SubscribedStockQuoteSchema: Schema = {
+  name: 'SubscribedStockQuote',
   properties: {
     _id: 'objectId',
 
@@ -19,4 +19,4 @@ export const StockQuoteTabSchema: Schema = {
   primaryKey: '_id',
 }
 
-export default StockQuoteTabSchema
+export default SubscribedStockQuoteSchema

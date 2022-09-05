@@ -23,7 +23,11 @@ import { MainStackNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navi
 import { SettingScreenProps, SettingScreenNavigatorParamList } from '../SettingScreen'
 import { NotificationScreenProps, NotificationScreenNavigatorParamList } from '../NotificationScreen'
 import { useRealm } from '@/Realms/RealmContext'
-import { TickerDetailDisplay, tickerDetailSectionsStrMap, TickerDetailSectionsType } from '@/Realms/Schemas/TickerDetailDisplaySchema'
+import {
+  TickerDetailDisplay,
+  tickerDetailSectionsStrMap,
+  TickerDetailSectionsType,
+} from '@/Realms/Schemas/SearchTab/TickerDetailDisplaySchema'
 import { SectionSubscriptionState } from '../Search/TickerNotiSubscriptionScreen'
 
 const windowHeight = Dimensions.get('window').height

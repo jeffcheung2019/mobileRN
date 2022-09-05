@@ -5,4 +5,4 @@ export type GoogleRSSFeedQuery = 'q' | 'before' | 'after'
 
 export type GoogleRSSFeed = Record<GoogleRSSFeedQuery, string>
 
-export type FoodPriceIndexZoom = '1' | '2' | '3' | '5' | '10' | 'ytd'
+export type FoodPriceIndexZoom = '1' | '2' | '3' | '5' | '6m' | 'ytd'

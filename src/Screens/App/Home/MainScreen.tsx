@@ -213,6 +213,7 @@ const HomeMainScreen: FC<HomeMainScreenProps> = ({ navigation, route }) => {
   // console.log('liveFeedResult ', JSON.stringify(liveFeedResult[0], null, 2))
 
   useEffect(() => {
+    dispatch(startLoading(false))
     setTimeout(() => {
       setNeedFetchDtl(false)
     }, 600)

@@ -9,7 +9,6 @@ import times from 'lodash/times'
 import { Skeleton } from '@rneui/themed'
 import Animated, { FadeInDown, FadeInRight, FadeOutLeft } from 'react-native-reanimated'
 import { useFinanceGraph } from '@/Hooks/useFinanceGraph'
-import LineStockChart from '@/Components/Graph/LineStockChart'
 
 const windowWidth = Dimensions.get('window').width
 type StockQuoteTabItemProps = {

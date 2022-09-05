@@ -42,8 +42,7 @@ const Header = (props: {
         flexDirection: 'row',
         height: headerHeight,
         width: windowWidth,
-        // borderBottomColor: !withProfile && headerText === undefined && onLeftPress === undefined ? colors.transparent : colors.brightGray,
-        borderBottomColor: colors.brightGray,
+        borderBottomColor: !withProfile && headerText === undefined && onLeftPress === undefined ? colors.transparent : colors.brightGray,
         borderBottomWidth: 1,
         backgroundColor: colors.white,
       }}

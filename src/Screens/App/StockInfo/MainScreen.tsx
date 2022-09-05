@@ -325,7 +325,6 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
       }),
     )
   }
-
   const stockInfoShowSectionButtons = useMemo(() => {
     let res: SectionButton[] = []
     let objectKeys = Object.keys(stockInfoShowSection) as Array<StockInfoShowSectionType>
@@ -412,7 +411,7 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
                       <View style={{ alignItems: 'center' }}>
                         <View style={{ flex: 1, justifyContent: 'flex-end' }}>{elem.icon()}</View>
                         <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 4 }}>
-                          <Text style={{ color: colors.white, fontSize: 12, textAlign: 'center' }}>{t(elem.sectionType)}</Text>
+                          <Text style={{ color: colors.white, fontSize: 10, textAlign: 'center' }}>{t(elem.sectionType)}</Text>
                         </View>
                       </View>
                     </Pressable>

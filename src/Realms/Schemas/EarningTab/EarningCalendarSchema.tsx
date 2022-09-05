@@ -1,5 +1,5 @@
 import Realm from 'realm'
-import { Schema } from './Schema'
+import { Schema } from '../Schema'
 // Declare Schema
 export type EarningCalendar = {
   earningDate: [number, number]

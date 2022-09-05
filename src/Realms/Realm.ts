@@ -1,12 +1,22 @@
 import Realm from 'realm'
-import { EarningCalendarSchema } from './Schemas/EarningCalendarSchema'
-import { StockQuoteTabSchema } from './Schemas/StockQuoteTabSchema'
-import { TickerDetailDisplaySchema } from './Schemas/TickerDetailDisplaySchema'
+import EarningCalendarSchema from './Schemas/EarningTab/EarningCalendarSchema'
+import FoodPriceIndexGraphDataSchema from './Schemas/StockInfoTab/FoodPriceIndexGraphDataSchema'
+import InvestorHoldingListSchema from './Schemas/StockInfoTab/InvestoHoldingListSchema'
+import SubscribedStockQuoteSchema from './Schemas/StockQuoteTab/SubscribedStockQuoteSchema'
+import TickerDetailDisplaySchema from './Schemas/SearchTab/TickerDetailDisplaySchema'
+import InvestorHoldingDetailSchema from './Schemas/StockInfoTab/InvestoHoldingDetailSchema'
 
 export const initRealm = async () => {
   const realm = new Realm({
-    schemaVersion: 3,
-    schema: [EarningCalendarSchema, TickerDetailDisplaySchema, StockQuoteTabSchema],
+    schemaVersion: 4,
+    schema: [
+      EarningCalendarSchema,
+      TickerDetailDisplaySchema,
+      SubscribedStockQuoteSchema,
+      InvestorHoldingListSchema,
+      InvestorHoldingDetailSchema,
+      FoodPriceIndexGraphDataSchema,
+    ],
     migration: (oldRealm, newRealm) => {
       //   const msgOldObjs = oldRealm.objects('Message');
       //   const msgNewObjs = newRealm.objects('Message');
