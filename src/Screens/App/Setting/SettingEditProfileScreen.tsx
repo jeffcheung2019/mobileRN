@@ -62,10 +62,6 @@ const SettingEditProfileScreen: FC<SettingEditProfileScreenProps> = ({ navigatio
     // navigation.navigate(RouteStacks.mainTab)
   }
 
-  const onLogoutPress = async () => {
-    await awsLogout()
-  }
-
   const onSubscriptionPress = async () => {}
 
   const onFormFieldChange = (formField: string, text: string) => {

@@ -199,22 +199,22 @@ const NewsDetailScreen: FC<HomeNewsDetailScreenProps> = ({ navigation, route }) 
             />
           ) : (
             <>
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' width={(windowWidth * 2) / 3} height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' width={(windowWidth * 2) / 3} height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' width={windowWidth / 2} height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
-              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={10} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' width={(windowWidth * 2) / 3} height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' width={(windowWidth * 2) / 3} height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' width={windowWidth / 2} height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
+              <Skeleton style={[SKELETON_NEWS_CONTENT]} animation='pulse' height={6} />
             </>
           )}
         </ScrollView>

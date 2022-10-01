@@ -30,13 +30,13 @@ const BrightGrayInput = (props: BrightGrayInputProps) => {
         flexDirection: 'row',
         backgroundColor: colors.brightGray,
         borderRadius: 10,
-        paddingHorizontal: 16,
+        paddingHorizontal: 20,
         ...inputStyle,
       }}
     >
       {icon ? icon() : null}
       <TextInput
-        style={[{ paddingLeft: 20, flex: 6, height: 50 }]}
+        style={[{ paddingLeft: icon ? 20 : 0, flex: 6, height: 50, color: colors.darkBlueGray }]}
         value={value}
         onChangeText={onChangeText}
         autoCorrect={false}

@@ -9,7 +9,7 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { RouteStacks } from '@/Navigators/routes'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'

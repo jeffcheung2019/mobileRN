@@ -35,11 +35,14 @@ const HomeTopNewsPlaceholder: FC = () => {
           paddingVertical: 10,
         }}
       >
-        <Skeleton style={{ marginVertical: 2 }} animation='pulse' width={50} height={10} />
-        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={10} />
-        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={10} />
-        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={10} />
-        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={10} />
+        <Skeleton style={{ marginVertical: 2 }} animation='pulse' width={50} height={6} />
+        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={6} />
+        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={6} />
+        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={6} />
+        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={6} />
+        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={6} />
+        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={6} />
+        <Skeleton style={{ marginVertical: 2 }} animation='pulse' height={6} />
       </View>
     </View>
   )

@@ -10,3 +10,7 @@ export type TickerCompanyDetail = {
   sector: string
   industry: string
 }
+export type XYPoint = {
+  x: number
+  y: number
+}

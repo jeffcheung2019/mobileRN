@@ -9,7 +9,7 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { RouteStacks } from '@/Navigators/routes'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -78,35 +78,37 @@ const LawsuitScreen: FC<LawsuitScreenProps> = ({ navigation, route }) => {
                 }
                 style={{
                   flexDirection: 'row',
-                  height: 100,
+                  height: 90,
                 }}
               >
-                <View
-                  style={{
-                    flexBasis: 100,
-                    justifyContent: 'center',
-                  }}
-                >
-                  <SharedElement style={{ width: '100%', height: '90%' }} id={`lawsuitNews.${newsItem?.id}.image`}>
-                    <FastImage
-                      source={{
-                        uri: hasImage ? newsItem?.imgUrl : config.defaultNewsImgUrl,
-                        priority: FastImage.priority.high,
-                      }}
-                      resizeMode={hasImage ? 'contain' : 'cover'}
-                      style={{
-                        backgroundColor: colors.white,
-                        width: '100%',
-                        height: '100%',
-                      }}
-                    />
-                  </SharedElement>
-                </View>
+                {hasImage ? (
+                  <View
+                    style={{
+                      flexBasis: 100,
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <SharedElement style={{ width: '100%', height: '90%' }} id={`lawsuitNews.${newsItem?.id}.image`}>
+                      <FastImage
+                        source={{
+                          uri: hasImage ? newsItem?.imgUrl : config.defaultNewsImgUrl,
+                          priority: FastImage.priority.high,
+                        }}
+                        resizeMode={hasImage ? 'contain' : 'cover'}
+                        style={{
+                          backgroundColor: colors.white,
+                          width: '100%',
+                          height: '100%',
+                        }}
+                      />
+                    </SharedElement>
+                  </View>
+                ) : null}
                 <View
                   style={{
                     justifyContent: 'center',
                     flex: 1,
-                    paddingLeft: 10,
+                    paddingLeft: hasImage ? 10 : 0,
                   }}
                 >
                   <SharedElement id={`lawsuitNews.${newsItem.id}.title`}>
@@ -115,7 +117,9 @@ const LawsuitScreen: FC<LawsuitScreenProps> = ({ navigation, route }) => {
                     </Text>
                   </SharedElement>
 
-                  <Text style={{ color: colors.darkBlueGray, fontSize: 12 }}>{moment(newsItem?.publishedAt).format('YYYY-MM-DD')}</Text>
+                  <Text style={{ color: colors.darkBlueGray, fontSize: 12, fontWeight: 'bold', paddingVertical: 2 }}>
+                    {moment(newsItem?.publishedAt).format('YYYY-MM-DD')}
+                  </Text>
 
                   <SharedElement id={`lawsuitNews.${newsItem?.id}.tickers.${join(tickers, '-')}`}>
                     <View

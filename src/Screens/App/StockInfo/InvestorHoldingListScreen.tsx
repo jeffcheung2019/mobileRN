@@ -9,7 +9,7 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { api, colors, config } from '@/Utils/constants'
-import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { RouteStacks } from '@/Navigators/routes'
 import { CompositeNavigationProp, CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -51,7 +51,7 @@ export type InvestorHolding = {
   slug?: string | undefined | null
   profolioManager?: string | undefined | null
 }
-let abortController = new AbortController()
+let abortController: AbortController
 const InvestorHoldingListScreen: FC<InvestorHoldingListScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
@@ -65,6 +65,7 @@ const InvestorHoldingListScreen: FC<InvestorHoldingListScreenProps> = ({ navigat
 
   useEffect(() => {
     const run = async () => {
+      abortController = new AbortController()
       try {
         let topInvestorsHtmlRes = await axios.get(api.topInvestorsHoldingHtml, {
           signal: abortController.signal,

@@ -3,10 +3,12 @@ import { showSnackbar, ShowSnackbarPayload, startLoading } from './actions'
 
 export type StockInfoDisplayState = {
   sectionShowDisplay: string[]
+  fetched: boolean
 }
 
 const initialState: StockInfoDisplayState = {
   sectionShowDisplay: [],
+  fetched: false,
 }
 
 export default createReducer<StockInfoDisplayState>(initialState, builder => {

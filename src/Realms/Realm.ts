@@ -2,17 +2,18 @@ import Realm from 'realm'
 import EarningCalendarSchema from './Schemas/EarningTab/EarningCalendarSchema'
 import FoodPriceIndexGraphDataSchema from './Schemas/StockInfoTab/FoodPriceIndexGraphDataSchema'
 import InvestorHoldingListSchema from './Schemas/StockInfoTab/InvestoHoldingListSchema'
-import SubscribedStockQuoteSchema from './Schemas/StockQuoteTab/SubscribedStockQuoteSchema'
+import { SubscribedStockQuoteSchema, StockTickerQuoteDetailSchema } from './Schemas/StockQuoteTab/SubscribedStockQuoteSchema'
 import TickerDetailDisplaySchema from './Schemas/SearchTab/TickerDetailDisplaySchema'
 import InvestorHoldingDetailSchema from './Schemas/StockInfoTab/InvestoHoldingDetailSchema'
 
 export const initRealm = async () => {
   const realm = new Realm({
-    schemaVersion: 4,
+    schemaVersion: 5,
     schema: [
       EarningCalendarSchema,
       TickerDetailDisplaySchema,
       SubscribedStockQuoteSchema,
+      StockTickerQuoteDetailSchema,
       InvestorHoldingListSchema,
       InvestorHoldingDetailSchema,
       FoodPriceIndexGraphDataSchema,

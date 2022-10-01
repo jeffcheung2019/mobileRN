@@ -46,12 +46,9 @@ import { createSharedElementStackNavigator } from 'react-navigation-shared-eleme
 import { SafeAreaView } from 'react-native-safe-area-context'
 export type ApplicationNavigatorParamList = {
   [RouteStacks.mainStack]: undefined
-  // 🔥 Your screens go here
 }
 const Stack = createSharedElementStackNavigator<ApplicationNavigatorParamList>()
-// const abortControllers: AbortController[] = times(2, () => {
-//   return new AbortController()
-// })
+
 let abortController = new AbortController()
 // @refresh reset
 const ApplicationNavigator = () => {

@@ -51,8 +51,6 @@ const SearchMainScreen: FC<SearchMainScreenProps> = ({ navigation, route }) => {
     setSearchText(text)
   }
 
-  console.log('SEARCH STATE ', JSON.stringify(navigation.getState(), null, 2))
-
   return (
     <ScreenBackgrounds screenName={RouteStacks.searchMain}>
       <Header headerText={t('searchTicker')} withProfile={false} />

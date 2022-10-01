@@ -2,7 +2,6 @@ import React, { FC } from 'react'
 import { View, Image, Text, StyleProp, ActivityIndicator, ViewStyle, TextProps, ViewProps } from 'react-native'
 import { useTheme } from '@/Hooks'
 import { colors, config } from '@/Utils/constants'
-import iconCheck from '@/Assets/Images/icons/icon_check.png'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 interface SnackbarMsgContainerProps extends ViewProps {

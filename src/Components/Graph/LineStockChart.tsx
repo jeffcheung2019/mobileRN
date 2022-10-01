@@ -22,8 +22,8 @@ type LineStockChartProps = {
   chartData: GraphPoint[]
   priceChangePercent: number
   contentContainerStyle?: object
-  lowest: number
-  highest: number
+  lowest?: number
+  highest?: number
   height: number
   hideYAxis?: boolean
   width: number
@@ -32,59 +32,63 @@ type LineStockChartProps = {
 const LineStockChart: FC<LineStockChartProps> = props => {
   const { title, chartData, contentContainerStyle, priceChangePercent, lowest, height, highest, width, hideYAxis } = props
 
-  const animatedStyleVal = useSharedValue({
-    x: 0,
-  })
-
   const { Common, Fonts, Gutters, Layout } = useTheme()
-  let diff = highest - lowest
 
   return chartData.length === 0 ? null : (
     <View
       style={{
-        position: 'absolute',
-        top: 10,
-        left: -15,
-        width: '100%',
-        height,
+        height: 180,
       }}
     >
-      <VictoryChart theme={VictoryTheme.material} height={height} width={width} style={{}}>
-        <VictoryArea
-          animate={{
-            duration: 2000,
-            onLoad: { duration: 1000 },
-          }}
-          style={{
-            data: {
-              fill: priceChangePercent > 0 ? colors.electricGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
-              fillOpacity: 0.3,
-              height: 200,
-              width: windowWidth,
-            },
-          }}
-          data={chartData}
-          domain={{ y: [lowest, highest] }}
-          x='date'
-          y='value'
-        />
-        {hideYAxis ? null : (
-          <VictoryAxis
-            dependentAxis
+      <View
+        style={{
+          position: 'absolute',
+          top: -30,
+          left: -15,
+          width: '100%',
+          height,
+        }}
+      >
+        <VictoryChart theme={VictoryTheme.material} height={height} width={width + 10} style={{}}>
+          <VictoryArea
+            animate={{
+              duration: 2000,
+              onLoad: { duration: 1000 },
+            }}
             style={{
+              data: {
+                fill: priceChangePercent > 0 ? colors.electricGreen : priceChangePercent === 0 ? colors.darkBlueGray : colors.crimson,
+                fillOpacity: 0.3,
+                height: 200,
+                width: windowWidth,
+              },
+            }}
+            data={chartData}
+            domain={lowest !== undefined && highest !== undefined ? { y: [lowest, highest] } : undefined}
+            x='date'
+            y='value'
+          />
+          {hideYAxis ? null : (
+            <VictoryAxis
+              dependentAxis
+              style={{
+                axis: { stroke: 'transparent' },
+                grid: { stroke: 'transparent' },
+                ticks: { stroke: 'transparent' },
+                tickLabels: { fill: colors.darkBlueGray },
+              }}
+            />
+          )}
+          <VictoryAxis
+            style={{
+              axis: { stroke: 'transparent' },
+              ticks: { stroke: 'transparent' },
+              tickLabels: { fill: 'transparent' },
               grid: { stroke: 'transparent' },
             }}
           />
-        )}
-        <VictoryAxis
-          style={{
-            axis: { stroke: 'transparent' },
-            ticks: { stroke: 'transparent' },
-            tickLabels: { fill: 'transparent' },
-            grid: { stroke: 'transparent' },
-          }}
-        />
-      </VictoryChart>
+        </VictoryChart>
+      </View>
     </View>
   )
 }

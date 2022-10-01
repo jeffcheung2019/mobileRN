@@ -9,7 +9,7 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { RouteStacks } from '@/Navigators/routes'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -36,7 +36,7 @@ export type OfferingDetailScreenProps = CompositeScreenProps<
 >
 
 const OFFERING_DETAIL_SKELETON: ViewStyle = {
-  marginVertical: 8,
+  marginVertical: 4,
 }
 
 const OfferingDetailScreen: FC<OfferingDetailScreenProps> = ({ navigation, route }) => {
@@ -145,27 +145,27 @@ const OfferingDetailScreen: FC<OfferingDetailScreenProps> = ({ navigation, route
           </View>
         ) : (
           <View>
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
-            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={10} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
+            <Skeleton animation='pulse' style={OFFERING_DETAIL_SKELETON} height={8} />
           </View>
         )}
       </KeyboardAwareScrollView>

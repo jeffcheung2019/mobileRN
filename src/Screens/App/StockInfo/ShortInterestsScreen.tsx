@@ -9,7 +9,7 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { api, colors, config } from '@/Utils/constants'
-import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -32,7 +32,7 @@ export type ShortInterestsScreenProps = CompositeScreenProps<
   StockInfoStackScreenProps
 >
 
-let abortController = new AbortController()
+let abortController: AbortController
 const ShortInterestsScreen: FC<ShortInterestsScreenProps> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
@@ -41,6 +41,7 @@ const ShortInterestsScreen: FC<ShortInterestsScreenProps> = ({ navigation, route
 
   useEffect(() => {
     const run = async () => {
+      abortController = new AbortController()
       const shortInterestsRes = await axios.get(api.shortInterestsHtml, {
         signal: abortController.signal,
       })
@@ -62,6 +63,7 @@ const ShortInterestsScreen: FC<ShortInterestsScreenProps> = ({ navigation, route
               .replace(/\n/g, ''),
           )
         }
+
         newShortInterestsRow.push(tableRow)
       }
       setShortInterestsRow(newShortInterestsRow)
@@ -72,6 +74,22 @@ const ShortInterestsScreen: FC<ShortInterestsScreenProps> = ({ navigation, route
       abortController.abort()
     }
   }, [])
+
+  const onShortInterestItemPress = () => {
+    // TBD: redirect user to ticker detail page
+    // navigation.navigate(RouteTabs.search, {
+    //   screen: RouteStacks.tickerDetail,
+    //   params: {
+    //     id: id,
+    //     ticker: ticker,
+    //     name: name,
+    //     prevScreen: {
+    //       tab: RouteTabs.stockInfo,
+    //       stack: RouteStacks.priceTargetList,
+    //     },
+    //   },
+    // })
+  }
 
   return (
     <ScreenBackgrounds screenName={RouteStacks.shortInterests}>
@@ -100,37 +118,51 @@ const ShortInterestsScreen: FC<ShortInterestsScreenProps> = ({ navigation, route
               entering={FadeInDown.duration(500).delay(idx * 200)}
               key={`ShortInterestTicker-${idx}`}
             >
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                }}
-              >
+              <Pressable onPress={() => onShortInterestItemPress()}>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
+                    flex: 1,
+                    justifyContent: 'center',
                   }}
                 >
                   <View
                     style={{
-                      backgroundColor: colors.darkBlueGray,
-                      padding: 4,
-                      width: 80,
-                      justifyContent: 'center',
+                      flexDirection: 'row',
                       alignItems: 'center',
-                      borderRadius: 4,
                     }}
                   >
-                    <Text
+                    <View
                       style={{
-                        color: colors.white,
-                        fontSize: 12,
-                        fontWeight: 'bold',
-                        textAlign: 'center',
+                        backgroundColor: colors.darkBlueGray,
+                        padding: 4,
+                        width: 80,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 4,
                       }}
                     >
-                      ${row[0]}
+                      <Text
+                        style={{
+                          color: colors.white,
+                          fontSize: 12,
+                          fontWeight: 'bold',
+                          textAlign: 'center',
+                        }}
+                      >
+                        ${row[0]}
+                      </Text>
+                    </View>
+
+                    <Text
+                      style={{
+                        color: colors.darkBlueGray,
+                        fontSize: 12,
+                        marginLeft: 8,
+                        fontWeight: 'bold',
+                      }}
+                      numberOfLines={2}
+                    >
+                      {row[2]}
                     </Text>
                   </View>
 
@@ -138,71 +170,61 @@ const ShortInterestsScreen: FC<ShortInterestsScreenProps> = ({ navigation, route
                     style={{
                       color: colors.darkBlueGray,
                       fontSize: 12,
-                      marginLeft: 8,
+                      marginTop: 8,
                       fontWeight: 'bold',
                     }}
-                    numberOfLines={2}
                   >
-                    {row[2]}
+                    {row[1]}
+                  </Text>
+
+                  <Text
+                    style={{
+                      color: colors.darkBlueGray,
+                      fontSize: 12,
+                    }}
+                  >
+                    <Text style={{ fontWeight: 'bold' }}>{t('shortRatio')}: </Text>
+                    {row[8]}
                   </Text>
                 </View>
 
-                <Text
+                <View
                   style={{
-                    color: colors.darkBlueGray,
-                    fontSize: 12,
-                    marginTop: 8,
-                    fontWeight: 'bold',
+                    flex: 1,
+                    justifyContent: 'flex-end',
                   }}
                 >
-                  {row[1]}
-                </Text>
-              </View>
+                  <Text
+                    style={{
+                      color: colors.darkBlueGray,
+                      fontSize: 12,
+                    }}
+                  >
+                    <Text style={{ fontWeight: 'bold' }}>{t('shortInterst')}: </Text>
+                    {row[5]}
+                  </Text>
 
-              <View
-                style={{
-                  flex: 1,
-                }}
-              >
-                <Text
-                  style={{
-                    color: colors.darkBlueGray,
-                    fontSize: 12,
-                  }}
-                >
-                  <Text style={{ fontWeight: 'bold' }}>{t('shortInterst')}:</Text>
-                  {row[5]}
-                </Text>
+                  <Text
+                    style={{
+                      color: colors.darkBlueGray,
+                      fontSize: 12,
+                    }}
+                  >
+                    <Text style={{ fontWeight: 'bold' }}>{t('shortDate')}: </Text>
+                    {row[6]}
+                  </Text>
 
-                <Text
-                  style={{
-                    color: colors.darkBlueGray,
-                    fontSize: 12,
-                  }}
-                >
-                  <Text style={{ fontWeight: 'bold' }}>{t('shortDate')}:</Text>
-                  {row[6]}
-                </Text>
-
-                <Text
-                  style={{
-                    color: colors.darkBlueGray,
-                    fontSize: 12,
-                  }}
-                >
-                  <Text style={{ fontWeight: 'bold' }}>{t('float')}:</Text>
-                  {row[7]}
-                </Text>
-                <Text
-                  style={{
-                    color: colors.darkBlueGray,
-                    fontSize: 12,
-                  }}
-                >
-                  <Text style={{ fontWeight: 'bold' }}>{t('shortRatio')}:</Text>
-                  {row[8]}
-                </Text>
-              </View>
+                  <Text
+                    style={{
+                      color: colors.darkBlueGray,
+                      fontSize: 12,
+                    }}
+                  >
+                    <Text style={{ fontWeight: 'bold' }}>{t('float')}: </Text>
+                    {row[7]}
+                  </Text>
+                </View>
+              </Pressable>
             </Animated.View>
           )
         })}

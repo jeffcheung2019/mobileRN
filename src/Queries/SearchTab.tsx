@@ -1,5 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
 import { number } from 'prop-types'
+import get from 'lodash/get'
 
 export const getCompanyPage = (ticker: string) => {
   const { loading, error, data } = useQuery(
@@ -125,6 +126,7 @@ export type NewsItem = {
   summary: string
   link: string
   publishedAt: string
+  ticker: string
 }
 // categoryIds & sourceIds can be found in ./Constants.ts
 export const getNewsItemPanel = (
@@ -199,11 +201,13 @@ export const getNewsItemPanel = (
   )
 
   return data?.newsItems.map((elem: any, idx: number) => {
+    console.log('elem ', elem.companies)
     return {
       title: elem.newsItem.title,
       summary: elem.newsItem.summary,
       link: elem.newsItem.link,
       publishedAt: elem.newsItem.publishedAt,
+      ticker: get(elem, 'companies[0].ticker', ''),
     }
   })
 }

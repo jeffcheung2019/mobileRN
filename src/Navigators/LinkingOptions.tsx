@@ -2,7 +2,7 @@ import { Linking } from 'react-native'
 import { createNavigationContainerRef, LinkingOptions } from '@react-navigation/native'
 import { AuthNavigatorParamList } from './AuthNavigator'
 import dynamicLinks, { FirebaseDynamicLinksTypes } from '@react-native-firebase/dynamic-links'
-import { RouteStacks, RouteTabs, RouteTopTabs } from './routes'
+import { RouteStacks, RouteTabs } from './routes'
 import { MainStackNavigatorParamList } from './MainStackNavigator'
 import { config } from '@/Utils/constants'
 import { ApplicationNavigatorParamList } from './Application'
@@ -135,20 +135,50 @@ export const privateLinking: LinkingOptions<ApplicationNavigatorParamList> = {
               [RouteTabs.earning]: {
                 path: RouteTabs.earning,
                 screens: {
-                  [RouteStacks.earningMain]: RouteStacks.earningMain,
+                  //date
+                  [RouteStacks.earningMain]: `${RouteStacks.earningMain}/:dateStr?`,
                 },
               },
               [RouteTabs.search]: {
                 path: RouteTabs.search,
                 screens: {
                   [RouteStacks.searchMain]: RouteStacks.searchMain,
+                  [RouteStacks.tickerDetail]: `${RouteStacks.tickerDetail}/:ticker`,
+                  [RouteStacks.tickerNotiSubscription]: `${RouteStacks.tickerNotiSubscription}/:ticker`,
                 },
               },
               [RouteTabs.stockInfo]: {
                 path: RouteTabs.stockInfo,
                 screens: {
-                  [RouteTopTabs.stockInfoMain]: RouteTopTabs.stockInfoMain,
-                  [RouteTopTabs.insider]: RouteTopTabs.insider,
+                  [RouteStacks.stockInfoMain]: RouteStacks.stockInfoMain,
+                  [RouteStacks.insiderTransactionList]: RouteStacks.insiderTransactionList,
+                  [RouteStacks.priceTargetList]: RouteStacks.priceTargetList,
+                  [RouteStacks.secFilingList]: RouteStacks.secFilingList,
+                  [RouteStacks.eventList]: RouteStacks.eventList,
+                  [RouteStacks.addWatchList]: RouteStacks.addWatchList,
+                  [RouteStacks.investorHoldingList]: RouteStacks.investorHoldingList,
+                  [RouteStacks.shortInterests]: RouteStacks.shortInterests,
+                  [RouteStacks.usEconomicData]: RouteStacks.usEconomicData,
+                  [RouteStacks.euEconomicData]: RouteStacks.euEconomicData,
+                  [RouteStacks.asianEconomicData]: RouteStacks.asianEconomicData,
+                  [RouteStacks.globalSupplyChain]: RouteStacks.globalSupplyChain,
+                  [RouteStacks.foodPriceIndex]: RouteStacks.foodPriceIndex,
+                  [RouteStacks.unusualOptions]: RouteStacks.unusualOptions,
+                  [RouteStacks.lawsuits]: RouteStacks.lawsuits,
+                  [RouteStacks.lawsuitsDetail]: RouteStacks.lawsuitsDetail,
+                  [RouteStacks.leadershipUpdate]: RouteStacks.leadershipUpdate,
+                  [RouteStacks.offering]: RouteStacks.offering,
+                  [RouteStacks.addStockQuote]: RouteStacks.addStockQuote,
+                  [RouteStacks.offeringDetail]: RouteStacks.offeringDetail,
+                  [RouteStacks.stockQuoteMain]: RouteStacks.stockQuoteMain,
+                  [RouteStacks.shortResearchReports]: RouteStacks.shortResearchReports,
+                  [RouteStacks.shortResearchReportsDetail]: RouteStacks.shortResearchReportsDetail,
+                  [RouteStacks.mergerAcquisition]: RouteStacks.mergerAcquisition,
+                  [RouteStacks.mergerAcquisitionDetail]: RouteStacks.mergerAcquisitionDetail,
+                  [RouteStacks.ipoNews]: RouteStacks.ipoNews,
+                  [RouteStacks.ipoNewsDetail]: RouteStacks.ipoNewsDetail,
+                  [RouteStacks.investorHoldingDetail]: RouteStacks.investorHoldingDetail,
+                  [RouteStacks.cpiIndex]: RouteStacks.cpiIndex,
                 },
               },
               [RouteTabs.stockQuote]: {

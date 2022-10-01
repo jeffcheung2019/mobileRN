@@ -9,7 +9,7 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
-import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { RouteStacks } from '@/Navigators/routes'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -29,6 +29,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import BrightGrayInput from '@/Components/Inputs/BrightGrayInput'
 import map from 'lodash/map'
 import FastImage from 'react-native-fast-image'
+import { useRealm } from '@/Realms/RealmContext'
+import ObjectId from 'bson-objectid'
 
 export type AddStockQuoteScreenProps = CompositeScreenProps<
   StackScreenProps<StockQuoteScreenNavigatorParamList, RouteStacks.addStockQuote>,
@@ -36,9 +38,12 @@ export type AddStockQuoteScreenProps = CompositeScreenProps<
 >
 
 const AddStockQuoteScreen: FC<AddStockQuoteScreenProps> = ({ navigation, route }) => {
+  const realm = useRealm()
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
+
+  const { tabName } = route?.params
 
   const [searchText, setSearchText] = useState('')
   const tickers: any = getTickers(searchText)
@@ -47,7 +52,21 @@ const AddStockQuoteScreen: FC<AddStockQuoteScreenProps> = ({ navigation, route }
     setSearchText(text)
   }
 
-  const onTickerPress = (ticker: string) => {}
+  const onTickerQuotePress = ({ id, ticker }: { id: number; ticker: string }) => {
+    realm?.write(() => {
+      // realm.objects("SubscribedStockQuote")
+      realm.create('SubscribedStockQuote', {
+        _id: ObjectId(),
+        tabName,
+        stockTickerDetails: [
+          {
+            id,
+            ticker,
+          },
+        ],
+      })
+    })
+  }
 
   return (
     <ScreenBackgrounds screenName={RouteStacks.addStockQuote}>
@@ -104,7 +123,7 @@ const AddStockQuoteScreen: FC<AddStockQuoteScreenProps> = ({ navigation, route }
               <Animated.View entering={FadeInDown.delay(100 * idx).duration(300)} key={`TickerView-${idx}`}>
                 <Pressable
                   key={`ticker-${elem.name}`}
-                  onPress={() => onTickerPress(elem.ticker)}
+                  onPress={() => onTickerQuotePress(elem.ticker)}
                   style={[
                     Layout.fullWidth,
                     {

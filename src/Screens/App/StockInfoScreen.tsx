@@ -10,7 +10,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { colors, config } from '@/Utils/constants'
 import { MainTabNavigatorNavigationProp, MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
-import { RouteTopTabs, RouteTabs, RouteStacks } from '@/Navigators/routes'
+import { RouteTabs, RouteStacks } from '@/Navigators/routes'
 import {
   AddWatchListScreen,
   FoodPriceIndexScreen,
@@ -30,6 +30,7 @@ import {
   InvestorHoldingDetailScreen,
   OfferingDetailScreen,
   LawsuitsDetailScreen,
+  IPONewsDetailScreen,
 } from './StockInfo'
 import { CompositeNavigationProp, CompositeScreenProps } from '@react-navigation/native'
 import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -46,6 +47,9 @@ import MergerAcquisitionScreen from './StockInfo/MergerAcquistionScreen'
 import MergerAcquisitionDetailScreen from './StockInfo/MergerAcquistionDetailScreen'
 import { LawsuitNewsDetail } from './StockInfo/LawsuitsDetailScreen'
 import join from 'lodash/join'
+import GlobalSupplyChainScreen from './StockInfo/GlobalSupplyChainScreen'
+import IPONewsScreen from './StockInfo/IPONewsScreen'
+import CpiIndexScreen from './StockInfo/CpiIndexScreen'
 
 export type StockInfoScreenNavigatorParamList = {
   [RouteStacks.stockInfoMain]: undefined
@@ -83,6 +87,7 @@ export type StockInfoScreenNavigatorParamList = {
   [RouteStacks.mergerAcquisitionDetail]: undefined
   [RouteStacks.ipoNews]: undefined
   [RouteStacks.ipoNewsDetail]: undefined
+  [RouteStacks.cpiIndex]: undefined
 }
 
 export type StockInfoStackScreenProps = CompositeScreenProps<
@@ -140,7 +145,7 @@ const StockInfoScreen: FC<StockInfoStackScreenProps> = ({ navigation, route }) =
       <Stack.Screen name={RouteStacks.usEconomicData} component={USEconomicDataScreen} />
       <Stack.Screen name={RouteStacks.euEconomicData} component={EUEconomicDataScreen} />
       <Stack.Screen name={RouteStacks.asianEconomicData} component={AsianEconomicDataScreen} />
-      <Stack.Screen name={RouteStacks.globalSupplyChain} component={SecFilingListScreen} />
+      <Stack.Screen name={RouteStacks.globalSupplyChain} component={GlobalSupplyChainScreen} />
       <Stack.Screen name={RouteStacks.foodPriceIndex} component={FoodPriceIndexScreen} />
       <Stack.Screen name={RouteStacks.unusualOptions} component={UnusualOptionsScreen} />
       <Stack.Screen name={RouteStacks.lawsuits} component={LawsuitsScreen} />
@@ -179,6 +184,9 @@ const StockInfoScreen: FC<StockInfoStackScreenProps> = ({ navigation, route }) =
       <Stack.Screen name={RouteStacks.shortResearchReportsDetail} component={ShortResearchReportsDetailScreen} />
       <Stack.Screen name={RouteStacks.mergerAcquisition} component={MergerAcquisitionScreen} />
       <Stack.Screen name={RouteStacks.mergerAcquisitionDetail} component={MergerAcquisitionDetailScreen} />
+      <Stack.Screen name={RouteStacks.ipoNews} component={IPONewsScreen} />
+      <Stack.Screen name={RouteStacks.ipoNewsDetail} component={IPONewsDetailScreen} />
+      <Stack.Screen name={RouteStacks.cpiIndex} component={CpiIndexScreen} />
     </Stack.Navigator>
   )
 }

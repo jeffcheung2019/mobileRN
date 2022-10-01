@@ -1,2 +1,2 @@
 export { default as en } from './en'
-export { default as zhHK } from './zhHK'
+export { default as zhhk } from './zhhk'

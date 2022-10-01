@@ -10,7 +10,7 @@
 		00E356F31AD99517003FC87E /* TestRNTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TestRNTests.m */; };
 		011408FFC1C84EA48D6D40CC /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A77D9E926BA8439999CE7CB7 /* Poppins-Thin.ttf */; };
 		0303D1DEF9AF4545935525F1 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F736A330FA9541D6B427BF4E /* Poppins-SemiBold.ttf */; };
-		0ABFF4E57ABBF7C2A9517EF9 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		0ABFF4E57ABBF7C2A9517EF9 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		0F0BBFA861BE45D582DC6CF9 /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 707FE37C147840959D575428 /* Poppins-MediumItalic.ttf */; };
 		1011A9CDACD542AEA8C263D8 /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD100D05C0824FC0B66AA8BE /* Poppins-ExtraLight.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -50,6 +50,7 @@
 		6D514CADD27F4C7387C2C28D /* Mont-HeavyDEMO.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9460F3FC55DF41AF897C74A9 /* Mont-HeavyDEMO.ttf */; };
 		799D0C3145754A7421C23CF1 /* libPods-TestRN-TestRNTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E751264DB0871B28051EAFF /* libPods-TestRN-TestRNTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		847A670828E8609300EE80C8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 847A670728E8609300EE80C8 /* GoogleService-Info.plist */; };
 		8DDD228272DA4DCCABCE30B2 /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9ADBDF4C78D7492D87BD590F /* Poppins-SemiBoldItalic.ttf */; };
 		97917077D4B34ED084F9F9B2 /* Poppins-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7FFCDA71C08410E888B233C /* Poppins-Italic.ttf */; };
 		9CE4A309A0134D8EBAA23829 /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B502A54FA6984924A2E50FB8 /* Poppins-ExtraLightItalic.ttf */; };
@@ -79,14 +80,13 @@
 		D49AE2FA37854816A7C6943F /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50DA38B3470840078D954869 /* Poppins-BlackItalic.ttf */; };
 		DF51CEAF46C3483A9E7A8A7F /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 569C1599401945429EC1E395 /* Poppins-ThinItalic.ttf */; };
 		E35D9210282CA4C0000CD920 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E35D920F282CA4C0000CD920 /* BootSplash.storyboard */; };
-		E36243EF283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F0283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F1283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F2283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F3283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F4283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E36243F5283E04C20098154B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
-		E38DA2C9289D167A003F1E0E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E38DA2C8289D167A003F1E0E /* GoogleService-Info.plist */; };
+		E36243EF283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F0283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F1283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F2283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F3283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F4283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		E36243F5283E04C20098154B /* (null) in Resources */ = {isa = PBXBuildFile; };
 		ED552533436A4875A2D4C5E8 /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98159A6563AE4D13823F8B63 /* Poppins-BoldItalic.ttf */; };
 		FE05D5C2EBFF464F96598A91 /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 367457BE5B8A46B2892C99B3 /* Poppins-ExtraBoldItalic.ttf */; };
 /* End PBXBuildFile section */
@@ -192,6 +192,7 @@
 		6CACA624280FA975008F6268 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		707FE37C147840959D575428 /* Poppins-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-MediumItalic.ttf"; path = "../src/Assets/Fonts/Poppins-MediumItalic.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = TestRN/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		847A670728E8609300EE80C8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		87B0274EC365E8E1CA498AA4 /* Pods-TestRNClip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestRNClip.release.xcconfig"; path = "Target Support Files/Pods-TestRNClip/Pods-TestRNClip.release.xcconfig"; sourceTree = "<group>"; };
 		9460F3FC55DF41AF897C74A9 /* Mont-HeavyDEMO.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Mont-HeavyDEMO.ttf"; path = "../src/Assets/Fonts/Mont-HeavyDEMO.ttf"; sourceTree = "<group>"; };
 		98159A6563AE4D13823F8B63 /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../src/Assets/Fonts/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
@@ -225,7 +226,6 @@
 		DD100D05C0824FC0B66AA8BE /* Poppins-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLight.ttf"; path = "../src/Assets/Fonts/Poppins-ExtraLight.ttf"; sourceTree = "<group>"; };
 		E35D920D282A1890000CD920 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = TestRN/BootSplash.storyboard; sourceTree = "<group>"; };
 		E35D920F282CA4C0000CD920 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = TestRN/BootSplash.storyboard; sourceTree = "<group>"; };
-		E38DA2C8289D167A003F1E0E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E8BF76D6843C28291C346D81 /* libPods-TestRN.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TestRN.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -238,7 +238,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0ABFF4E57ABBF7C2A9517EF9 /* BuildFile in Frameworks */,
+				0ABFF4E57ABBF7C2A9517EF9 /* (null) in Frameworks */,
 				799D0C3145754A7421C23CF1 /* libPods-TestRN-TestRNTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -312,7 +312,7 @@
 		13B07FAE1A68108700A75B9A /* TestRN */ = {
 			isa = PBXGroup;
 			children = (
-				E38DA2C8289D167A003F1E0E /* GoogleService-Info.plist */,
+				847A670728E8609300EE80C8 /* GoogleService-Info.plist */,
 				6CACA624280FA975008F6268 /* RNBackgroundFetch+AppDelegate.m */,
 				E35D920D282A1890000CD920 /* BootSplash.storyboard */,
 				E35D920F282CA4C0000CD920 /* BootSplash.storyboard */,
@@ -702,7 +702,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4EE769F28227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
-				E36243F0283E04C20098154B /* BuildFile in Resources */,
+				E36243F0283E04C20098154B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -712,7 +712,7 @@
 			files = (
 				1F5B4F1727FEBA92009618AF /* Ionicons.ttf in Resources */,
 				1F5B4F1927FEBA92009618AF /* FontAwesome.ttf in Resources */,
-				E38DA2C9289D167A003F1E0E /* GoogleService-Info.plist in Resources */,
+				847A670828E8609300EE80C8 /* GoogleService-Info.plist in Resources */,
 				1F5B4F2127FEBA92009618AF /* Feather.ttf in Resources */,
 				1F5B4F1A27FEBA92009618AF /* Octicons.ttf in Resources */,
 				1F5B4F1D27FEBA92009618AF /* FontAwesome5_Regular.ttf in Resources */,
@@ -752,7 +752,7 @@
 				0F0BBFA861BE45D582DC6CF9 /* Poppins-MediumItalic.ttf in Resources */,
 				0303D1DEF9AF4545935525F1 /* Poppins-SemiBold.ttf in Resources */,
 				8DDD228272DA4DCCABCE30B2 /* Poppins-SemiBoldItalic.ttf in Resources */,
-				E36243EF283E04C20098154B /* BuildFile in Resources */,
+				E36243EF283E04C20098154B /* (null) in Resources */,
 				011408FFC1C84EA48D6D40CC /* Poppins-Thin.ttf in Resources */,
 				DF51CEAF46C3483A9E7A8A7F /* Poppins-ThinItalic.ttf in Resources */,
 			);
@@ -764,7 +764,7 @@
 			files = (
 				C4EE76A028227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
 				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
-				E36243F1283E04C20098154B /* BuildFile in Resources */,
+				E36243F1283E04C20098154B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -773,7 +773,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4EE76A128227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
-				E36243F2283E04C20098154B /* BuildFile in Resources */,
+				E36243F2283E04C20098154B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -783,7 +783,7 @@
 			files = (
 				C4EE76A228227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
 				C4114DCC282258E100074A62 /* LaunchScreen.storyboard in Resources */,
-				E36243F3283E04C20098154B /* BuildFile in Resources */,
+				E36243F3283E04C20098154B /* (null) in Resources */,
 				C4114DC9282258E100074A62 /* Assets.xcassets in Resources */,
 				C4114DC7282258E000074A62 /* Main.storyboard in Resources */,
 			);
@@ -794,7 +794,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4EE76A328227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
-				E36243F4283E04C20098154B /* BuildFile in Resources */,
+				E36243F4283E04C20098154B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -803,7 +803,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4EE76A428227579003F6C95 /* afdevkey_donotpush.plist in Resources */,
-				E36243F5283E04C20098154B /* BuildFile in Resources */,
+				E36243F5283E04C20098154B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1422,7 +1422,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1480,7 +1480,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

@@ -93,7 +93,7 @@ const TickerDetailScreen: FC<TickerDetailScreenProps> = ({ navigation, route }) 
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
-  const { id: companyId, ticker, name, prevScreen } = route?.params
+  const { id: companyId, ticker, prevScreen } = route?.params
   const companyPage = getCompanyPage(ticker)
 
   let { chartData, prevClose, currClose, lowest, highest } = useFinanceGraph(ticker)
@@ -102,12 +102,10 @@ const TickerDetailScreen: FC<TickerDetailScreenProps> = ({ navigation, route }) 
 
   let priceChangePercent: number = ((currClose - prevClose) / prevClose) * 100
 
-  console.log('STATE ', JSON.stringify(navigation.getState(), null, 2))
-
   return (
     <ScreenBackgrounds screenName={RouteStacks.tickerDetail}>
       <Header
-        headerText={`${name}`}
+        headerText={`${companyPage?.name}`}
         onLeftPress={() => {
           if (prevScreen === undefined) {
             navigation.navigate(RouteStacks.searchMain)
@@ -133,7 +131,7 @@ const TickerDetailScreen: FC<TickerDetailScreenProps> = ({ navigation, route }) 
           style={[
             SECTION_VIEW,
             {
-              height: 300,
+              height: 250,
             },
           ]}
         >
@@ -182,7 +180,7 @@ const TickerDetailScreen: FC<TickerDetailScreenProps> = ({ navigation, route }) 
                   onPress={() =>
                     navigation.navigate(RouteStacks.tickerNotiSubscription, {
                       ticker,
-                      name,
+                      name: companyPage?.name,
                     })
                   }
                 />

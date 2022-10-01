@@ -4,8 +4,8 @@ import { CompositeScreenProps, NavigationHelpers, NavigatorScreenParams, TabNavi
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack'
 import React, { FC, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Dimensions, Image, Pressable, Text, View } from 'react-native'
-import { RouteStacks, RouteTabs, RouteTopTabs } from '@/Navigators/routes'
+import { Dimensions, Easing, Image, Pressable, Text, View, Animated } from 'react-native'
+import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import cup from '@/Assets/Icons/tabs/cup.png'
 import flag from '@/Assets/Icons/tabs/flag.png'
 import home from '@/Assets/Icons/tabs/home.png'
@@ -21,13 +21,14 @@ import {
 import { ApplicationNavigatorParamList } from './Application'
 import { ImageSourcePropType } from 'react-native'
 import { MainTabNavigatorParamList } from './MainStackNavigator'
-import Animated, {
+import ReactNativeAnimated, {
   FadeInDown,
   FadeOutDown,
   interpolate,
   interpolateColor,
   measure,
   runOnUI,
+  useAnimatedProps,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -37,7 +38,15 @@ import Animated, {
 import { times } from 'lodash'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Store'
+import Lottie from 'lottie-react-native'
+import homeJson from 'Assets/Images/Gif/home.json'
+import calendarJson from 'Assets/Images/Gif/calendar.json'
+import searchJson from 'Assets/Images/Gif/search.json'
+import search1Json from 'Assets/Images/Gif/search1.json'
+import gridViewJson from 'Assets/Images/Gif/gridView.json'
+import stockQuoteJson from 'Assets/Images/Gif/stockQuote.json'
 
+const AnimatedLottie = ReactNativeAnimated.createAnimatedComponent(Lottie)
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
 
@@ -62,7 +71,7 @@ const TabWrapperView: FC<TabWrapperViewProps> = ({ focused, children, onPress, o
 
 type MainCustomTabBarProps = BottomTabBarProps & {
   tabBarIconsMap: {
-    [Key in RouteStacks & RouteTopTabs as string]?: () => React.ReactNode
+    [Key in RouteStacks as string]?: () => React.ReactNode
   }
 }
 
@@ -70,7 +79,37 @@ let dimensionRatioTimeout: NodeJS.Timeout
 
 const nameColorMap = [colors.homeTheme, colors.earningTheme, colors.searchTheme, colors.stockInfoTheme, colors.chartTheme]
 
+const animatedIconJson = [homeJson, calendarJson, search1Json, gridViewJson, stockQuoteJson]
+
+const AnimatedTabBarIcon: FC<any> = ({ idx, focused }) => {
+  const iconProgress = useSharedValue(0)
+  const animatedProps = useAnimatedProps(() => {
+    return {
+      progress: withTiming(iconProgress.value, {
+        duration: 1000,
+      }),
+    }
+  })
+
+  if (focused) {
+    iconProgress.value = 1
+  } else {
+    iconProgress.value = 0
+  }
+
+  return (
+    <AnimatedLottie
+      animatedProps={animatedProps}
+      autoSize
+      source={animatedIconJson[idx]}
+      resizeMode='contain'
+      style={{ width: 30, height: 30 }}
+    />
+  )
+}
+
 const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navigation: bottomTabNavigation, tabBarIconsMap }) => {
+  const animationProgress = useRef(new Animated.Value(0.1))
   const routeIdxSharedValue = useSharedValue<number>(0)
   const highlightDimensionScale = useSharedValue<number>(1)
   const iconScales = useSharedValue<number[]>([1, 1, 1, 1, 1])
@@ -128,11 +167,6 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         height: 80,
-        elevation: 2,
-        shadowColor: colors.black,
-        shadowOpacity: 0.26,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 10,
       }}
     >
       <View
@@ -147,8 +181,9 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
         }}
       >
         {map(state.routes, (route: TabNavigationState<MainTabNavigatorParamList>, idx: number) => {
+          let focused = idx === state.index
+
           const onTabPress = () => {
-            let focused = idx === state.index
             const event = bottomTabNavigation.emit({
               type: 'tabPress',
               target: state.routes[idx].key,
@@ -164,15 +199,17 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
               target: route.key,
             })
           }
+          console.log('state.index', state.index, idx, focused)
+
           return (
             <TabWrapperView focused={idx === state.index} key={`TabWrapperView-${idx}`} onLongPress={onLongPress} onPress={onTabPress}>
-              {tabBarIconsMap[state.routeNames[idx]]}
+              <AnimatedTabBarIcon focused={focused} idx={idx} />
             </TabWrapperView>
           )
         })}
       </View>
 
-      <Animated.View
+      <ReactNativeAnimated.View
         style={[
           {
             position: 'absolute',
@@ -186,7 +223,7 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
           containerAnimationStyle,
         ]}
       >
-        <Animated.View
+        <ReactNativeAnimated.View
           ref={highlightRef}
           style={[
             {
@@ -198,7 +235,7 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
             highlightAnimationStyle,
           ]}
         />
-      </Animated.View>
+      </ReactNativeAnimated.View>
     </View>
   )
 }

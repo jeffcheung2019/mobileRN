@@ -9,23 +9,30 @@ import { UserState } from '@/Store/Users/reducer'
 import { createStackNavigator } from '@react-navigation/stack'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { config } from '@/Utils/constants'
-import { MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
+import { MainTabNavigatorNavigationProp, MainTabNavigatorParamList, MainTabNavigatorScreenProps } from '@/Navigators/MainStackNavigator'
 import { RouteStacks, RouteTabs } from '@/Navigators/routes'
 import { MainScreen } from './StockQuote'
-import { CompositeScreenProps } from '@react-navigation/native'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { CompositeNavigationProp, CompositeScreenProps } from '@react-navigation/native'
+import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import AddStockQuoteScreen from './StockQuote/AddStockQuoteScreen'
 
 const Stack = createStackNavigator()
 
 export type StockQuoteScreenNavigatorParamList = {
   [RouteStacks.stockQuoteMain]: undefined
-  [RouteStacks.addStockQuote]: undefined
+  [RouteStacks.addStockQuote]: {
+    tabName: string
+  }
 }
 
 export type StockQuoteScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabNavigatorParamList, RouteTabs.stockQuote>,
   MainTabNavigatorScreenProps
+>
+
+export type StockQuoteScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainTabNavigatorParamList, RouteTabs.stockQuote>,
+  MainTabNavigatorNavigationProp
 >
 
 const StockQuoteScreen: FC<StockQuoteScreenProps> = ({ navigation, route }) => {

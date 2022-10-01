@@ -26,6 +26,7 @@ import { Icon } from '@rneui/base'
 import { RootState } from '@/Store'
 import SettingActionItem from '@/Screens/App/Setting/Components/SettingActionItem'
 import { startLoading } from '@/Store/UI/actions'
+import { resetStockInfoShowSection } from '@/Store/Slices/ui'
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
@@ -80,6 +81,7 @@ const SettingMainScreen: FC<SettingMainScreenProps> = ({ navigation, route }) =>
   }
 
   const onLogoutPress = async () => {
+    dispatch(resetStockInfoShowSection())
     await awsLogout()
   }
   const onEditAccountDtlPress = () => {

@@ -9,7 +9,7 @@ import { UserState } from '@/Store/Users/reducer'
 
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { api, colors, config } from '@/Utils/constants'
-import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { RouteStacks } from '@/Navigators/routes'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -80,8 +80,6 @@ const OfferingScreen: FC<OfferingScreenProps> = ({ navigation, route }) => {
     run()
   }, [newsOffset])
 
-  console.log('news ', news[0])
-
   return (
     <ScreenBackgrounds screenName={RouteStacks.offering}>
       <Header headerText={t('offering')} onLeftPress={() => navigation.navigate(RouteStacks.stockInfoMain)} withProfile={false} />
@@ -111,6 +109,7 @@ const OfferingScreen: FC<OfferingScreenProps> = ({ navigation, route }) => {
                   title: e.title,
                 })
               }}
+              key={`Offering-${idx}`}
             >
               <View
                 style={{

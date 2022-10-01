@@ -8,11 +8,6 @@ export enum RouteTabs {
   search = 'search',
 }
 
-export enum RouteTopTabs {
-  stockInfoMain = 'stockInfoMain',
-  insider = 'insider',
-}
-
 // Adding new screens need to add corresponding background image in Components/ScreenBackgrounds/index.tsx
 export enum RouteStacks {
   startUp = 'startUp',
@@ -80,6 +75,7 @@ export enum RouteStacks {
   ipoNews = 'ipoNews',
   ipoNewsDetail = 'ipoNewsDetail',
   investorHoldingDetail = 'investorHoldingDetail',
+  cpiIndex = 'cpiIndex',
 
   setting = 'setting',
   mainTab = 'mainTab',

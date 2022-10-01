@@ -20,6 +20,7 @@ import TickerNotiSubscriptionScreen from './Search/TickerNotiSubscriptionScreen'
 import { StockInfoScreenNavigatorParamList } from './StockInfoScreen'
 import { EarningMainScreenNavigatorParamList } from './Earning/MainScreen'
 import { StockQuoteScreenNavigatorParamList } from './StockQuoteScreen'
+import { RootState } from '@/Store'
 const Stack = createSharedElementStackNavigator()
 
 export type SearchScreenNavigatorParamList = {
@@ -31,10 +32,9 @@ export type SearchScreenNavigatorParamList = {
   [RouteStacks.tickerDetail]: {
     ticker: string
     id: number
-    name: string
     prevScreen?: {
       tab: keyof MainTabNavigatorParamList
-      stack: RouteStacks.priceTargetList // more prevScreen stack screen to be added later
+      stack: RouteStacks.priceTargetList | RouteStacks.stockQuoteMain // more prevScreen stack screen to be added later
       params?: any
     }
   }
@@ -54,6 +54,10 @@ const SearchScreen: FC<SearchScreenProps> = ({ navigation, route }) => {
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
 
+  const user = useSelector((state: RootState) => state.user)
+
+  console.log('@@@ ', JSON.stringify(user, null, 2))
+
   // useFocusEffect(useCallback(() => {
   //   navigation.reset({
   //     index: 0,
@@ -66,9 +70,7 @@ const SearchScreen: FC<SearchScreenProps> = ({ navigation, route }) => {
       screenOptions={{ headerShown: false }}
       screenListeners={({ navigation }) => {
         return {
-          state: e => {
-            console.log('SEARCH SCREEN STATE', JSON.stringify(e, null, 2))
-          },
+          state: e => {},
         }
       }}
     >

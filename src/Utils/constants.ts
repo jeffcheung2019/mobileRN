@@ -1,4 +1,4 @@
-import { FoodPriceIndexZoom, GoogleRSSFeed, GoogleRSSFeedQuery } from '@/Types/API'
+import { FoodPriceIndexZoomType, GoogleRSSFeed, GoogleRSSFeedQuery, ZoomType } from '@/Types/API'
 
 export const config = {
   iconSize: 28,
@@ -44,11 +44,11 @@ export const api = {
 
     return `https://news.google.com/rss/search${queryStrs === '' ? '' : '?' + queryStrs + '&ceid=US:en&hl=en-US&gl=US'}`
   },
-  foodPriceIndex: (zoom: FoodPriceIndexZoom) => {
+  foodPriceIndex: (zoom: FoodPriceIndexZoomType) => {
     return `https://ycharts.com/charts/fund_data.json?annotations=&annualizedReturns=false&calcs=&chartType=interactive&chartView=&correlations=&dateSelection=range&displayDateRange=false&displayTicker=false&endDate=&format=real&legendOnChart=false&note=&partner=basic_2000&quoteLegend=false&recessions=false&scaleType=linear&securities=id%3AI%3AFPI%2Cinclude%3Atrue%2C%2C&securityGroup=&securitylistName=&securitylistSecurityId=&source=false&splitType=single&startDate=&title=&units=false&useCustomColors=false&useEstimates=false&zoom=${zoom}&redesign=true&chartCreator=&maxPoints=588`
   },
-
-  foodPriceIndexHtml: 'https://ycharts.com/indicators/food_index_world_bank',
+  cpiIndexHtml: 'https://www.investing.com/economic-calendar/cpi-733',
+  cpiIndexDataJson: 'https://sbcharts.investing.com/events_charts/us/733.json',
   economicDataHtml: 'https://ycharts.com/indicators',
   globalSupplyChainCSV: 'https://www.newyorkfed.org/medialibrary/research/interactives/data/gscpi/gscpi_interactive_data.csv',
   globalSupplyChainEstimate: 'https://www.newyorkfed.org/medialibrary/research/interactives/data/gscpi/gscpi.json',
@@ -70,23 +70,10 @@ export const colors = {
   brightTurquoise: '#00F2DE',
   magicPotion: '#FD4762',
   darkBlueGray: '#67739E',
-  darkGunmetal: '#151C35',
-  jacarta: '#38405E',
-  philippineSilver: '#B5B5B5',
-  buleCola: '#0174E5',
-  lightSlateGray: '#749597',
   eucalyptus: '#42DCA3',
 
   green: '#14D13E', //green
   orange: '#D6AE14', //yellow
-
-  arsenic: '#3D4248',
-  charlestonGreen: '#322E29',
-  brinkPink: '#FF637D',
-  amaranthRed: 'rgba(213, 31, 55, 0.1)',
-
-  tealDeer: '#87F4B5',
-  cornflower: '#93CBF1',
 
   // Theme colors for each tab, home, earning, search, priceTarget, event
   homeTheme: '#69DDFF',
@@ -105,6 +92,18 @@ export const colors = {
   electricGreen: '#00ff00', // area color
   red: '#FF0000', // line color
   crimson: '#E21134', // area color
+
+  // crimson gradient colors
+  whiteCrimson25: '#f4a2b0',
+  whiteCrimson50: '#ec647b',
+  whiteCrimson75: '#e73e5a',
+
+  // electricGreen gradient colors
+  whiteElectricGreen25: '#baffba',
+  whiteElectricGreen50: '#82ff82',
+  whiteElectricGreen75: '#45ff45',
+
+  whiteDarkBlueGray25: '#dcdfe9',
 }
 
 export const elevationStyle = {
@@ -113,4 +112,13 @@ export const elevationStyle = {
   shadowOpacity: 0.26,
   shadowOffset: { width: 0, height: 2 },
   shadowRadius: 10,
+}
+
+export const zoomTypesDateRangeMap = {
+  '6M': 6,
+  '1Y': 12,
+  '2Y': 24,
+  '3Y': 36,
+  '5Y': 60,
+  '10Y': 120,
 }

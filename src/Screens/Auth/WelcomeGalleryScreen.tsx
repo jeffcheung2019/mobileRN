@@ -196,7 +196,7 @@ const WelcomeGalleryScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteSta
             active={screenIdx}
             activeColor={colors.eucalyptus}
             marginHorizontal={8}
-            inactiveColor={colors.lightSlateGray}
+            inactiveColor={colors.darkBlueGray}
             passiveDotWidth={8}
             pasiveDotHeight={8}
             activeDotWidth={12}

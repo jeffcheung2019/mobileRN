@@ -14,7 +14,7 @@ import {
   StockInfoStackScreenNavigationProp,
   StockInfoStackScreenProps,
 } from '@/Screens/App/StockInfoScreen'
-import { RouteStacks, RouteTopTabs } from '@/Navigators/routes'
+import { RouteStacks } from '@/Navigators/routes'
 import { CompositeNavigationProp, CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { HomeScreenNavigatorParamList } from '../HomeScreen'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -65,6 +65,7 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import { RootState } from '@/Store'
 import { updateStockInfoShowSection } from '@/Store/Slices/ui'
 import keys from 'lodash/keys'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export type StockInfoMainScreenProps = CompositeScreenProps<
   StackScreenProps<StockInfoScreenNavigatorParamList, RouteStacks.stockInfoMain>,
@@ -101,6 +102,7 @@ export const initStockInfoShowSection = {
   shortResearchReports: true,
   mergerAcquisition: true,
   ipoNews: true,
+  cpiIndex: true,
 }
 
 export type StockInfoShowSectionType = keyof typeof initStockInfoShowSection
@@ -190,6 +192,11 @@ const sectionButtonsMap: Record<string, SectionButton> = {
     icon: () => <Entypo name='news' size={windowWidth / 14} color={colors.white} />,
     sectionType: 'ipoNews',
     redirectTo: RouteStacks.ipoNews,
+  },
+  cpiIndex: {
+    icon: () => <Ionicons name='pricetags' size={windowWidth / 14} color={colors.white} />,
+    sectionType: 'cpiIndex',
+    redirectTo: RouteStacks.cpiIndex,
   },
 }
 
@@ -297,6 +304,7 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
       true,
     )
   }, [])
+
   const stockInfoDisplayAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -308,8 +316,12 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
   }, [])
 
   useEffect(() => {
-    sectionRotateVal.value = 1
-  }, [])
+    if (showDelButton) {
+      sectionRotateVal.value = 1
+    } else {
+      sectionRotateVal.value = 0
+    }
+  }, [showDelButton])
 
   useFocusEffect(
     useCallback(() => {
@@ -327,7 +339,7 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
   }
   const stockInfoShowSectionButtons = useMemo(() => {
     let res: SectionButton[] = []
-    let objectKeys = Object.keys(stockInfoShowSection) as Array<StockInfoShowSectionType>
+    let objectKeys = (stockInfoShowSection ? Object.keys(stockInfoShowSection) : []) as Array<StockInfoShowSectionType>
     objectKeys.forEach((elem: StockInfoShowSectionType) => {
       if (stockInfoShowSection[elem]) {
         res.push(sectionButtonsMap[elem])
@@ -452,7 +464,7 @@ const StockInfoMainScreen: FC<StockInfoMainScreenProps> = ({ navigation, route }
                 }}
                 entering={FadeIn.duration(500)}
                 exiting={FadeOut.duration(500)}
-                layout={SequencedTransition.duration(1000)}
+                layout={SequencedTransition.duration(1000).delay(500)}
               >
                 <Pressable
                   style={{

@@ -145,6 +145,8 @@ export default {
   add: 'Add',
   noResult: 'No Result',
   addWatchList: 'Add watch list',
+  cpiIndex: 'CPI Index',
+  shortResearchReport: 'Short Research Report',
 
   stockQuote: 'Stock Quote',
   addStockQuote: 'Add Stock Quote',
@@ -172,4 +174,14 @@ export default {
   lawsuitsDetail: 'Lawsuit Detail',
   all: 'All',
   loading: 'Loading',
+  nameStockQuoteTab: 'Name your stock quote watch list tab',
+  tabName: 'Tab name',
+  globalSupplyChainIndexDesc:
+    'The GSCPI integrates a number of commonly used metrics with the aim of providing a comprehensive summary of potential supply chain disruptions. Global transportation costs are measured by employing data from the Baltic Dry Index (BDI) and the Harpex index, as well as airfreight cost indices from the U.S. Bureau of Labor Statistics. The GSCPI also uses several supply chain-related components from Purchasing Managers’ Index (PMI) surveys, focusing on manufacturing firms across seven interconnected economies: China, the euro area, Japan, South Korea, Taiwan, the United Kingdom, and the United States.',
+  standardDeviationFromAvg: 'Standard deviations from average value',
+  cancel: 'Cancel',
+  time: 'Time',
+  actual: 'Actual',
+  forcast: 'Forcast',
+  startSettingUpWatchListTab: 'Start Setting Up Your Stock Watchlist',
 }

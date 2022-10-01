@@ -23,7 +23,7 @@ export type UIState = {
   stockInfoShowSection: StockInfoShowSection
 }
 
-const initialState: UIState = {
+export const initialState: UIState = {
   isScreenLoading: true,
   snackBarConfig: {
     visible: false,
@@ -63,8 +63,13 @@ const uiSlice = createSlice({
         ...action.payload,
       }
     },
+    resetStockInfoShowSection: state => {
+      state.stockInfoShowSection = {
+        ...initStockInfoShowSection,
+      }
+    },
   },
 })
 
-export const { startLoading, showSnackbar, showTabBar, updateStockInfoShowSection } = uiSlice.actions
+export const { startLoading, showSnackbar, showTabBar, updateStockInfoShowSection, resetStockInfoShowSection } = uiSlice.actions
 export default uiSlice.reducer
