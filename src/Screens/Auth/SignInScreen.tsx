@@ -192,6 +192,7 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
   }, [])
 
   const onLoginOptionPress = async (loginOpt: string) => {
+    console.log('loginOpt', credential)
     let currErrMsg = {
       email: '',
       password: '',
@@ -243,6 +244,7 @@ const SignInScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.logI
         await Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Google })
       }
     } catch (err: any) {
+      console.log('err', err)
       loginErrHandler(err)
       setIsLoggingIn(false)
     } finally {

@@ -103,7 +103,7 @@ const AnimatedTabBarIcon: FC<any> = ({ idx, focused }) => {
       autoSize
       source={animatedIconJson[idx]}
       resizeMode='contain'
-      style={{ width: 30, height: 30 }}
+      style={{ width: idx === 2 ? 60 : 30, height: idx === 2 ? 60 : 30 }}
     />
   )
 }
