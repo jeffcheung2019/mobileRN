@@ -56,8 +56,6 @@ const SearchScreen: FC<SearchScreenProps> = ({ navigation, route }) => {
 
   const user = useSelector((state: RootState) => state.user)
 
-  console.log('@@@ ', JSON.stringify(user, null, 2))
-
   // useFocusEffect(useCallback(() => {
   //   navigation.reset({
   //     index: 0,

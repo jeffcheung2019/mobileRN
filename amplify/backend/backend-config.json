@@ -1,6 +1,6 @@
 {
   "auth": {
-    "stracker": {
+    "trackeruseramplify": {
       "service": "Cognito",
       "serviceType": "imported",
       "providerPlugin": "awscloudformation",

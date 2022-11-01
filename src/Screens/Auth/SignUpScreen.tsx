@@ -88,7 +88,7 @@ const SignUpScreen: FC<StackScreenProps<AuthNavigatorParamList, RouteStacks.sign
       setIsCreatingAccount(true)
       // any type here as aws amplify has no typescript support
       const { user }: any = await Auth.signUp({
-        username: credential.email,
+        username: emailUsernameHash(credential.email),
         password: credential.password,
         attributes: {
           email: credential.email,

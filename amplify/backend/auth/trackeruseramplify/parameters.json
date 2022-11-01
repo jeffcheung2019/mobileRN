@@ -1,8 +1,8 @@
 {
   "authSelections": "userPoolOnly",
-  "resourceName": "stracker",
+  "resourceName": "trackeruseramplify",
   "serviceType": "imported",
-  "region": "us-east-1",
+  "region": "us-west-1",
   "authProvidersUserPool": [
     "Facebook",
     "Google"

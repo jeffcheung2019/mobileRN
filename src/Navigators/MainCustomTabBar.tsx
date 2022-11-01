@@ -199,7 +199,6 @@ const MainCustomTabBar: FC<MainCustomTabBarProps> = ({ state, descriptors, navig
               target: route.key,
             })
           }
-          console.log('state.index', state.index, idx, focused)
 
           return (
             <TabWrapperView focused={idx === state.index} key={`TabWrapperView-${idx}`} onLongPress={onLongPress} onPress={onTabPress}>

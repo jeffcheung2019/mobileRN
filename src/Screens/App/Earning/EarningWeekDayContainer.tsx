@@ -65,11 +65,9 @@ const EarningWeekDayContainer: FC<EarningWeekDayContainerProps> = props => {
   const [earningCompanies, setEarningCompanies] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [tickerQuery, setTickerQuery] = useState('')
-  // const { data: swrData, error } = useCancelableSWR(tradingViewEarningApi(Number(earningDay)))
 
   useEffect(() => {
     const run = async () => {
-      console.log('RUNNNN')
       setIsLoading(true)
       let newEanringDay = Number(earningDay) + earningWeek * 7
       let tradingViewEarningApiRes = await axios({
@@ -108,7 +106,7 @@ const EarningWeekDayContainer: FC<EarningWeekDayContainerProps> = props => {
     run()
 
     return () => {
-      abortController.abort()
+      // abortController.abort()
     }
     // imgName === '' then symbol
     // https://s3-symbol-logo.tradingview.com/${imgName}.svg

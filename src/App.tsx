@@ -36,6 +36,7 @@ const client = new ApolloClient({
 })
 // TBD: remove later
 console.warn = () => {}
+console.disableYellowBox = true
 
 const onInstallConversionDataCanceller = appsFlyer.onInstallConversionData(res => {
   const isFirstLaunch = res?.data?.is_first_launch

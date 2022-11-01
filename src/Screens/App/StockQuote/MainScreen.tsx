@@ -79,8 +79,6 @@ const StockQuoteMainScreen: FC<StockQuoteMainScreenProps> = ({ navigation, route
 
   const onAddStockQuoteModalClose = () => {}
 
-  console.log('stockQuoteTab', stockQuoteTab)
-
   return (
     <ScreenBackgrounds screenName={RouteStacks.stockQuoteMain}>
       <AddStockQuoteModal ref={addStockQuoteModalRef} onModalClose={onAddStockQuoteModalClose} />
